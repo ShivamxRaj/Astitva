@@ -12,10 +12,13 @@
 
 ## 📂 Module-Based Progress (Time-Linked)
 
-| 🕐 Time        | 📁 File                  | 📌 Description                                                                 |
-|---------------|--------------------------|--------------------------------------------------------------------------------|
-| 01:00 PM      | adminauth.js           | 🔐 Built secure admin authentication system.<br>• JWT-based login<br>• bcrypt for password hashing |
-| 02:00 PM      | unclaimedbodyreport.js | 📝 Created public and anonymous report system.<br>• OTP with Twilio API<br>• Anonymous route support<br>• Location captured via Geo API |
+| 🕐 Time        | 📁 File(s)                            | 📌 Description                                                                 |
+|---------------|----------------------------------------|--------------------------------------------------------------------------------|
+| 01:00 PM      | adminauth.js                         | 🔐 Built secure admin authentication system.<br>• JWT-based login<br>• bcrypt for password hashing |
+| 02:00 PM      | unclaimedbodyreport.js               | 📝 Created public and anonymous report system.<br>• OTP with Twilio API<br>• Anonymous route support<br>• Location captured via Geo API |
+| 04:00 PM      | FloatingActionButton.js, Navbar.js | 🆘 Added floating emergency contact button.<br>• One-tap call access: Police, Ambulance, Fire, Women & Child Safety<br>📍 Added Navigation Bar with key page routes & language toggle |
+| 06:00 PM      | otp.js                               | 🔒 Developed OTP route handler.<br>• /send-otp & /verify-otp endpoints<br>• Connects to service layer securely |
+| 08:00 PM      | otpService.js, chat.js             | ✉ Created reusable OTP service layer.<br>• Twilio-integrated logic<br>💬 Initialized chat route for future real-time user–admin communication |
 
 ---
 
@@ -28,56 +31,102 @@
 - Environment-secured keys with dotenv.
 - Acts as *gatekeeper* to ensure only verified authorities access sensitive data.
 
-### 📝 unclaimedbodyreport.js – Public Reporting (2:00 PM)
+### 📝 unclaimedbodyreport.js – Public Reporting System (2:00 PM)
 
-- Twilio OTP system for verified public reports.
-- Anonymous report route for users hesitant to reveal identity.
-- Captures location data via integrated Geo APIs.
-- Prioritizes both *trust* and *empathy* — users can *choose to stay private*.
+- Twilio OTP verification system for trusted reports.
+- Alternate *anonymous* submission route for privacy.
+- Geo-location auto-captured using integrated APIs.
+- Designed to ensure dignity and trust.
+
+### 🆘 FloatingActionButton.js – Emergency Access (4:00 PM)
+
+- Floating circular button for *quick emergency calls*.
+- Contacts included:
+  - 🚨 Police
+  - 🚑 Ambulance
+  - 🔥 Fire Brigade
+  - 👧 Child Safety
+  - 👩 Women Helpline (state-specific)
+
+> “Every second matters — users can now act instantly in emergencies.”
+
+### 🌐 Navbar.js – Page Navigation (4:00 PM)
+
+- Clean navigation bar with links to:
+  - Home
+  - Report Case
+  - Team
+  - About Us
+  - FAQ
+  - Contact Us
+  - Login / Register
+  - Hindi / English switch toggle
+
+> “Because accessibility is part of empathy.”
+
+### 🔒 otp.js – OTP API Routes (6:00 PM)
+
+- /send-otp & /verify-otp routes handled via Express.
+- Modular structure with validation support.
+- Connects securely to backend logic layer.
+
+### ✉ otpService.js – OTP Logic Layer (8:00 PM)
+
+- Twilio-based logic centralized here.
+- OTP send/verify flow extracted from route to service.
+- Keeps codebase clean and testable.
+
+### 💬 chat.js – Real-Time Communication Route (8:00 PM)
+
+- Route skeleton created for future *user-admin messaging*.
+- Intended for live case follow-ups and queries.
+- To be powered by WebSockets or Firebase in later stages.
 
 ---
 
 ## 🔐 Security Highlights
 
-- Encrypted passwords using bcrypt.
-- Authenticated routes protected with JWT.
-- No personal data stored unless user chooses to provide.
-- All reports stored securely in MongoDB Atlas.
+- Passwords secured with bcrypt.
+- JWT-protected routes and tokens.
+- OTP system built with validation + expiry.
+- MongoDB Atlas secured for data handling.
 
 ---
 
 ## 💡 Why This Approach?
 
-We divided our core features into meaningful, time-boxed modules to ensure quality and focus.
+We structured our code into *checkpoint-wise functional blocks*, combining technical logic with emotional responsibility.
 
-- *1:00 PM* – Admin system to *secure the backend*.
-- *2:00 PM* – Public report system to *give voice to the unheard*.
+- *1:00 PM* – Admin system to *safeguard backend*  
+- *2:00 PM* – Public report flow to *empower citizens*  
+- *4:00 PM* – Instant help button & UI navigation for *emergency action*  
+- *6:00 PM* – OTP APIs to *ensure verified communication*  
+- *8:00 PM* – Chat & service layers for *future interactivity*
 
-Each line of code was written with the emotion that "हर लाश एक कहानी कहती है, बस उसे सुनने वाला चाहिए।"
+> “हर लाश एक कहानी कहती है, बस उसे सुनने वाला चाहिए।”
 
 ---
 
 ## 👨‍💻 Contributors
 
-| Name        | Role                            | Contact                   |
-|-------------|----------------------------------|---------------------------|
-| *Shivam Raj*  | Backend Lead (JWT/Auth + Reports) | raj073032@gmail.com       |
-| *Anup Kumar*  | UI/UX & Frontend Integration     | itsheaven62032@gmail.com  |
-| *Amit Kumar*  | MongoDB & API Integrations        | amitk306416@gmail.com     |
+| Name           | Role                                  | Contact                   |
+|----------------|----------------------------------------|---------------------------|
+| *Shivam Raj* | Backend Lead (JWT/Auth + OTP + Reports) | raj073032@gmail.com       |
+| *Anup Kumar* | UI/UX & Frontend Integration           | itsheaven62032@gmail.com  |
+| *Amit Kumar* | MongoDB & API Integrations             | amitk306416@gmail.com     |
 
 ---
 
 ## 🫡 Our Message
 
-> "Avyakta is more than just a codebase —  
-> it's our way of giving dignity to those who couldn't ask for it."  
-
-We built this with *urgency, **emotion, and **intention* — every file, every route, every detail matters.
+> “Avyakta is not just a project. It's a silent shout for those who couldn't speak for themselves.”  
+> We built this not for competition — but for *contribution*.  
+> Every file, every icon, every API — it all tells a story.
 
 ---
 
 ## 📄 License
 
-Open-source project.  
-Use for *ethical, **non-commercial, and **social good* purposes only.  
-Unethical use may lead to legal action.
+This is an *open-source humanitarian project*.  
+Use it strictly for *ethical, **non-commercial, and **social-good* purposes.  
+Any misuse may result in legal consequences.
