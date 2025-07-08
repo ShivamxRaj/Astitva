@@ -4,8 +4,7 @@
 
 ✅ Checkpoint 1 Update:
 - Project initialized with basic React structure
-- Admin.login and 
-User.register  component created with styled form and validation
+- Login component created with styled form and validation
 - Other pages will be added in future checkpoints
 
 🛠 Stack: ReactJS, CSS Modules
@@ -75,3 +74,4 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. 
+# Astitva
