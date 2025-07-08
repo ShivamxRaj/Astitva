@@ -1,0 +1,94 @@
+{
+  "nav": {
+    "home": "Home",
+    "report": "Report Case",
+    "search": "Search",
+    "about": "About",
+    "contact": "Contact",
+    "admin": "Admin"
+  },
+  "home": {
+    "hero": {
+      "title": "Avyakta",
+      "subtitle": "Giving dignity to the forgotten. A compassionate platform for identifying and responding to unclaimed bodies.",
+      "emergencyHelp": "Emergency Help",
+      "reportCase": "Report a Case"
+    },
+    "stats": {
+      "casesReported": "Cases Reported",
+      "casesResolved": "Cases Resolved",
+      "ngosOnboard": "NGOs Onboard",
+      "livesTouched": "Lives Touched"
+    },
+    "testimonials": [
+      {
+        "quote": "Avyakta has brought dignity to the unclaimed. Their work is truly humanitarian and makes a real difference.",
+        "name": "Inspector Rajeev Kumar",
+        "role": "Delhi Police"
+      },
+      {
+        "quote": "We are proud to partner with Avyakta. The platform is efficient, compassionate, and truly serves the community.",
+        "name": "Meera Joshi",
+        "role": "NGO Volunteer"
+      },
+      {
+        "quote": "Reporting and tracking cases is now so easy. Thank you for this invaluable service to society.",
+        "name": "Amit Sharma",
+        "role": "Citizen"
+      }
+    ],
+    "steps": [
+      {
+        "title": "Spot",
+        "desc": "Notice an unclaimed body in your area."
+      },
+      {
+        "title": "Report",
+        "desc": "Submit details securely on Avyakta."
+      },
+      {
+        "title": "Track",
+        "desc": "Follow the case progress and resolution."
+      }
+    ],
+    "features": [
+      {
+        "title": "24/7 Emergency Support",
+        "description": "Round-the-clock assistance for urgent situations"
+      },
+      {
+        "title": "Multi-Language Support",
+        "description": "Available in English and Hindi for everyone"
+      },
+      {
+        "title": "Secure & Confidential",
+        "description": "Your information is protected with encryption"
+      },
+      {
+        "title": "Real-time Tracking",
+        "description": "Monitor case progress with live updates"
+      }
+    ]
+  },
+  "footer": {
+    "description": "Nirman Sewa is dedicated to helping identify and respond to unclaimed bodies with dignity and respect.",
+    "about": {
+      "title": "About",
+      "mission": "Our Mission",
+      "team": "Our Team",
+      "contact": "Contact Us"
+    },
+    "resources": {
+      "title": "Resources",
+      "faq": "FAQ",
+      "guidelines": "Guidelines",
+      "support": "Support"
+    },
+    "legal": {
+      "title": "Legal",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service"
+    },
+    "rights": "All rights reserved"
+  }
+} 
