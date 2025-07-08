@@ -42,7 +42,7 @@ const AdminAuth = () => {
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   
-  const API_KEY = 'YOUR_API_KEY_HERE'; // TODO: Use environment variable in production
+  const API_KEY = 'YOUR_API_KEY_HERE'; // Use environment variable in production
   const API_BASE_URL = 'https://api.textlocal.in/send/'; // TextLocal API for SMS
   const EMAIL_API_URL = 'https://api.emailjs.com/api/v1.0/email/send'; // EmailJS for emails
 
