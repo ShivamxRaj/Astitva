@@ -1,77 +1,83 @@
-# Avyakta – HackOrbit 2025
+# 🕊 Avyakta – आवाज़ उन बेजुबानों की
 
-🔐 A React-powered system to identify unclaimed deceased persons.
+> “A voice for the unspoken. A tribute to the unknown. A mission with dignity.”
 
-✅ Checkpoint 1 Update:
-- Project initialized with basic React structure
-- Login component created with styled form and validation
-- Other pages will be added in future checkpoints
+---
 
-🛠 Stack: ReactJS, CSS Modules
+## 📌 Project Snapshot
 
-## Features
+*Avyakta* is a socially driven platform that allows citizens to report *unclaimed dead bodies* in their vicinity — either anonymously or through OTP-verified submissions. It also provides a secure admin panel for officials to view and act upon reports.
 
-- Public reporting form with photo upload and geolocation
-- Admin dashboards for Police, NGOs, and Hospitals
-- Search portal for missing persons/dead bodies
-- Progressive Web App (PWA) with offline capabilities
-- Bilingual support (Hindi/English)
+---
 
-## Tech Stack
+## 📂 Module-Based Progress (Time-Linked)
 
-- Frontend: React.js with TailwindCSS
-- Backend: Node.js + Express
-- Database: MongoDB
-- Additional: Geolocation API, Image compression, PWA support
+| 🕐 Time        | 📁 File                  | 📌 Description                                                                 |
+|---------------|--------------------------|--------------------------------------------------------------------------------|
+| 01:00 PM      | adminauth.js           | 🔐 Built secure admin authentication system.<br>• JWT-based login<br>• bcrypt for password hashing |
+| 02:00 PM      | unclaimedbodyreport.js | 📝 Created public and anonymous report system.<br>• OTP with Twilio API<br>• Anonymous route support<br>• Location captured via Geo API |
 
-## Getting Started
+---
 
-### Prerequisites
+## ✅ Module Descriptions
 
-- Node.js (v14 or higher)
-- MongoDB
-- npm or yarn
+### 🔐 adminauth.js – Admin Authentication (1:00 PM)
 
-### Installation
+- JWT-based login system for admin.
+- bcrypt hashing for password security.
+- Environment-secured keys with dotenv.
+- Acts as *gatekeeper* to ensure only verified authorities access sensitive data.
 
-1. Clone the repository
-```bash
-git clone [repository-url]
-cd nirman-sewa
-```
+### 📝 unclaimedbodyreport.js – Public Reporting (2:00 PM)
 
-2. Install dependencies
-```bash
-# Install backend dependencies
-cd backend
-npm install
+- Twilio OTP system for verified public reports.
+- Anonymous report route for users hesitant to reveal identity.
+- Captures location data via integrated Geo APIs.
+- Prioritizes both *trust* and *empathy* — users can *choose to stay private*.
 
-# Install frontend dependencies
-cd ../frontend
-npm install
-```
+---
 
-3. Set up environment variables
-```bash
-# In backend directory
-cp .env.example .env
-# Edit .env with your configuration
-```
+## 🔐 Security Highlights
 
-4. Start development servers
-```bash
-# Start backend server (from backend directory)
-npm run dev
+- Encrypted passwords using bcrypt.
+- Authenticated routes protected with JWT.
+- No personal data stored unless user chooses to provide.
+- All reports stored securely in MongoDB Atlas.
 
-# Start frontend server (from frontend directory)
-npm start
-```
+---
 
-## Contributing
+## 💡 Why This Approach?
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+We divided our core features into meaningful, time-boxed modules to ensure quality and focus.
 
-## License
+- *1:00 PM* – Admin system to *secure the backend*.
+- *2:00 PM* – Public report system to *give voice to the unheard*.
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-# Astitva
+Each line of code was written with the emotion that "हर लाश एक कहानी कहती है, बस उसे सुनने वाला चाहिए।"
+
+---
+
+## 👨‍💻 Contributors
+
+| Name        | Role                            | Contact                   |
+|-------------|----------------------------------|---------------------------|
+| *Shivam Raj*  | Backend Lead (JWT/Auth + Reports) | raj073032@gmail.com       |
+| *Anup Kumar*  | UI/UX & Frontend Integration     | itsheaven62032@gmail.com  |
+| *Amit Kumar*  | MongoDB & API Integrations        | amitk306416@gmail.com     |
+
+---
+
+## 🫡 Our Message
+
+> "Avyakta is more than just a codebase —  
+> it's our way of giving dignity to those who couldn't ask for it."  
+
+We built this with *urgency, **emotion, and **intention* — every file, every route, every detail matters.
+
+---
+
+## 📄 License
+
+Open-source project.  
+Use for *ethical, **non-commercial, and **social good* purposes only.  
+Unethical use may lead to legal action.
