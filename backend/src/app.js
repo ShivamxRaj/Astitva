@@ -19,6 +19,7 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/chat', require('./routes/chat'));
 app.use('/api/ratings', require('./routes/ratings'));
+app.use('/api/contact', require('./routes/contact'));
 
 // Error handling middleware
 app.use((err, req, res, next) => {
