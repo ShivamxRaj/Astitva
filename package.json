@@ -1,0 +1,20 @@
+{
+  "name": "dream",
+  "version": "1.0.0",
+  "description": "A citizen-powered platform for identifying, reporting, and responding to unknown/unclaimed dead bodies across India with real-time police/NGO/hospital coordination.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.0.1",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.16.1"
+  }
+}

@@ -197,54 +197,66 @@ Always prioritize safety and emergency situations. Be compassionate, helpful, an
     if (!inputMessage.trim()) return;
 
     // Add user message
-    setMessages(prev => [...prev, { 
-      type: 'user', 
-      text: inputMessage,
-      timestamp: new Date()
-    }]);
-    
-    setIsLoading(true);
-    
-    try {
-      // Try AI response first
-      const aiResponse = await getAIResponse(inputMessage);
-      
-      if (aiResponse) {
-        // Use AI response
-        setMessages(prev => [...prev, { 
-          type: 'bot', 
-          text: aiResponse,
-          timestamp: new Date(),
-          quickActions: [
-            { text: "🚨 Emergency Help", action: "emergency" },
-            { text: "📞 Contact Us", action: "contact" },
-            { text: "💙 Get Support", action: "support" },
-            { text: "📋 Report Case", action: "report" }
-          ]
-        }]);
-      } else {
-        // Fallback to local responses
-        const response = getFallbackResponse(inputMessage);
-      setMessages(prev => [...prev, { 
-        type: 'bot', 
-          text: response.text,
-          timestamp: new Date(),
-          quickActions: response.quickActions
-      }]);
-      }
-    } catch (error) {
-      // Fallback to local responses on error
-      const response = getFallbackResponse(inputMessage);
-      setMessages(prev => [...prev, { 
-        type: 'bot', 
-        text: response.text,
+    setMessages(prev => [
+      ...prev,
+      {
+        type: 'user',
+        text: inputMessage,
         timestamp: new Date(),
-        quickActions: response.quickActions
-      }]);
-    } finally {
+      },
+    ]);
+    setInputMessage('');
+    setIsLoading(true);
+
+    // Heart-touching, comprehensive response
+    const responseText = `💙 Dear Friend,
+
+Thank you for reaching out. No matter what you're facing, please know you are not alone. We are here for you, day and night, with open hearts and helping hands.
+
+🚨 *Emergency Help*
+If you or someone near you is in immediate danger, please call:
+• Police: 100
+• Ambulance: 102
+• Fire: 101
+• Women: 1091 | Children: 1098 | Mental Health: 9152987821
+
+Your safety is our top priority. Stay calm, and help is on the way.
+
+🔍 *Missing Person or Unclaimed Body*
+If you are searching for a loved one or have found someone in need, please:
+• File an FIR at your nearest police station
+• Contact local hospitals and authorities
+• Share details and photos with us—we will support you every step of the way
+
+🏥 *Medical Emergencies*
+For accidents, injuries, or sudden illness, call 102 for an ambulance. Stay with the person, keep them comfortable, and wait for help. Every moment matters, and your courage can save a life.
+
+🏛️ *About Avyakta*
+We are dedicated to giving dignity to the forgotten, reuniting families, and supporting those in crisis. Our mission is to bring hope, justice, and peace to every soul.
+
+📞 *Contact & Support*
+• Helpline: +91 1800-XXX-XXXX
+• Email: support@avyakta.org
+• Website: www.avyakta.org
+• Location: New Delhi, India
+
+We offer legal aid, counseling, financial help, and a listening ear. Whatever your need, we will walk with you.
+
+🌈 *You Matter*
+Your pain is seen, your voice is heard, and your story matters. Together, we can find light even in the darkest times. Please let us know how we can help you today. 💙`;
+
+    setTimeout(() => {
+      setMessages(prev => [
+        ...prev,
+        {
+          type: 'bot',
+          text: responseText,
+          timestamp: new Date(),
+          quickActions: [],
+        },
+      ]);
       setIsLoading(false);
-      setInputMessage('');
-    }
+    }, 800);
   };
 
   const handleQuickAction = (action) => {

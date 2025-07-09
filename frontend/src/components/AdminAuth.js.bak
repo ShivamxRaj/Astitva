@@ -1,0 +1,716 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import PasswordRecovery from './PasswordRecovery';
+import {
+  UserIcon,
+  LockClosedIcon,
+  EnvelopeIcon,
+  PhoneIcon,
+  PhotoIcon,
+  DocumentTextIcon,
+  UserGroupIcon,
+  EyeIcon,
+  EyeSlashIcon,
+  ShieldCheckIcon
+} from '@heroicons/react/24/outline';
+
+const AdminAuth = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { t } = useTranslation();
+  // Set default tab based on URL query param
+  const getDefaultTab = () => {
+    const params = new URLSearchParams(location.search);
+    return params.get('tab') === 'register' ? false : true;
+  };
+  const [isLogin, setIsLogin] = useState(getDefaultTab());
+
+  // Update tab if URL changes
+  useEffect(() => {
+    setIsLogin(getDefaultTab());
+  }, [location.search]);
+  const [showForgot, setShowForgot] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [registrationStep, setRegistrationStep] = useState(1); // 1: Basic info, 2: OTP verification, 3: Final details
+  const [otp, setOtp] = useState('');
+  const [securityCode, setSecurityCode] = useState('');
+  const [generatedSecurityCode] = useState('AVY123'); // This would be generated dynamically
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  
+  const API_KEY = 'YOUR_API_KEY_HERE'; // Use environment variable in production
+  const API_BASE_URL = 'https://api.textlocal.in/send/'; // TextLocal API for SMS
+  const EMAIL_API_URL = 'https://api.emailjs.com/api/v1.0/email/send'; // EmailJS for emails
+
+  const [formData, setFormData] = useState({
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    mobile: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    role: '',
+    profilePic: null,
+    verificationDoc: null,
+    terms: false
+  });
+
+  const roles = [
+    { value: 'admin', label: 'Admin' },
+    { value: 'ngo', label: 'NGO' },
+    { value: 'common', label: 'Common User' }
+  ];
+
+  const handleInputChange = (e) => {
+    const { name, value, type, files, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'file' ? files[0] : type === 'checkbox' ? checked : value
+    }));
+    // Clear error when user starts typing
+    if (error) setError('');
+  };
+
+  const generateOTP = () => {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  };
+
+  const sendOTP = async (mobileNumber, generatedOTP) => {
+    try {
+      const message = `Your Avyakta verification code is: ${generatedOTP}. Valid for 10 minutes.`;
+      const url = `${API_BASE_URL}?apikey=${API_KEY}&numbers=${mobileNumber}&message=${encodeURIComponent(message)}&sender=AVYAKT`;
+      
+      const response = await fetch(url);
+      const data = await response.json();
+      
+      if (data.status === 'success') {
+        return true;
+      } else {
+        throw new Error(data.message || 'Failed to send OTP');
+      }
+    } catch (error) {
+      console.error('OTP sending error:', error);
+      throw error;
+    }
+  };
+
+  const sendWelcomeEmail = async (email, firstName) => {
+    try {
+      const emailData = {
+        service_id: 'SK8538d37ae544ef7c84bd79a5b5b3c825', // API key for email service
+        template_id: 'your_template_id', // Replace with your EmailJS template ID
+        user_id: 'your_user_id', // Replace with your EmailJS user ID
+        template_params: {
+          to_email: email,
+          to_name: firstName,
+          message: `Welcome to Avyakta, ${firstName}! Your account has been successfully created.`
+        }
+      };
+
+      const response = await fetch(EMAIL_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(emailData)
+      });
+
+      if (response.ok) {
+        console.log('Welcome email sent successfully');
+      }
+    } catch (error) {
+      console.error('Email sending error:', error);
+    }
+  };
+
+  const handleSendOTP = async () => {
+    if (!formData.mobile || formData.mobile.length !== 10) {
+      setError('Please enter a valid 10-digit mobile number');
+      return;
+    }
+
+    setIsLoading(true);
+    setError('');
+    setSuccessMessage('');
+
+    try {
+      const generatedOTP = generateOTP();
+      // Store OTP in sessionStorage for verification (in production, use secure backend)
+      sessionStorage.setItem('registrationOTP', generatedOTP);
+      sessionStorage.setItem('registrationMobile', formData.mobile);
+
+      await sendOTP(formData.mobile, generatedOTP);
+      setSuccessMessage('OTP sent successfully to your mobile number!');
+      setRegistrationStep(2);
+    } catch (error) {
+      setError('Failed to send OTP. Please try again.');
+      console.error('OTP sending failed:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleVerifyOTP = async (e) => {
+    e.preventDefault();
+    
+    if (!otp || otp.length !== 6) {
+      setError('Please enter a valid 6-digit OTP');
+      return;
+    }
+
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const storedOTP = sessionStorage.getItem('registrationOTP');
+      const storedMobile = sessionStorage.getItem('registrationMobile');
+
+      if (otp === storedOTP && formData.mobile === storedMobile) {
+        setSuccessMessage('OTP verified successfully!');
+        setRegistrationStep(3);
+        // Clear stored OTP
+        sessionStorage.removeItem('registrationOTP');
+        sessionStorage.removeItem('registrationMobile');
+      } else {
+        setError('Invalid OTP. Please try again.');
+      }
+    } catch (error) {
+      setError('OTP verification failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match!');
+      return;
+    }
+    
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters long');
+      return;
+    }
+    
+    if (securityCode !== generatedSecurityCode) {
+      setError('Security code is incorrect!');
+      return;
+    }
+    
+    if (!formData.terms) {
+      setError('Please agree to the terms and conditions');
+      return;
+    }
+    
+    setIsLoading(true);
+    setError('');
+
+    try {
+      // Simulate API call for registration
+      console.log('Form submitted:', formData);
+      
+      // Send welcome email
+      await sendWelcomeEmail(formData.email, formData.firstName);
+      
+      setShowSuccessModal(true);
+    } catch (error) {
+      setError('Registration failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSuccessModalClose = () => {
+    setShowSuccessModal(false);
+    navigate('/');
+  };
+
+  return (
+    <>
+      <div className="min-h-screen flex items-center justify-center relative font-poppins p-4">
+        {/* Background image with overlay */}
+        <div className="absolute inset-0 z-0">
+          <img src="/images/admin-bg.jpg" alt="Background" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900/90 to-blue-900/90 backdrop-blur-sm" />
+        </div>
+        <div className="max-w-md w-full space-y-6 sm:space-y-8 bg-white/90 p-4 sm:p-6 lg:p-8 rounded-2xl shadow-2xl z-10 animate-fade-in">
+          {/* Logo and Title */}
+          <div className="text-center">
+            <img className="mx-auto h-10 sm:h-12 lg:h-16 w-auto" src="/images/logo.png" alt="Avyakta" />
+            <h2 className="mt-3 sm:mt-4 lg:mt-6 text-xl sm:text-2xl lg:text-3xl font-merriweather font-bold text-[#003f88]">
+              {isLogin ? 'Admin Login' : 'Admin Registration'}
+            </h2>
+            <p className="mt-1 sm:mt-2 text-xs sm:text-sm lg:text-base text-gray-600">
+              {isLogin ? 'Sign in to your account' : 'Create a new admin/NGO/common account'}
+            </p>
+          </div>
+
+          {/* Error and Success Messages */}
+          {error && (
+            <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg flex items-center">
+              <svg className="h-5 w-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+              <span className="text-sm">{error}</span>
+            </div>
+          )}
+
+          {successMessage && (
+            <div className="p-3 bg-green-100 border border-green-400 text-green-700 rounded-lg flex items-center">
+              <svg className="h-5 w-5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              <span className="text-sm">{successMessage}</span>
+            </div>
+          )}
+
+          {/* Toggle Buttons */}
+          <div className="flex rounded-lg bg-gray-100 p-1">
+            <button
+              onClick={() => { 
+                setIsLogin(true); 
+                setShowForgot(false); 
+                setRegistrationStep(1); 
+                setError('');
+                setSuccessMessage('');
+              }}
+              className={`flex-1 py-2 px-2 sm:px-3 lg:px-4 rounded-md text-xs sm:text-sm font-medium transition-all duration-300 ${
+                isLogin ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              {t('Admin.login')}
+            </button>
+            <button
+              onClick={() => { 
+                setIsLogin(false); 
+                setShowForgot(false); 
+                setRegistrationStep(1); 
+                setError('');
+                setSuccessMessage('');
+              }}
+              className={`flex-1 py-2 px-2 sm:px-3 lg:px-4 rounded-md text-xs sm:text-sm font-medium transition-all duration-300 ${
+                !isLogin ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              {t('User.register')}
+            </button>
+          </div>
+
+          {/* Login Form */}
+          {isLogin && !showForgot && (
+            <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4 lg:space-y-6">
+              <div>
+                <label htmlFor="email" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 flex items-center gap-2">
+                  <EnvelopeIcon className="h-4 w-4 sm:h-5 sm:w-5 text-[#003f88]" />
+                  Email
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 text-sm sm:text-base"
+                  placeholder="Enter your email"
+                />
+              </div>
+              <div>
+                <label htmlFor="password" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 flex items-center gap-2">
+                  <LockClosedIcon className="h-4 w-4 sm:h-5 sm:w-5 text-[#003f88]" />
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 pr-10 text-sm sm:text-base"
+                    placeholder="Enter your password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-[#003f88]"
+                  >
+                    {showPassword ? (
+                      <EyeSlashIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+                    ) : (
+                      <EyeIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+                    )}
+                  </button>
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={() => setShowForgot(true)}
+                  className="text-xs sm:text-sm text-blue-600 hover:text-blue-500 transition-colors duration-200"
+                >
+                  Forgot password?
+                </button>
+              </div>
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full py-2 sm:py-3 px-4 border border-transparent rounded-lg shadow-sm text-xs sm:text-sm lg:text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? 'Signing in...' : 'Sign in'}
+              </button>
+            </form>
+          )}
+
+          {/* Registration Form - Step 1: Basic Info */}
+          {!isLogin && registrationStep === 1 && (
+            <div className="space-y-3 sm:space-y-4 lg:space-y-6">
+              <div className="text-center mb-3 sm:mb-4">
+                <h3 className="text-base sm:text-lg font-semibold text-[#003f88]">Step 1: Personal Information</h3>
+                <p className="text-xs sm:text-sm text-gray-600">Enter your basic details</p>
+              </div>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
+                <div>
+                  <label htmlFor="firstName" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 flex items-center gap-1 sm:gap-2">
+                    <UserIcon className="h-3 w-3 sm:h-4 sm:w-4 text-[#003f88]" />
+                    First Name
+                  </label>
+                  <input
+                    id="firstName"
+                    name="firstName"
+                    type="text"
+                    required
+                    value={formData.firstName}
+                    onChange={handleInputChange}
+                    className="w-full px-2 sm:px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 text-xs sm:text-sm"
+                    placeholder="First"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="middleName" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                    Middle Name
+                  </label>
+                  <input
+                    id="middleName"
+                    name="middleName"
+                    type="text"
+                    value={formData.middleName}
+                    onChange={handleInputChange}
+                    className="w-full px-2 sm:px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 text-xs sm:text-sm"
+                    placeholder="Middle"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="lastName" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                    Last Name
+                  </label>
+                  <input
+                    id="lastName"
+                    name="lastName"
+                    type="text"
+                    required
+                    value={formData.lastName}
+                    onChange={handleInputChange}
+                    className="w-full px-2 sm:px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 text-xs sm:text-sm"
+                    placeholder="Last"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="mobile" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 flex items-center gap-1 sm:gap-2">
+                  <PhoneIcon className="h-4 w-4 sm:h-5 sm:w-5 text-[#003f88]" />
+                  Mobile Number
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    id="mobile"
+                    name="mobile"
+                    type="tel"
+                    required
+                    value={formData.mobile}
+                    onChange={handleInputChange}
+                    className="flex-1 px-2 sm:px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 text-xs sm:text-sm"
+                    placeholder="Enter your mobile number"
+                    maxLength="10"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleSendOTP}
+                    disabled={isLoading || !formData.mobile || formData.mobile.length !== 10}
+                    className="px-3 sm:px-4 py-2 bg-[#003f88] text-white rounded-lg hover:bg-blue-700 transition-all duration-300 text-xs sm:text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                  >
+                    {isLoading ? 'Sending...' : 'Send OTP'}
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setRegistrationStep(2)}
+                disabled={!formData.mobile || formData.mobile.length !== 10}
+                className="w-full py-2 sm:py-3 px-4 border border-transparent rounded-lg shadow-sm text-xs sm:text-sm lg:text-base font-medium text-white bg-[#003f88] hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Continue
+              </button>
+            </div>
+          )}
+
+          {/* Registration Form - Step 2: OTP Verification */}
+          {!isLogin && registrationStep === 2 && (
+            <form onSubmit={handleVerifyOTP} className="space-y-3 sm:space-y-4 lg:space-y-6">
+              <div className="text-center mb-3 sm:mb-4">
+                <h3 className="text-base sm:text-lg font-semibold text-[#003f88]">Step 2: OTP Verification</h3>
+                <p className="text-xs sm:text-sm text-gray-600">
+                  OTP has been sent to <span className="font-semibold">{formData.mobile}</span>
+                </p>
+              </div>
+
+              <div>
+                <label htmlFor="otp" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                  Enter OTP
+                </label>
+                <input
+                  id="otp"
+                  type="text"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 text-center text-base sm:text-lg tracking-widest"
+                  placeholder="Enter 6-digit OTP"
+                  maxLength="6"
+                  required
+                />
+              </div>
+
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setRegistrationStep(1)}
+                  className="flex-1 py-2 px-3 sm:px-4 border border-gray-300 rounded-lg text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all duration-300"
+                >
+                  ← Back
+                </button>
+                <button
+                  type="submit"
+                  disabled={isLoading || !otp || otp.length !== 6}
+                  className="flex-1 py-2 px-3 sm:px-4 border border-transparent rounded-lg shadow-sm text-xs sm:text-sm font-medium text-white bg-[#003f88] hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? 'Verifying...' : 'Verify OTP'}
+                </button>
+              </div>
+            </form>
+          )}
+
+          {/* Registration Form - Step 3: Final Details */}
+          {!isLogin && registrationStep === 3 && (
+            <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4 lg:space-y-6">
+              <div className="text-center mb-3 sm:mb-4">
+                <h3 className="text-base sm:text-lg font-semibold text-[#003f88]">Step 3: Complete Registration</h3>
+                <p className="text-xs sm:text-sm text-gray-600">OTP verified successfully! Complete your registration.</p>
+              </div>
+
+              <div>
+                <label htmlFor="password" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 flex items-center gap-1 sm:gap-2">
+                  <LockClosedIcon className="h-4 w-4 sm:h-5 sm:w-5 text-[#003f88]" />
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 pr-10 text-sm sm:text-base"
+                    placeholder="Create a password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-[#003f88]"
+                  >
+                    {showPassword ? (
+                      <EyeSlashIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+                    ) : (
+                      <EyeIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="confirmPassword" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 flex items-center gap-1 sm:gap-2">
+                  <LockClosedIcon className="h-4 w-4 sm:h-5 sm:w-5 text-[#003f88]" />
+                  Confirm Password
+                </label>
+                <div className="relative">
+                  <input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    required
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 pr-10 text-sm sm:text-base"
+                    placeholder="Confirm your password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-[#003f88]"
+                  >
+                    {showConfirmPassword ? (
+                      <EyeSlashIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+                    ) : (
+                      <EyeIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="email" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 flex items-center gap-1 sm:gap-2">
+                  <EnvelopeIcon className="h-4 w-4 sm:h-5 sm:w-5 text-[#003f88]" />
+                  Email Address
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 text-sm sm:text-base"
+                  placeholder="Enter your email address"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="role" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 flex items-center gap-1 sm:gap-2">
+                  <UserGroupIcon className="h-4 w-4 sm:h-5 sm:w-5 text-[#003f88]" />
+                  Role
+                </label>
+                <select
+                  id="role"
+                  name="role"
+                  required
+                  value={formData.role}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 text-sm sm:text-base"
+                >
+                  <option value="">Select your role</option>
+                  {roles.map(role => (
+                    <option key={role.value} value={role.value}>{role.label}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="securityCode" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 flex items-center gap-1 sm:gap-2">
+                  <ShieldCheckIcon className="h-4 w-4 sm:h-5 sm:w-5 text-[#003f88]" />
+                  Security Code
+                </label>
+                <div className="mb-2 p-2 sm:p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <p className="text-xs sm:text-sm text-blue-800 font-mono text-center text-base sm:text-lg">
+                    {generatedSecurityCode}
+                  </p>
+                  <p className="text-xs text-blue-600 text-center mt-1">Type this code for high security</p>
+                </div>
+                <input
+                  id="securityCode"
+                  type="text"
+                  value={securityCode}
+                  onChange={(e) => setSecurityCode(e.target.value)}
+                  className="w-full px-3 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 text-sm sm:text-base"
+                  placeholder="Enter the security code above"
+                  required
+                />
+              </div>
+
+              <div className="flex items-start">
+                <input
+                  id="terms"
+                  name="terms"
+                  type="checkbox"
+                  checked={formData.terms}
+                  onChange={handleInputChange}
+                  className="h-4 w-4 text-[#003f88] focus:ring-[#003f88] border-gray-300 rounded mt-1"
+                />
+                <label htmlFor="terms" className="ml-2 block text-xs sm:text-sm text-gray-700">
+                  I agree to the <a href="#" className="text-[#003f88] hover:underline">User Agreement</a> and <a href="#" className="text-[#003f88] hover:underline">Terms and Conditions</a>
+                </label>
+              </div>
+
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setRegistrationStep(2)}
+                  className="flex-1 py-2 px-3 sm:px-4 border border-gray-300 rounded-lg text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all duration-300"
+                >
+                  ← Back
+                </button>
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="flex-1 py-2 px-3 sm:px-4 border border-transparent rounded-lg shadow-sm text-xs sm:text-sm font-medium text-white bg-[#003f88] hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? 'Creating Account...' : 'Complete Registration'}
+                </button>
+              </div>
+            </form>
+          )}
+
+          {/* Success Modal */}
+          {showSuccessModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-lg p-4 sm:p-6 lg:p-8 max-w-md w-full mx-4 text-center">
+                <div className="mb-4 sm:mb-6">
+                  <img src="/images/logo.png" alt="Avyakta" className="h-12 sm:h-16 lg:h-20 w-auto mx-auto mb-4" />
+                </div>
+                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#003f88] mb-4">Thank you for joining Avyakta</h2>
+                <p className="text-xs sm:text-sm lg:text-base text-gray-600 mb-6">
+                  You're now a part of a mission to give dignity to the forgotten.
+                  Your action today could bring justice, identity, and peace to someone tomorrow.
+                </p>
+                <p className="text-[#003f88] font-semibold mb-6">— Team Avyakta</p>
+                <button
+                  onClick={handleSuccessModalClose}
+                  className="w-full sm:w-auto rounded-full bg-gold px-4 sm:px-6 lg:px-8 py-2 sm:py-3 text-xs sm:text-sm lg:text-base font-bold text-[#003f88] shadow-lg hover:bg-yellow-400 transition-all duration-300 hover:scale-105"
+                >
+                  Continue to Home
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Back to Home Link */}
+          <div className="text-center mt-3 sm:mt-4">
+            <button
+              onClick={() => navigate('/')}
+              className="text-xs sm:text-sm text-blue-600 hover:text-blue-500 transition-colors duration-200"
+            >
+              Back to Home
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Password Recovery Modal - Moved outside main container */}
+      {showForgot && (
+        <PasswordRecovery onClose={() => setShowForgot(false)} />
+      )}
+    </>
+  );
+};
+
+export default AdminAuth; 
