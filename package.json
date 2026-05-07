@@ -4,7 +4,8 @@
   "description": "A citizen-powered platform for identifying, reporting, and responding to unknown/unclaimed dead bodies across India with real-time police/NGO/hospital coordination.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "vercel-build": "cd frontend && npm install && npm run build && cd .. && rm -rf public && cp -r frontend/build public"
   },
   "keywords": [],
   "author": "",
