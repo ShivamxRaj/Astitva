@@ -1,272 +1,187 @@
 import React, { useState } from 'react';
+import { supabase } from '../lib/supabaseClient';
+import { StarIcon, MapPinIcon, UserIcon, ChatBubbleLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 const RatingForm = ({ onSubmit, onClose, isVisible }) => {
-  const [formData, setFormData] = useState({
-    name: '',
-    rating: 0,
-    comment: '',
-    location: ''
-  });
+  const [formData, setFormData] = useState({ name: '', rating: 0, comment: '', location: '' });
   const [hoveredRating, setHoveredRating] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
   };
 
   const handleRatingClick = (rating) => {
-    setFormData(prev => ({
-      ...prev,
-      rating
-    }));
-    if (errors.rating) {
-      setErrors(prev => ({
-        ...prev,
-        rating: ''
-      }));
-    }
+    setFormData(prev => ({ ...prev, rating }));
+    if (errors.rating) setErrors(prev => ({ ...prev, rating: '' }));
   };
 
-  const validateForm = () => {
-    const newErrors = {};
-    
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
-    } else if (formData.name.trim().length < 2) {
-      newErrors.name = 'Name must be at least 2 characters';
-    }
-    
-    if (formData.rating === 0) {
-      newErrors.rating = 'Please select a rating';
-    }
-    
-    if (formData.comment && formData.comment.length > 500) {
-      newErrors.comment = 'Comment must not exceed 500 characters';
-    }
-    
-    if (formData.location && formData.location.length > 100) {
-      newErrors.location = 'Location must not exceed 100 characters';
-    }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const validate = () => {
+    const errs = {};
+    if (!formData.name.trim() || formData.name.trim().length < 2)
+      errs.name = 'Name must be at least 2 characters';
+    if (formData.rating === 0)
+      errs.rating = 'Please select a rating';
+    if (formData.comment && formData.comment.length > 500)
+      errs.comment = 'Comment must be under 500 characters';
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
-    }
-    
+    if (!validate()) return;
     setIsSubmitting(true);
-    
-    try {
-      const response = await fetch('http://localhost:5001/api/ratings/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      
-      const result = await response.json();
-      
-      if (result.success) {
-        onSubmit(result);
-        setFormData({
-          name: '',
-          rating: 0,
-          comment: '',
-          location: ''
-        });
-        setErrors({});
-      } else {
-        setErrors({ submit: result.message });
-      }
-    } catch (error) {
-      setErrors({ submit: 'Failed to submit rating. Please try again.' });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
-  const renderStars = () => {
-    return [...Array(5)].map((_, index) => {
-      const starValue = index + 1;
-      const isFilled = starValue <= (hoveredRating || formData.rating);
-      
-      return (
-        <button
-          key={index}
-          type="button"
-          className={`text-3xl md:text-4xl transition-all duration-200 transform hover:scale-110 ${
-            isFilled 
-              ? 'text-yellow-400 drop-shadow-[0_0_8px_rgba(255,255,0,0.6)]' 
-              : 'text-gray-400 hover:text-yellow-300'
-          }`}
-          onClick={() => handleRatingClick(starValue)}
-          onMouseEnter={() => setHoveredRating(starValue)}
-          onMouseLeave={() => setHoveredRating(0)}
-          aria-label={`Rate ${starValue} star${starValue > 1 ? 's' : ''}`}
-        >
-          ★
-        </button>
-      );
-    });
+    const { error } = await supabase.from('ratings').insert([{
+      name:      formData.name.trim(),
+      rating:    formData.rating,
+      comment:   formData.comment.trim() || null,
+      location:  formData.location.trim() || null,
+      status:    'pending',
+      created_at: new Date().toISOString(),
+    }]);
+
+    setIsSubmitting(false);
+
+    if (error) {
+      setErrors({ submit: 'Failed to submit. Please try again.' });
+    } else {
+      setFormData({ name: '', rating: 0, comment: '', location: '' });
+      setErrors({});
+      onSubmit({ success: true });
+    }
   };
 
   if (!isVisible) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 border border-white/10 rounded-3xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-8">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
-              Rate Your Experience
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(6px)' }}
+      role="dialog" aria-modal="true" aria-labelledby="rating-form-title">
+      <div className="w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-scale-in"
+        style={{ background: '#fff' }}>
+
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 pt-6 pb-4"
+          style={{ borderBottom: '1px solid #E2E8F0' }}>
+          <div>
+            <h3 id="rating-form-title" className="font-merriweather font-bold text-xl" style={{ color: '#1B3A6B' }}>
+              Share Your Experience
             </h3>
-            <p className="text-gray-300 text-sm">
-              Help us improve by sharing your feedback
-            </p>
+            <p className="text-xs mt-0.5" style={{ color: '#718096' }}>Help us improve our services</p>
+          </div>
+          <button onClick={onClose} aria-label="Close rating form"
+            className="p-2 rounded-full hover:bg-gray-100 transition-colors">
+            <XMarkIcon style={{ width: '1.2rem', height: '1.2rem', color: '#718096' }} aria-hidden="true" />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="px-6 py-5 space-y-5">
+
+          {/* Name */}
+          <div>
+            <label htmlFor="rf-name" className="flex items-center gap-1.5 text-sm font-medium mb-1.5" style={{ color: '#374151' }}>
+              <UserIcon style={{ width: '0.9rem', height: '0.9rem', color: '#2E7D9C' }} aria-hidden="true" />
+              Your Name *
+            </label>
+            <input id="rf-name" name="name" type="text" value={formData.name}
+              onChange={handleInputChange} placeholder="Enter your name"
+              className="w-full px-4 py-2.5 rounded-lg border text-sm focus:outline-none focus:ring-2"
+              style={{ borderColor: errors.name ? '#C0392B' : '#D1D5DB', focusRingColor: '#2E7D9C' }}
+              aria-required="true" aria-invalid={!!errors.name} />
+            {errors.name && <p className="text-xs mt-1" style={{ color: '#C0392B' }}>{errors.name}</p>}
           </div>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Name Input */}
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
-                Your Name *
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                className={`w-full px-4 py-3 bg-white/5 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200 ${
-                  errors.name ? 'border-red-400' : 'border-white/20'
-                }`}
-                placeholder="Enter your name"
-              />
-              {errors.name && (
-                <p className="text-red-400 text-sm mt-1">{errors.name}</p>
-              )}
+          {/* Stars */}
+          <div>
+            <p className="text-sm font-medium mb-2" style={{ color: '#374151' }}>Your Rating *</p>
+            <div className="flex gap-1.5">
+              {[1,2,3,4,5].map(star => (
+                <button key={star} type="button"
+                  onClick={() => handleRatingClick(star)}
+                  onMouseEnter={() => setHoveredRating(star)}
+                  onMouseLeave={() => setHoveredRating(0)}
+                  aria-label={`Rate ${star} star${star > 1 ? 's' : ''}`}
+                  className="transition-transform hover:scale-125 focus:outline-none">
+                  <StarIcon style={{
+                    width: '2rem', height: '2rem',
+                    color: star <= (hoveredRating || formData.rating) ? '#FBBF24' : '#D1D5DB',
+                    fill:  star <= (hoveredRating || formData.rating) ? '#FBBF24' : 'none',
+                    filter: star <= (hoveredRating || formData.rating) ? 'drop-shadow(0 0 4px rgba(251,191,36,0.5))' : 'none',
+                    transition: 'all 0.15s',
+                  }} aria-hidden="true" />
+                </button>
+              ))}
             </div>
-
-            {/* Rating Stars */}
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-3">
-                Your Rating *
-              </label>
-              <div className="flex justify-center gap-2">
-                {renderStars()}
-              </div>
-              {formData.rating > 0 && (
-                <p className="text-center text-sm text-gray-400 mt-2">
-                  You rated us {formData.rating} star{formData.rating > 1 ? 's' : ''}
-                </p>
-              )}
-              {errors.rating && (
-                <p className="text-red-400 text-sm text-center mt-1">{errors.rating}</p>
-              )}
-            </div>
-
-            {/* Comment Input */}
-            <div>
-              <label htmlFor="comment" className="block text-sm font-medium text-gray-300 mb-2">
-                Your Comment (Optional)
-              </label>
-              <textarea
-                id="comment"
-                name="comment"
-                value={formData.comment}
-                onChange={handleInputChange}
-                rows="3"
-                className={`w-full px-4 py-3 bg-white/5 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200 resize-none ${
-                  errors.comment ? 'border-red-400' : 'border-white/20'
-                }`}
-                placeholder="Share your experience with us..."
-              />
-              {errors.comment && (
-                <p className="text-red-400 text-sm mt-1">{errors.comment}</p>
-              )}
-              <p className="text-xs text-gray-500 mt-1">
-                {formData.comment.length}/500 characters
+            {formData.rating > 0 && (
+              <p className="text-xs mt-1" style={{ color: '#6B7280' }}>
+                {['','Poor','Below Average','Average','Good','Excellent'][formData.rating]} — {formData.rating}/5
               </p>
-            </div>
-
-            {/* Location Input */}
-            <div>
-              <label htmlFor="location" className="block text-sm font-medium text-gray-300 mb-2">
-                Location (Optional)
-              </label>
-              <input
-                type="text"
-                id="location"
-                name="location"
-                value={formData.location}
-                onChange={handleInputChange}
-                className={`w-full px-4 py-3 bg-white/5 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200 ${
-                  errors.location ? 'border-red-400' : 'border-white/20'
-                }`}
-                placeholder="City, State"
-              />
-              {errors.location && (
-                <p className="text-red-400 text-sm mt-1">{errors.location}</p>
-              )}
-            </div>
-
-            {/* Submit Error */}
-            {errors.submit && (
-              <div className="bg-red-500/10 border border-red-400/20 rounded-xl p-3">
-                <p className="text-red-400 text-sm">{errors.submit}</p>
-              </div>
             )}
+            {errors.rating && <p className="text-xs mt-1" style={{ color: '#C0392B' }}>{errors.rating}</p>}
+          </div>
 
-            {/* Action Buttons */}
-            <div className="flex gap-3 pt-4">
-              <button
-                type="button"
-                onClick={onClose}
-                className="flex-1 px-6 py-3 bg-white/10 border border-white/20 text-white rounded-xl hover:bg-white/20 transition-all duration-200 font-medium"
-                disabled={isSubmitting}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl hover:from-purple-700 hover:to-blue-700 transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isSubmitting ? (
-                  <span className="flex items-center justify-center">
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
+          {/* Comment */}
+          <div>
+            <label htmlFor="rf-comment" className="flex items-center gap-1.5 text-sm font-medium mb-1.5" style={{ color: '#374151' }}>
+              <ChatBubbleLeftIcon style={{ width: '0.9rem', height: '0.9rem', color: '#2E7D9C' }} aria-hidden="true" />
+              Comment <span style={{ color: '#9CA3AF', fontWeight: 400 }}>(optional)</span>
+            </label>
+            <textarea id="rf-comment" name="comment" value={formData.comment}
+              onChange={handleInputChange} rows={3} placeholder="Share your experience..."
+              className="w-full px-4 py-2.5 rounded-lg border text-sm focus:outline-none focus:ring-2 resize-none"
+              style={{ borderColor: errors.comment ? '#C0392B' : '#D1D5DB' }} />
+            <p className="text-xs mt-0.5 text-right" style={{ color: formData.comment.length > 480 ? '#C0392B' : '#9CA3AF' }}>
+              {formData.comment.length}/500
+            </p>
+            {errors.comment && <p className="text-xs" style={{ color: '#C0392B' }}>{errors.comment}</p>}
+          </div>
+
+          {/* Location */}
+          <div>
+            <label htmlFor="rf-location" className="flex items-center gap-1.5 text-sm font-medium mb-1.5" style={{ color: '#374151' }}>
+              <MapPinIcon style={{ width: '0.9rem', height: '0.9rem', color: '#2E7D9C' }} aria-hidden="true" />
+              Location <span style={{ color: '#9CA3AF', fontWeight: 400 }}>(optional)</span>
+            </label>
+            <input id="rf-location" name="location" type="text" value={formData.location}
+              onChange={handleInputChange} placeholder="City, State"
+              className="w-full px-4 py-2.5 rounded-lg border text-sm focus:outline-none focus:ring-2"
+              style={{ borderColor: '#D1D5DB' }} />
+          </div>
+
+          {/* Submit error */}
+          {errors.submit && (
+            <p className="text-sm text-center px-3 py-2 rounded-lg" style={{ background: '#FEE2E2', color: '#991B1B' }}>
+              {errors.submit}
+            </p>
+          )}
+
+          {/* Buttons */}
+          <div className="flex gap-3 pt-1">
+            <button type="button" onClick={onClose} disabled={isSubmitting}
+              className="flex-1 py-2.5 rounded-lg text-sm font-semibold border transition-all hover:bg-gray-50"
+              style={{ borderColor: '#D1D5DB', color: '#374151' }}>
+              Cancel
+            </button>
+            <button type="submit" disabled={isSubmitting}
+              className="flex-1 py-2.5 rounded-lg text-sm font-bold text-white transition-all disabled:opacity-60"
+              style={{ background: 'linear-gradient(135deg, #1B3A6B, #2E7D9C)' }}>
+              {isSubmitting
+                ? <span className="flex items-center justify-center gap-2">
+                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     Submitting...
                   </span>
-                ) : (
-                  'Submit Rating'
-                )}
-              </button>
-            </div>
-          </form>
-        </div>
+                : 'Submit Rating'}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
 };
 
-export default RatingForm; 
+export default RatingForm;
