@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Disclosure } from '@headlessui/react';
@@ -15,35 +15,22 @@ const LANG_OPTIONS = [
 ];
 
 const Navbar = () => {
-  const { i18n } = useTranslation();
-  const [showLanguageModal, setShowLanguageModal] = useState(false);
-  const [newLanguage, setNewLanguage] = useState('');
+  const { i18n, t } = useTranslation();
 
-  const handleLanguageSelect = (code) => {
-    if (code !== i18n.language) {
-      setNewLanguage(code);
-      setShowLanguageModal(true);
-    }
-  };
-
-  const confirmLanguageChange = () => {
-    i18n.changeLanguage(newLanguage);
-    setShowLanguageModal(false);
-  };
-
-  const cancelLanguageChange = () => {
-    setShowLanguageModal(false);
+  const switchLang = (code) => {
+    if (code !== i18n.language) i18n.changeLanguage(code);
   };
 
   const navItems = [
-    { key: 'home',    label: 'Home',       path: '/' },
-    { key: 'about',   label: 'About',      path: '/about' },
-    { key: 'faq',     label: 'FAQ',        path: '/faq' },
-    { key: 'contact', label: 'Contact',    path: '/contact' },
+    { key: 'home',    label: t('nav.home'),    path: '/' },
+    { key: 'about',   label: t('nav.about'),   path: '/about' },
+    { key: 'faq',     label: 'FAQ',            path: '/faq' },
+    { key: 'contact', label: t('nav.contact'), path: '/contact' },
   ];
 
-  const currentLangLabel = LANG_OPTIONS.find(l => l.code === i18n.language)?.full || 'English';
-  const newLangLabel = LANG_OPTIONS.find(l => l.code === newLanguage)?.full || '';
+  const searchLabel  = t('nav.search');
+  const reportLabel  = t('nav.report');
+  const adminLabel   = t('nav.admin');
 
   return (
     <>
@@ -123,7 +110,7 @@ const Navbar = () => {
                     {LANG_OPTIONS.map((lang) => (
                       <button
                         key={lang.code}
-                        onClick={() => handleLanguageSelect(lang.code)}
+                        onClick={() => switchLang(lang.code)}
                         className={`px-2 py-1 text-xs font-semibold transition-all duration-200 ${
                           i18n.language === lang.code
                             ? 'bg-white text-blue-900'
@@ -144,7 +131,7 @@ const Navbar = () => {
                     style={{ background: 'linear-gradient(135deg, #2E7D9C, #1B5E7A)' }}
                     aria-label="Search for missing person"
                   >
-                    🔍 Search
+                    🔍 {searchLabel}
                   </Link>
 
                   {/* Report Case — urgent red */}
@@ -154,7 +141,17 @@ const Navbar = () => {
                     style={{ background: 'linear-gradient(135deg, #C0392B, #962D22)' }}
                     aria-label="Report an unclaimed body"
                   >
-                    🚨 Report Case
+                    🚨 {reportLabel}
+                  </Link>
+
+                  {/* Admin Login — discrete */}
+                  <Link
+                    to="/admin/login"
+                    className="px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200"
+                    style={{ color: '#93C5FD', border: '1px solid rgba(147,197,253,0.3)' }}
+                    aria-label="Admin Login"
+                  >
+                    🔐 {adminLabel}
                   </Link>
                 </div>
 
@@ -212,7 +209,7 @@ const Navbar = () => {
                     {LANG_OPTIONS.map((lang) => (
                       <button
                         key={lang.code}
-                        onClick={() => handleLanguageSelect(lang.code)}
+                        onClick={() => switchLang(lang.code)}
                         className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${
                           i18n.language === lang.code
                             ? 'bg-white text-blue-900'
@@ -241,32 +238,7 @@ const Navbar = () => {
         )}
       </Disclosure>
 
-      {/* Language Confirmation Modal */}
-      {showLanguageModal && (
-        <div className="modal-responsive" style={{ backgroundColor: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(4px)' }} role="dialog" aria-modal="true" aria-labelledby="lang-modal-title">
-          <div className="modal-content-responsive" style={{ background: '#fff', borderRadius: '1rem', boxShadow: '0 20px 60px rgba(0,0,0,0.3)' }}>
-            <h3 id="lang-modal-title" className="text-lg font-bold mb-2" style={{ color: '#1B3A6B' }}>Change Language</h3>
-            <p className="text-sm text-gray-600 mb-5">
-              Switch to <strong>{newLangLabel}</strong> from <strong>{currentLangLabel}</strong>?
-            </p>
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={cancelLanguageChange}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={confirmLanguageChange}
-                className="px-4 py-2 text-sm font-bold text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                style={{ background: '#1B3A6B' }}
-              >
-                Confirm
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+
     </>
   );
 };
