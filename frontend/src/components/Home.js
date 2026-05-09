@@ -157,23 +157,7 @@ const Home = () => {
             </Link>
           </div>
 
-          {/* ── Quick Search Bar ── */}
-          <div className={`flex justify-center mb-10 transition-all duration-1000 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <form onSubmit={handleSearch} className="quick-search-bar" role="search" aria-label="Quick person search">
-              <MagnifyingGlassIcon style={{ width:'1.2rem', height:'1.2rem', color:'#94A3B8', flexShrink:0 }} aria-hidden="true" />
-              <input
-                type="search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search by name, location, date, or case ID..."
-                aria-label="Search query"
-                id="hero-search-input"
-              />
-              <button type="submit" className="quick-search-btn" aria-label="Submit search">
-                Search Records
-              </button>
-            </form>
-          </div>
+          {/* Removed Quick Search Bar as requested */}
 
           {/* ── Case Status Tracker Preview ── */}
           <div className={`flex justify-center transition-all duration-1000 delay-600 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
