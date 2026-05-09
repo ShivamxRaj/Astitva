@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 import { supabase as sb } from '../lib/supabaseClient';
 import {
@@ -36,6 +37,7 @@ const AdminRatings = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [toast, setToast] = useState('');
+  const navigate = useNavigate();
 
   const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 3000); };
 
@@ -80,6 +82,24 @@ const AdminRatings = () => {
   return (
     <div className="min-h-screen py-8" style={{ background: 'linear-gradient(135deg, #1B3A6B 0%, #0F2440 100%)' }}>
       <div className="max-w-6xl mx-auto px-4">
+
+        {/* Navigation between Admin Pages */}
+        <div className="flex justify-center mb-6">
+          <div className="bg-white/10 p-1 rounded-xl flex gap-1 border border-white/20">
+            <button 
+              onClick={() => navigate('/admin/cases')}
+              className="px-6 py-2 rounded-lg font-bold text-sm text-blue-200 hover:bg-white/10 transition-all"
+            >
+              Cases / Reports
+            </button>
+            <button 
+              onClick={() => navigate('/admin/ratings')}
+              className="px-6 py-2 rounded-lg font-bold text-sm bg-white text-blue-900 shadow"
+            >
+              Feedback / Ratings
+            </button>
+          </div>
+        </div>
 
         {/* Header */}
         <div className="text-center mb-8">

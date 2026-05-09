@@ -85,7 +85,7 @@ const AdminAuth = () => {
       }
     } else {
       setSuccess('Login successful! Redirecting...');
-      setTimeout(() => navigate('/admin/ratings', { replace: true }), 800);
+      setTimeout(() => navigate('/admin/cases', { replace: true }), 800);
     }
   };
 

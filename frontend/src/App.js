@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import Home from './components/Home';
 import AdminAuth from './components/AdminAuth';
 import AdminRatings from './components/AdminRatings';
+import AdminCases from './components/AdminCases';
 import About from './pages/About';
 import TestPage from './pages/TestPage';
 import EmergencyHelp from './components/EmergencyHelp';
@@ -169,6 +170,7 @@ function App() {
             <Route exact path="/test" element={<TestPage />} />
             <Route exact path="/admin/login" element={<AdminAuth />} />
             <Route exact path="/admin/ratings" element={<ProtectedRoute><AdminRatings /></ProtectedRoute>} />
+            <Route exact path="/admin/cases" element={<ProtectedRoute><AdminCases /></ProtectedRoute>} />
             <Route exact path="/contact" element={<Contact />} />
             <Route exact path="/faq" element={<FAQPage />} />
             <Route exact path="/testimonials" element={<Testimonials />} />
