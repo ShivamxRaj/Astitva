@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '../lib/supabaseClient';
 
 function getRandomUsername() {
   const animals = ['Lion', 'Tiger', 'Eagle', 'Wolf', 'Falcon', 'Panther', 'Dove', 'Fox', 'Bear', 'Hawk'];
@@ -126,20 +127,41 @@ const ReportUnclaimedBody = () => {
   const handleVerifyOtp = () => {
     setPublicForm((f) => ({ ...f, otpVerified: true }));
   };
-  const handlePublicSubmit = (e) => {
+  const handlePublicSubmit = async (e) => {
     e.preventDefault();
     const eObj = validatePublic();
     setPublicErrors(eObj);
     if (Object.keys(eObj).length > 0) return;
     setSubmitting(true);
-    setTimeout(() => {
-      setSubmitting(false);
+    
+    const newReportId = generateReportId();
+    
+    try {
+      const { error } = await supabase
+        .from('cases')
+        .insert([{
+          report_id: newReportId,
+          report_type: 'public',
+          location: publicForm.location,
+          date_time: new Date(publicForm.dateTime).toISOString(),
+          description: publicForm.description + (publicForm.message ? `\n\nNotes: ${publicForm.message}` : ''),
+          contact: publicForm.contact,
+          status: 'pending'
+        }]);
+
+      if (error) throw error;
+
       setSubmitted(true);
-      setReportId(generateReportId());
+      setReportId(newReportId);
       setPublicForm(initialPublic);
       setImagePreview(null);
       setStep(1);
-    }, 2000);
+    } catch (err) {
+      console.error('Failed to submit public report:', err);
+      alert('Failed to submit report. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   // --- Anonymous Form Logic ---
@@ -157,17 +179,38 @@ const ReportUnclaimedBody = () => {
       setAnonForm((f) => ({ ...f, [name]: value }));
     }
   };
-  const handleAnonSubmit = (e) => {
+  const handleAnonSubmit = async (e) => {
     e.preventDefault();
     const eObj = validateAnon();
     setAnonErrors(eObj);
     if (Object.keys(eObj).length > 0) return;
     setSubmitting(true);
-    setTimeout(() => {
-      setSubmitting(false);
+
+    const newReportId = generateReportId();
+
+    try {
+      const { error } = await supabase
+        .from('cases')
+        .insert([{
+          report_id: newReportId,
+          report_type: 'anonymous',
+          location: anonForm.location,
+          date_time: new Date(anonForm.dateTime).toISOString(),
+          description: `Anonymous Report by ${anonForm.username}`,
+          status: 'pending'
+        }]);
+
+      if (error) throw error;
+
       setSubmittedAnon(true);
+      setReportId(newReportId);
       setAnonForm({ ...initialAnon, username: getRandomUsername() });
-    }, 2000);
+    } catch (err) {
+      console.error('Failed to submit anonymous report:', err);
+      alert('Failed to submit report. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleCopyReportId = () => {
@@ -242,8 +285,19 @@ const ReportUnclaimedBody = () => {
             <p className="text-lg text-gray-700 mb-2">Your anonymous report has been securely submitted and will be reviewed. You've helped bring dignity and closure.</p>
             <div className="italic text-gray-400 text-sm mb-2">“Every voice matters, even in silence.”</div>
             <div className="mt-4 text-green-700 text-base font-medium">💚 Thank you for your silent act of humanity. Your report is now part of a greater mission to bring truth, peace, and identity to those who can't speak for themselves.</div>
+            {reportId && (
+              <div className="flex flex-col items-center gap-2 mt-4">
+                <div className="flex items-center gap-2 text-purple-800 font-mono text-sm bg-purple-100 px-4 py-2 rounded-lg">
+                  Report ID: <span className="font-bold">{reportId}</span>
+                  <button onClick={handleCopyReportId} title="Copy Report ID" className="ml-1 p-1 rounded hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" fill="#7e22ce" opacity="0.15"/><rect x="3" y="3" width="13" height="13" rx="2" stroke="#7e22ce" strokeWidth="2" fill="none"/></svg>
+                  </button>
+                </div>
+                <span className="text-xs text-gray-500">Tap to copy. You can use this ID to track the case anonymously.</span>
+              </div>
+            )}
           </div>
-          <button className="mt-6 px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-500 text-white rounded-lg font-semibold shadow hover:from-purple-700 hover:to-pink-600" onClick={() => setSubmittedAnon(false)}>Submit Another Anonymous Report</button>
+          <button className="mt-6 px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-500 text-white rounded-lg font-semibold shadow hover:from-purple-700 hover:to-pink-600" onClick={() => { setSubmittedAnon(false); setReportId(null); }}>Submit Another Anonymous Report</button>
         </div>
         <style>{`
           @keyframes flicker { 0%{opacity:1;} 50%{opacity:0.7;} 100%{opacity:1;} }
