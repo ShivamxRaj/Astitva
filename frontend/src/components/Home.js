@@ -142,22 +142,21 @@ const Home = () => {
           </p>
 
           {/* ── Two Primary CTA Paths ── */}
-          <div className={`flex flex-col sm:flex-row gap-4 justify-center mb-10 transition-all duration-1000 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <div className={`flex flex-col sm:flex-row justify-center items-center gap-4 mb-12 transition-all duration-1000 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <Link to="/search" aria-label="Search for a missing person"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-white text-base sm:text-lg shadow-2xl hover:scale-105 transition-all duration-300"
-              style={{ background:'linear-gradient(135deg, #2E7D9C, #1B5E7A)', boxShadow:'0 8px 32px rgba(46,125,156,0.45)', minHeight:'56px' }}>
-              <MagnifyingGlassIcon style={{ width:'1.3rem', height:'1.3rem' }} aria-hidden="true" />
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-white text-base sm:text-lg transition-all duration-300 hover:scale-105"
+              style={{ background:'linear-gradient(135deg, #2E7D9C, #1B5E7A)', boxShadow:'0 8px 32px rgba(46,125,156,0.45)', minHeight:'56px', maxWidth:'320px' }}>
+              <MagnifyingGlassIcon style={{ width:'1.3rem', height:'1.3rem', flexShrink:0 }} aria-hidden="true" />
               {t('home.hero.search')}
             </Link>
             <Link to="/report" aria-label="Report an unclaimed body"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-white text-base sm:text-lg shadow-2xl hover:scale-105 transition-all duration-300"
-              style={{ background:'linear-gradient(135deg, #C0392B, #962D22)', boxShadow:'0 8px 32px rgba(192,57,43,0.45)', minHeight:'56px' }}>
-              <ExclamationTriangleIcon style={{ width:'1.3rem', height:'1.3rem' }} aria-hidden="true" />
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-white text-base sm:text-lg shadow-2xl hover:scale-105 transition-all duration-300"
+              style={{ background:'linear-gradient(135deg, #C0392B, #962D22)', boxShadow:'0 8px 32px rgba(192,57,43,0.45)', minHeight:'56px', maxWidth:'320px' }}>
+              <ExclamationTriangleIcon style={{ width:'1.3rem', height:'1.3rem', flexShrink:0 }} aria-hidden="true" />
               {t('home.hero.cta')}
             </Link>
           </div>
 
-          {/* Removed Quick Search Bar as requested */}
 
           {/* ── Case Status Tracker Preview ── */}
           <div className={`flex justify-center transition-all duration-1000 delay-600 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>

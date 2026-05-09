@@ -36,11 +36,11 @@ const Navbar = () => {
     <>
       {/* ── Utility Bar ── */}
       <div className="utility-bar" role="banner">
-        <div className="flex items-center gap-3">
+        <div className="hidden sm:flex items-center gap-3 text-xs md:text-sm">
           <ShieldCheckIcon style={{ width: '0.9rem', height: '0.9rem', color: '#90CDF4', flexShrink: 0 }} aria-hidden="true" />
-          <span>🏛️ Official Humanitarian Portal &nbsp;|&nbsp; Punjab, India &nbsp;|&nbsp; Est. 2020</span>
+          <span className="whitespace-nowrap">🏛️ Official Humanitarian Portal &nbsp;|&nbsp; Punjab, India &nbsp;|&nbsp; Est. 2020</span>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center justify-center sm:justify-end gap-3 w-full sm:w-auto">
           <a
             href={`tel:${HELPLINE}`}
             className="helpline-badge"
@@ -159,7 +159,7 @@ const Navbar = () => {
                 <div className="flex items-center gap-2 md:hidden">
                   <Link
                     to="/report"
-                    className="px-3 py-1.5 rounded-lg text-xs font-bold text-white"
+                    className="px-3 py-1.5 rounded-lg text-xs font-bold text-white whitespace-nowrap"
                     style={{ background: '#C0392B' }}
                     aria-label="Report a case"
                   >
