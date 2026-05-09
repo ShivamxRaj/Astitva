@@ -107,7 +107,7 @@ const Home = () => {
   ];
 
   return (
-    <div className="min-h-screen" style={{ paddingTop: '64px' }}>
+    <div className="min-h-screen">
 
       {/* ══════════════════════════════════════════════════
           HERO — Cosmic dark (preserved), improved CTAs
