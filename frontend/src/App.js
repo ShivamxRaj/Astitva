@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './components/Home';
@@ -20,35 +19,11 @@ import CookiePolicy from './pages/CookiePolicy';
 import SplashLoader from './components/SplashLoader';
 import ReportUnclaimedBody from './components/ReportUnclaimedBody';
 import SearchMissingPerson from './pages/SearchMissingPerson';
+import ProtectedRoute from './components/ProtectedRoute';
 import './i18n';
 
-// API base URL
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-
-// Function to register a new user
-const registerUser = async (userData) => {
-  try {
-    const response = await axios.post(`${API_BASE_URL}/auth/register`, userData);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-// Function to fetch user profile
-const fetchUserProfile = async () => {
-  try {
-    const token = localStorage.getItem('token');
-    const response = await axios.get(`${API_BASE_URL}/users/profile`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
+// API base URL (kept for future backend calls)
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api'; // eslint-disable-line no-unused-vars
 
 function App() {
   const { i18n } = useTranslation();
@@ -193,7 +168,7 @@ function App() {
             <Route exact path="/about" element={<About />} />
             <Route exact path="/test" element={<TestPage />} />
             <Route exact path="/admin/login" element={<AdminAuth />} />
-            <Route exact path="/admin/ratings" element={<AdminRatings />} />
+            <Route exact path="/admin/ratings" element={<ProtectedRoute><AdminRatings /></ProtectedRoute>} />
             <Route exact path="/contact" element={<Contact />} />
             <Route exact path="/faq" element={<FAQPage />} />
             <Route exact path="/testimonials" element={<Testimonials />} />
