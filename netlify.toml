@@ -2,6 +2,9 @@
   command = "cd frontend && npm install && node node_modules/react-scripts/bin/react-scripts.js build"
   publish = "frontend/build"
 
+[build.environment]
+  CI = "false"
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
