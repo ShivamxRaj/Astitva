@@ -53,7 +53,6 @@ const fetchUserProfile = async () => {
 function App() {
   const { i18n } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
-  const [loadingType, setLoadingType] = useState('default');
   const [isServerDown, setIsServerDown] = useState(false);
 
   useEffect(() => {
@@ -78,12 +77,12 @@ function App() {
       document.head.appendChild(viewport);
     }
 
-    // Add theme color for mobile browsers
+    // Add theme color for mobile browsers — institutional navy
     const themeColor = document.querySelector('meta[name="theme-color"]');
     if (!themeColor) {
       const theme = document.createElement('meta');
       theme.name = 'theme-color';
-      theme.content = '#0F0A2D';
+      theme.content = '#1B3A6B';
       document.head.appendChild(theme);
     }
 
@@ -182,40 +181,6 @@ function App() {
 
     checkServerStatus();
   }, []);
-
-  // Example function to handle registration
-  const handleRegistration = async (userData) => {
-    setIsLoading(true);
-    setLoadingType('registration');
-    try {
-      // Your registration logic here
-      await registerUser(userData);
-    } catch (error) {
-      if (error.response?.status === 503) {
-        setIsServerDown(true);
-        setLoadingType('server');
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Example function to handle profile loading
-  const loadUserProfile = async () => {
-    setIsLoading(true);
-    setLoadingType('profile');
-    try {
-      // Your profile loading logic here
-      await fetchUserProfile();
-    } catch (error) {
-      if (error.response?.status === 503) {
-        setIsServerDown(true);
-        setLoadingType('server');
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <Router>
