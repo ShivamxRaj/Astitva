@@ -10,9 +10,12 @@
   "home": {
     "hero": {
       "title": "Avyakta",
+      "description": "Bringing dignity to the unclaimed, one soul at a time",
       "subtitle": "Giving dignity to the forgotten. A compassionate platform for identifying and responding to unclaimed bodies.",
       "emergencyHelp": "Emergency Help",
-      "reportCase": "Report a Case"
+      "reportCase": "Report a Case",
+      "cta": "Report an Unclaimed Body",
+      "search": "Search for a Missing Person"
     },
     "stats": {
       "casesReported": "Cases Reported",

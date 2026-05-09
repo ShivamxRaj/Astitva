@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   HeartIcon,
   UserGroupIcon,
@@ -78,6 +79,7 @@ const recentCases = [
 ];
 
 const Home = () => {
+  const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -127,12 +129,12 @@ const Home = () => {
           {/* Main Heading */}
           <h1 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-merriweather font-bold mb-4 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
             style={{ backgroundImage:'linear-gradient(91deg, #fff, #7e55ff)', backgroundClip:'text', WebkitBackgroundClip:'text', color:'transparent' }}>
-            Avyakta
+            {t('home.hero.title')}
           </h1>
 
           <p className={`text-lg sm:text-xl lg:text-2xl max-w-3xl mx-auto mb-3 transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
             style={{ color:'#E2E8F0' }}>
-            Bringing dignity to the unclaimed, one soul at a time
+            {t('home.hero.description')}
           </p>
           <p className={`text-sm sm:text-base max-w-2xl mx-auto mb-10 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
             style={{ color:'#A0AEC0' }}>
@@ -145,13 +147,13 @@ const Home = () => {
               className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-white text-base sm:text-lg shadow-2xl hover:scale-105 transition-all duration-300"
               style={{ background:'linear-gradient(135deg, #2E7D9C, #1B5E7A)', boxShadow:'0 8px 32px rgba(46,125,156,0.45)', minHeight:'56px' }}>
               <MagnifyingGlassIcon style={{ width:'1.3rem', height:'1.3rem' }} aria-hidden="true" />
-              Search for a Missing Person
+              {t('home.hero.search')}
             </Link>
             <Link to="/report" aria-label="Report an unclaimed body"
               className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-white text-base sm:text-lg shadow-2xl hover:scale-105 transition-all duration-300"
               style={{ background:'linear-gradient(135deg, #C0392B, #962D22)', boxShadow:'0 8px 32px rgba(192,57,43,0.45)', minHeight:'56px' }}>
               <ExclamationTriangleIcon style={{ width:'1.3rem', height:'1.3rem' }} aria-hidden="true" />
-              Report an Unclaimed Body
+              {t('home.hero.cta')}
             </Link>
           </div>
 
