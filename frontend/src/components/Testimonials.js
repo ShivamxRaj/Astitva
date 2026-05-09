@@ -94,11 +94,10 @@ const Testimonials = () => {
     setTimeout(() => setIsAutoPlaying(true), 5000);
   };
 
-  const handleRatingSubmit = (result) => {
-    setSubmissionSuccess(result.message);
+  const handleRatingSubmit = () => {
+    setSubmissionSuccess('✅ Thank you! Your feedback has been submitted for review.');
     setShowRatingForm(false);
-    // Show success message for 3 seconds
-    setTimeout(() => setSubmissionSuccess(null), 3000);
+    setTimeout(() => setSubmissionSuccess(null), 4000);
   };
 
   return (
