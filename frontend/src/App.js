@@ -21,6 +21,7 @@ import SplashLoader from './components/SplashLoader';
 import ReportUnclaimedBody from './components/ReportUnclaimedBody';
 import SearchMissingPerson from './pages/SearchMissingPerson';
 import ProtectedRoute from './components/ProtectedRoute';
+import ResetPassword from './components/ResetPassword';
 import './i18n';
 
 // API base URL (kept for future backend calls)
@@ -169,6 +170,7 @@ function App() {
             <Route exact path="/about" element={<About />} />
             <Route exact path="/test" element={<TestPage />} />
             <Route exact path="/admin/login" element={<AdminAuth />} />
+            <Route exact path="/reset-password" element={<ResetPassword />} />
             <Route exact path="/admin/ratings" element={<ProtectedRoute><AdminRatings /></ProtectedRoute>} />
             <Route exact path="/admin/cases" element={<ProtectedRoute><AdminCases /></ProtectedRoute>} />
             <Route exact path="/contact" element={<Contact />} />

@@ -46,8 +46,17 @@ const AdminAuth = () => {
 
   const [formData, setFormData] = useState({ email: '', password: '' });
 
-  // Redirect if already logged in
+  // Redirect if already logged in (but NOT if arriving via a password-recovery link)
   useEffect(() => {
+    // Check URL hash for recovery token — if present, don't auto-redirect
+    const hash = window.location.hash;
+    const isRecovery = hash.includes('type=recovery');
+    if (isRecovery) {
+      // Redirect to the dedicated reset-password page with the hash intact
+      navigate('/reset-password' + hash, { replace: true });
+      return;
+    }
+
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) navigate('/admin/ratings', { replace: true });
     });
@@ -98,7 +107,7 @@ const AdminAuth = () => {
 
     const { error: resetError } = await supabase.auth.resetPasswordForEmail(
       forgotEmail.trim(),
-      { redirectTo: `${window.location.origin}/admin/login` }
+      { redirectTo: `${window.location.origin}/reset-password` }
     );
 
     setIsLoading(false);
