@@ -10,6 +10,7 @@ import {
   MapPinIcon,
   CalendarIcon,
   ClockIcon,
+  ArrowRightOnRectangleIcon,
 } from '@heroicons/react/24/outline';
 
 const renderStars = (rating) =>
@@ -38,6 +39,11 @@ const AdminRatings = () => {
   const [error, setError] = useState('');
   const [toast, setToast] = useState('');
   const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/admin/login', { replace: true });
+  };
 
   const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 3000); };
 
@@ -84,7 +90,7 @@ const AdminRatings = () => {
       <div className="max-w-6xl mx-auto px-4">
 
         {/* Navigation between Admin Pages */}
-        <div className="flex justify-center mb-6">
+        <div className="flex items-center justify-center mb-6 gap-3 flex-wrap">
           <div className="bg-white/10 p-1 rounded-xl flex gap-1 border border-white/20">
             <button 
               onClick={() => navigate('/admin/cases')}
@@ -99,6 +105,15 @@ const AdminRatings = () => {
               Feedback / Ratings
             </button>
           </div>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition-all hover:bg-red-500/20"
+            style={{ background: 'rgba(239,68,68,0.15)', color: '#FCA5A5', border: '1px solid rgba(239,68,68,0.3)' }}
+            aria-label="Logout"
+          >
+            <ArrowRightOnRectangleIcon style={{ width: '1rem', height: '1rem' }} aria-hidden="true" />
+            Logout
+          </button>
         </div>
 
         {/* Header */}
