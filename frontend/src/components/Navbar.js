@@ -389,3 +389,7 @@ const Navbar = () => {
         }
       `}</style>
     </>
+  );
+};
+
+export default Navbar;
