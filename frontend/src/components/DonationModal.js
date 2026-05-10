@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import {
   XMarkIcon,
-  QrCodeIcon,
-  CreditCardIcon,
-  DocumentDuplicateIcon
+  CreditCardIcon
 } from '@heroicons/react/24/outline';
 import { CheckCircleIcon as CheckCircleIconSolid } from '@heroicons/react/24/solid';
 
 const DonationModal = ({ isOpen, onClose }) => {
   const [step, setStep] = useState(1);
   const [amount, setAmount] = useState('');
-  const [copied, setCopied] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
   // Reset state when modal opens/closes
@@ -18,7 +15,6 @@ const DonationModal = ({ isOpen, onClose }) => {
     if (isOpen) {
       setStep(1);
       setAmount('');
-      setCopied(false);
       setIsProcessing(false);
     }
   }, [isOpen]);
@@ -34,11 +30,7 @@ const DonationModal = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  const handleCopyUPI = () => {
-    navigator.clipboard.writeText('shivamxraj@sbi');
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+
 
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
@@ -436,108 +428,7 @@ const DonationModal = ({ isOpen, onClose }) => {
                   </div>
                 </div>
 
-                {/* Card 1: UPI */}
-                <div
-                  className="mb-4"
-                  style={{
-                    border: '1.5px solid #E0D5C5',
-                    borderRadius: '10px',
-                    padding: '20px',
-                    background: 'white',
-                  }}
-                >
-                  <div className="flex justify-between items-center mb-4">
-                    <div
-                      className="flex items-center gap-2"
-                      style={{ fontWeight: 600, color: '#1B3A6B' }}
-                    >
-                      <QrCodeIcon className="w-5 h-5 text-green-600" />
-                      Pay via UPI / QR Code
-                    </div>
-                    <div style={{ fontSize: '0.7rem', color: '#5A7184' }}>
-                      GPay · PhonePe · Paytm
-                    </div>
-                  </div>
-
-                  <div
-                    style={{
-                      width: '160px',
-                      height: '160px',
-                      margin: '12px auto',
-                      border: '1px solid #E0D5C5',
-                      borderRadius: '8px',
-                      padding: '8px',
-                      background: 'white',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    {/* Placeholder image tag - replace src when deploying */}
-                    <img
-                      src="/images/donation-qr.png" // User must place the QR code image here
-                      alt="UPI QR Code"
-                      style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                      onError={(e) => { e.target.style.display = 'none'; }}
-                    />
-                    <div className="absolute text-center text-xs text-gray-400">QR Code</div>
-                  </div>
-
-                  <div className="flex justify-center mt-4">
-                    <div
-                      className="flex items-center gap-2"
-                      style={{
-                        background: '#F5F0E8',
-                        border: '1px solid #E0D5C5',
-                        borderRadius: '6px',
-                        padding: '8px 14px',
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontFamily: 'monospace',
-                          fontSize: '0.9rem',
-                          color: '#1B3A6B',
-                          fontWeight: 600,
-                        }}
-                      >
-                        shivamxraj@sbi
-                      </span>
-                      <button
-                        onClick={handleCopyUPI}
-                        className="p-1 hover:bg-gray-200 rounded transition"
-                        style={{ color: '#2E7D9C' }}
-                        title="Copy UPI ID"
-                      >
-                        {copied ? (
-                          <span className="text-xs font-bold whitespace-nowrap">Copied! ✓</span>
-                        ) : (
-                          <DocumentDuplicateIcon className="w-4 h-4" />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => setStep(3)}
-                    className="w-full mt-4 transition-colors"
-                    style={{
-                      background: 'transparent',
-                      border: '1.5px solid #2E7D9C',
-                      color: '#2E7D9C',
-                      borderRadius: '8px',
-                      padding: '10px',
-                      fontSize: '0.85rem',
-                      fontWeight: 600,
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = '#E0F2F8')}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
-                  >
-                    I have completed UPI payment
-                  </button>
-                </div>
-
-                {/* Card 2: Razorpay */}
+                {/* Main Razorpay Option */}
                 <div
                   style={{
                     border: '1.5px solid #E0D5C5',
