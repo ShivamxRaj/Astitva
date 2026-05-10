@@ -11,6 +11,7 @@ const DonationModal = ({ isOpen, onClose }) => {
   const [step, setStep] = useState(1);
   const [amount, setAmount] = useState('');
   const [copied, setCopied] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // Reset state when modal opens/closes
   useEffect(() => {
@@ -18,6 +19,7 @@ const DonationModal = ({ isOpen, onClose }) => {
       setStep(1);
       setAmount('');
       setCopied(false);
+      setIsProcessing(false);
     }
   }, [isOpen]);
 
@@ -38,10 +40,100 @@ const DonationModal = ({ isOpen, onClose }) => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleRazorpay = () => {
-    // In a real app, you would initialize Razorpay here.
-    // For now, we simulate success and move to step 3.
-    setStep(3);
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  const handleRazorpay = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    
+    const res = await loadRazorpayScript();
+    if (!res) {
+      alert('Razorpay SDK failed to load. Are you online?');
+      setIsProcessing(false);
+      return;
+    }
+
+    try {
+      // 1. Create order on the backend
+      const result = await fetch((process.env.REACT_APP_API_URL || 'http://localhost:5001') + '/api/payment/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount })
+      });
+
+      const data = await result.json();
+
+      if (!data.success) {
+        alert('Server error. Failed to create payment order.');
+        setIsProcessing(false);
+        return;
+      }
+
+      // 2. Initialize Razorpay Checkout
+      const options = {
+        key: process.env.REACT_APP_RAZORPAY_KEY_ID || 'rzp_test_SnnIfRUhlH1kHJ',
+        amount: data.order.amount,
+        currency: data.order.currency,
+        name: 'Avyakta',
+        description: 'Donation for bringing dignity to unclaimed souls',
+        order_id: data.order.id,
+        handler: async function (response) {
+          try {
+            // 3. Verify Payment
+            const verifyUrl = (process.env.REACT_APP_API_URL || 'http://localhost:5001') + '/api/payment/verify';
+            const verifyData = {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature
+            };
+
+            const verifyResult = await fetch(verifyUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(verifyData)
+            });
+            
+            const verifyResponse = await verifyResult.json();
+            if (verifyResponse.success) {
+              setStep(3); // Go to thank you page
+            } else {
+              alert('Payment verification failed!');
+            }
+          } catch (err) {
+            alert('Error verifying payment.');
+          }
+        },
+        prefill: {
+          name: '',
+          email: '',
+          contact: ''
+        },
+        theme: {
+          color: '#2E7D9C'
+        }
+      };
+
+      const paymentObject = new window.Razorpay(options);
+      
+      paymentObject.on('payment.failed', function (response) {
+        console.error(response.error);
+        alert(response.error.description);
+      });
+      
+      paymentObject.open();
+    } catch (error) {
+      console.error(error);
+      alert('Something went wrong!');
+    }
+    setIsProcessing(false);
   };
 
   const handleWhatsAppShare = () => {
@@ -467,20 +559,25 @@ const DonationModal = ({ isOpen, onClose }) => {
 
                   <button
                     onClick={handleRazorpay}
+                    disabled={isProcessing}
                     className="w-full transition-all"
                     style={{
-                      background: '#2E7D9C',
+                      background: isProcessing ? '#93AABF' : '#2E7D9C',
                       color: 'white',
                       borderRadius: '8px',
                       padding: '12px',
                       fontWeight: 700,
                       border: 'none',
-                      cursor: 'pointer',
+                      cursor: isProcessing ? 'not-allowed' : 'pointer',
                     }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = '#1A5F78')}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = '#2E7D9C')}
+                    onMouseEnter={(e) => {
+                      if (!isProcessing) e.currentTarget.style.background = '#1A5F78';
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isProcessing) e.currentTarget.style.background = '#2E7D9C';
+                    }}
                   >
-                    Pay ₹{amount} with Razorpay
+                    {isProcessing ? 'Processing...' : `Pay ₹${amount} with Razorpay`}
                   </button>
 
                   <div

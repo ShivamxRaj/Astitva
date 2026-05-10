@@ -20,6 +20,7 @@ app.use('/api/admin', require('./routes/admin'));
 app.use('/api/chat', require('./routes/chat'));
 app.use('/api/ratings', require('./routes/ratings'));
 app.use('/api/contact', require('./routes/contact'));
+app.use('/api/payment', require('./routes/payment'));
 
 // Error handling middleware
 app.use((err, req, res, next) => {
