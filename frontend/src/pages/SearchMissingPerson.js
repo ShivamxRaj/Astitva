@@ -16,9 +16,9 @@ const initialForm = {
 };
 
 const Tooltip = ({ text }) => (
-  <span className="ml-1 text-blue-500 cursor-pointer group relative">
+  <span className="ml-1 cursor-pointer group relative" style={{ color: 'var(--teal)' }}>
     <span className="text-xs align-super">ℹ</span>
-    <span className="absolute left-1/2 -translate-x-1/2 mt-2 w-48 bg-gray-800 text-white text-xs rounded p-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 pointer-events-none">
+    <span className="absolute left-1/2 -translate-x-1/2 mt-2 w-48 text-white text-xs rounded p-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 pointer-events-none" style={{ background: 'var(--navy)' }}>
       {text}
     </span>
   </span>
@@ -31,8 +31,7 @@ const SearchMissingPerson = () => {
   const [aiSummary, setAiSummary] = useState('');
   const [results, setResults] = useState([]);
   
-  // Track Report State
-  const [searchTab, setSearchTab] = useState('ai_search'); // 'ai_search' or 'track_report'
+  const [searchTab, setSearchTab] = useState('ai_search');
   const [trackId, setTrackId] = useState('');
   const [trackResult, setTrackResult] = useState(null);
   const [trackError, setTrackError] = useState('');
@@ -57,9 +56,8 @@ const SearchMissingPerson = () => {
     e.preventDefault();
     setSubmitting(true);
     setAiSummary("Based on the information provided, we're analyzing available records. Please stay connected. Every detail matters.");
-    // TODO: Call backend API for AI-powered search
     setTimeout(() => {
-      setResults([]); // Placeholder for AI results
+      setResults([]);
       setSubmitting(false);
     }, 2000);
   };
@@ -95,175 +93,208 @@ const SearchMissingPerson = () => {
     }
   };
 
+  const inputStyle = {
+    border: '1.5px solid #CBD5E0',
+    borderRadius: '8px',
+    padding: '0.6rem 0.85rem',
+    fontSize: '0.95rem',
+    color: 'var(--text-dark)',
+    background: '#fff',
+    width: '100%',
+    transition: 'border-color 0.2s, box-shadow 0.2s',
+  };
+
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
-      {/* Left Panel */}
-      <div className="md:w-1/2 flex flex-col justify-center items-center p-8 bg-white/80 border-r border-blue-100 shadow-lg relative">
-        <h2 className="text-3xl font-bold text-blue-800 mb-4">Searching for someone? You are not alone.</h2>
-        <p className="text-lg text-gray-700 mb-2">Even the faintest hope can light the path home. Let's look together.</p>
-        <p className="text-base text-purple-700 mb-4">Our AI will assist, but your memory is the key. Together, we can bring someone home.</p>
-        {/* Optional Help Video Placeholder */}
-        <div className="w-full max-w-xs mb-4">
-          <div className="aspect-w-16 aspect-h-9 bg-gray-200 rounded-lg flex items-center justify-center text-gray-400">Help Video Coming Soon</div>
+    <div className="min-h-screen pt-16 sm:pt-20 lg:pt-24" style={{ background: 'var(--off-white)' }}>
+      {/* Navy Header */}
+      <section className="section-dark section-padding">
+        <div className="container-responsive text-center">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-merriweather font-bold mb-3" style={{ color: '#fff' }}>
+            Searching for someone? You are not alone.
+          </h1>
+          <p className="text-base sm:text-lg max-w-2xl mx-auto mb-2" style={{ color: '#CBD5E0' }}>
+            Even the faintest hope can light the path home. Let's look together.
+          </p>
+          <p className="text-sm sm:text-base max-w-xl mx-auto" style={{ color: 'rgba(255,255,255,0.7)' }}>
+            Our AI will assist, but your memory is the key. Together, we can bring someone home.
+          </p>
         </div>
-        <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded mb-4 text-blue-900 w-full max-w-md">
-          <p className="mb-1">All searches are private and confidential.</p>
-          <p>You can report anonymously if you wish to share more details later.</p>
+      </section>
+
+      {/* Privacy Notice */}
+      <div className="container-responsive py-4">
+        <div className="p-4 rounded-lg" style={{ background: 'rgba(46,125,156,0.08)', borderLeft: '4px solid var(--teal)' }}>
+          <p className="mb-1 text-sm font-medium" style={{ color: 'var(--navy)' }}>All searches are private and confidential.</p>
+          <p className="text-sm" style={{ color: 'var(--text-mid)' }}>You can report anonymously if you wish to share more details later.</p>
         </div>
-        {/* Soft divider for visual separation on small screens */}
-        <div className="hidden md:block absolute top-0 right-0 h-full w-2 bg-gradient-to-r from-blue-100/60 to-transparent" />
       </div>
-      <div className="md:w-1/2 flex flex-col justify-center items-center p-8 bg-white/90 overflow-y-auto">
-        <div className="w-full max-w-lg mb-6 flex bg-blue-100 rounded-xl p-1 shadow-inner">
-          <button 
-            onClick={() => { setSearchTab('ai_search'); setTrackResult(null); setTrackError(''); }}
-            className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all duration-300 ${searchTab === 'ai_search' ? 'bg-white text-blue-800 shadow' : 'text-blue-600 hover:bg-blue-50'}`}
-          >
-            AI Search
-          </button>
-          <button 
-            onClick={() => { setSearchTab('track_report'); setResults([]); setAiSummary(''); }}
-            className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all duration-300 ${searchTab === 'track_report' ? 'bg-white text-blue-800 shadow' : 'text-blue-600 hover:bg-blue-50'}`}
-          >
-            Track Report
-          </button>
-        </div>
 
-        {searchTab === 'ai_search' ? (
-        <form className="w-full max-w-lg bg-white rounded-xl shadow-lg p-8 space-y-4" onSubmit={handleSubmit}>
-          <h3 className="text-2xl font-semibold text-blue-700 mb-2">Search for a Missing Person</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium">Full Name</label>
-              <input type="text" name="fullName" value={form.fullName} onChange={handleChange} className="w-full border rounded p-2" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium">Gender</label>
-              <select name="gender" value={form.gender} onChange={handleChange} className="w-full border rounded p-2">
-                <option value="">Select</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium">Age (approx)</label>
-              <input type="number" name="age" value={form.age} onChange={handleChange} className="w-full border rounded p-2" min="0" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium">Date of Birth</label>
-              <input type="date" name="dob" value={form.dob} onChange={handleChange} className="w-full border rounded p-2" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium">Approximate Height (in cm)</label>
-              <input type="text" name="height" value={form.height} onChange={handleChange} className="w-full border rounded p-2" placeholder="e.g. 160-170" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium">Last Seen Location</label>
-              <input type="text" name="lastSeenLocation" value={form.lastSeenLocation} onChange={handleChange} className="w-full border rounded p-2" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium">Date Last Seen</label>
-              <input type="date" name="dateLastSeen" value={form.dateLastSeen} onChange={handleChange} className="w-full border rounded p-2" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium">Accessories Worn (if any)</label>
-              <input type="text" name="accessories" value={form.accessories} onChange={handleChange} className="w-full border rounded p-2" />
-            </div>
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium">Upload Photo (optional but recommended)</label>
-              <input type="file" name="photo" accept="image/*" onChange={handleChange} className="w-full" />
-              {imagePreview && <img src={imagePreview} alt="Preview" className="mt-2 rounded shadow w-32 h-32 object-cover" />}
-            </div>
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium">Identifying Marks (tattoos, scars, etc.)
-                <Tooltip text="Describe any unique physical features that could help identify the person." />
-              </label>
-              <input type="text" name="identifyingMarks" value={form.identifyingMarks} onChange={handleChange} className="w-full border rounded p-2" />
-            </div>
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium">Relationship to the Missing Person (optional)
-                <Tooltip text="E.g., parent, sibling, friend. Helps us understand your connection." />
-              </label>
-              <input type="text" name="relationship" value={form.relationship} onChange={handleChange} className="w-full border rounded p-2" />
-            </div>
-          </div>
-          <button type="submit" className="w-full py-3 rounded-lg font-semibold text-lg bg-blue-700 hover:bg-blue-800 text-white shadow-md transition-all duration-200" disabled={submitting}>
-            {submitting ? 'Searching...' : 'AI-Powered Search'}
-          </button>
-          <div className="text-xs text-gray-500 text-center mt-2">Powered by secure, intelligent matching – your data stays safe.</div>
-          {aiSummary && <div className="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-blue-900 rounded">{aiSummary}</div>}
-        </form>
-        ) : (
-        <form className="w-full max-w-lg bg-white rounded-xl shadow-lg p-8 space-y-4" onSubmit={handleTrackSubmit}>
-          <h3 className="text-2xl font-semibold text-blue-700 mb-2">Track Your Report</h3>
-          <p className="text-sm text-gray-600 mb-4">Enter the Report ID you received when submitting an unclaimed body report to check its current status.</p>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Report ID</label>
-            <input 
-              type="text" 
-              value={trackId} 
-              onChange={(e) => setTrackId(e.target.value)} 
-              className="w-full border rounded-lg p-3 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" 
-              placeholder="e.g. #AVY-2026..." 
-              required
-            />
+      {/* Main Content */}
+      <section className="section-padding" style={{ background: 'var(--off-white)', paddingTop: '1rem' }}>
+        <div className="container-responsive max-w-2xl mx-auto">
+          {/* Tabs */}
+          <div className="mb-6 flex rounded-xl p-1 shadow-inner" style={{ background: 'var(--slate-mid)' }}>
+            <button 
+              onClick={() => { setSearchTab('ai_search'); setTrackResult(null); setTrackError(''); }}
+              className="flex-1 py-2.5 text-sm font-bold rounded-lg transition-all duration-300"
+              style={searchTab === 'ai_search' ? { background: '#fff', color: 'var(--navy)', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' } : { color: 'var(--teal)', background: 'transparent' }}
+            >
+              AI Search
+            </button>
+            <button 
+              onClick={() => { setSearchTab('track_report'); setResults([]); setAiSummary(''); }}
+              className="flex-1 py-2.5 text-sm font-bold rounded-lg transition-all duration-300"
+              style={searchTab === 'track_report' ? { background: '#fff', color: 'var(--navy)', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' } : { color: 'var(--teal)', background: 'transparent' }}
+            >
+              Track Report
+            </button>
           </div>
 
-          <button type="submit" className="w-full py-3 rounded-lg font-semibold text-lg bg-blue-700 hover:bg-blue-800 text-white shadow-md transition-all duration-200" disabled={submitting}>
-            {submitting ? 'Tracking...' : 'Track Status'}
-          </button>
-
-          {trackError && <div className="mt-4 p-3 bg-red-50 border-l-4 border-red-400 text-red-900 rounded">{trackError}</div>}
-        </form>
-        )}
-
-        {/* Results Section */}
-        <div className="w-full max-w-lg mt-8">
-          {searchTab === 'ai_search' && results.length > 0 ? (
-            <div className="bg-white rounded-xl shadow p-6">
-              <h4 className="text-lg font-semibold mb-2">Possible Matches</h4>
-              {/* Map over results and display match info and images */}
+          {searchTab === 'ai_search' ? (
+            <div className="form-card">
+              <h3 className="text-xl sm:text-2xl font-bold mb-4" style={{ color: 'var(--navy)' }}>Search for a Missing Person</h3>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-semibold mb-1" style={{ color: 'var(--navy)' }}>Full Name</label>
+                    <input type="text" name="fullName" value={form.fullName} onChange={handleChange} style={inputStyle} />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold mb-1" style={{ color: 'var(--navy)' }}>Gender</label>
+                    <select name="gender" value={form.gender} onChange={handleChange} style={inputStyle}>
+                      <option value="">Select</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold mb-1" style={{ color: 'var(--navy)' }}>Age (approx)</label>
+                    <input type="number" name="age" value={form.age} onChange={handleChange} style={inputStyle} min="0" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold mb-1" style={{ color: 'var(--navy)' }}>Date of Birth</label>
+                    <input type="date" name="dob" value={form.dob} onChange={handleChange} style={inputStyle} />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold mb-1" style={{ color: 'var(--navy)' }}>Approximate Height (cm)</label>
+                    <input type="text" name="height" value={form.height} onChange={handleChange} style={inputStyle} placeholder="e.g. 160-170" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold mb-1" style={{ color: 'var(--navy)' }}>Last Seen Location</label>
+                    <input type="text" name="lastSeenLocation" value={form.lastSeenLocation} onChange={handleChange} style={inputStyle} />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold mb-1" style={{ color: 'var(--navy)' }}>Date Last Seen</label>
+                    <input type="date" name="dateLastSeen" value={form.dateLastSeen} onChange={handleChange} style={inputStyle} />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold mb-1" style={{ color: 'var(--navy)' }}>Accessories Worn</label>
+                    <input type="text" name="accessories" value={form.accessories} onChange={handleChange} style={inputStyle} />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-semibold mb-1" style={{ color: 'var(--navy)' }}>Upload Photo (optional)</label>
+                    <input type="file" name="photo" accept="image/*" onChange={handleChange} style={{ ...inputStyle, padding: '0.4rem' }} />
+                    {imagePreview && <img src={imagePreview} alt="Preview" className="mt-2 rounded shadow w-32 h-32 object-cover" />}
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-semibold mb-1" style={{ color: 'var(--navy)' }}>
+                      Identifying Marks (tattoos, scars, etc.)
+                      <Tooltip text="Describe any unique physical features that could help identify the person." />
+                    </label>
+                    <input type="text" name="identifyingMarks" value={form.identifyingMarks} onChange={handleChange} style={inputStyle} />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-semibold mb-1" style={{ color: 'var(--navy)' }}>
+                      Relationship to the Missing Person
+                      <Tooltip text="E.g., parent, sibling, friend. Helps us understand your connection." />
+                    </label>
+                    <input type="text" name="relationship" value={form.relationship} onChange={handleChange} style={inputStyle} />
+                  </div>
+                </div>
+                <button type="submit" className="btn-primary w-full" style={{ borderRadius: '10px', padding: '0.85rem', fontSize: '1.05rem', opacity: submitting ? 0.6 : 1 }} disabled={submitting}>
+                  {submitting ? 'Searching...' : 'AI-Powered Search'}
+                </button>
+                <div className="text-xs text-center mt-2" style={{ color: 'var(--text-light)' }}>Powered by secure, intelligent matching – your data stays safe.</div>
+                {aiSummary && (
+                  <div className="mt-4 p-3 rounded-lg" style={{ background: 'rgba(46,125,156,0.08)', borderLeft: '4px solid var(--teal)', color: 'var(--navy)' }}>
+                    {aiSummary}
+                  </div>
+                )}
+              </form>
             </div>
-          ) : null}
-
-          {searchTab === 'track_report' && trackResult && (
-            <div className="bg-white rounded-xl shadow-lg border border-blue-100 overflow-hidden">
-              <div className="bg-blue-50 px-6 py-4 border-b border-blue-100 flex justify-between items-center">
-                <h4 className="text-lg font-bold text-blue-900">Report Details</h4>
-                <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
-                  trackResult.status === 'approved' ? 'bg-green-100 text-green-700' :
-                  trackResult.status === 'rejected' ? 'bg-red-100 text-red-700' :
-                  'bg-yellow-100 text-yellow-700'
-                }`}>
-                  {trackResult.status}
-                </span>
-              </div>
-              <div className="p-6 space-y-4">
+          ) : (
+            <div className="form-card">
+              <h3 className="text-xl sm:text-2xl font-bold mb-2" style={{ color: 'var(--navy)' }}>Track Your Report</h3>
+              <p className="text-sm mb-4" style={{ color: 'var(--text-mid)' }}>Enter the Report ID you received when submitting an unclaimed body report to check its current status.</p>
+              <form onSubmit={handleTrackSubmit} className="space-y-4">
                 <div>
-                  <span className="block text-xs font-bold text-gray-500 uppercase">Report ID</span>
-                  <span className="font-mono text-gray-800">{trackResult.report_id}</span>
+                  <label className="block text-sm font-semibold mb-1" style={{ color: 'var(--navy)' }}>Report ID</label>
+                  <input 
+                    type="text" 
+                    value={trackId} 
+                    onChange={(e) => setTrackId(e.target.value)} 
+                    style={inputStyle}
+                    placeholder="e.g. #AVY-2026..." 
+                    required
+                  />
                 </div>
-                <div>
-                  <span className="block text-xs font-bold text-gray-500 uppercase">Location Found</span>
-                  <span className="text-gray-800">{trackResult.location}</span>
-                </div>
-                <div>
-                  <span className="block text-xs font-bold text-gray-500 uppercase">Description</span>
-                  <p className="text-gray-700 text-sm italic border-l-2 border-gray-300 pl-3 mt-1">"{trackResult.description}"</p>
-                </div>
-                <div>
-                  <span className="block text-xs font-bold text-gray-500 uppercase">Date Logged</span>
-                  <span className="text-gray-600 text-sm">{new Date(trackResult.date_time).toLocaleString()}</span>
-                </div>
-              </div>
+                <button type="submit" className="btn-primary w-full" style={{ borderRadius: '10px', padding: '0.85rem', fontSize: '1.05rem', opacity: submitting ? 0.6 : 1 }} disabled={submitting}>
+                  {submitting ? 'Tracking...' : 'Track Status'}
+                </button>
+                {trackError && (
+                  <div className="mt-4 p-3 rounded-lg" style={{ background: 'rgba(192,57,43,0.08)', borderLeft: '4px solid var(--alert-red)', color: 'var(--alert-red)' }}>
+                    {trackError}
+                  </div>
+                )}
+              </form>
             </div>
           )}
+
+          {/* Results */}
+          <div className="mt-8">
+            {searchTab === 'ai_search' && results.length > 0 && (
+              <div className="inst-card">
+                <h4 className="text-lg font-semibold mb-2" style={{ color: 'var(--navy)' }}>Possible Matches</h4>
+              </div>
+            )}
+
+            {searchTab === 'track_report' && trackResult && (
+              <div className="inst-card overflow-hidden" style={{ padding: 0 }}>
+                <div className="px-6 py-4 flex justify-between items-center" style={{ background: 'rgba(46,125,156,0.06)', borderBottom: '1px solid #E2E8F0' }}>
+                  <h4 className="text-lg font-bold" style={{ color: 'var(--navy)' }}>Report Details</h4>
+                  <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider" style={{
+                    background: trackResult.status === 'approved' ? 'rgba(39,174,96,0.12)' : trackResult.status === 'rejected' ? 'rgba(192,57,43,0.12)' : 'rgba(245,158,11,0.12)',
+                    color: trackResult.status === 'approved' ? 'var(--success-green)' : trackResult.status === 'rejected' ? 'var(--alert-red)' : 'var(--amber-warn)'
+                  }}>
+                    {trackResult.status}
+                  </span>
+                </div>
+                <div className="p-6 space-y-4">
+                  <div>
+                    <span className="block text-xs font-bold uppercase" style={{ color: 'var(--text-light)' }}>Report ID</span>
+                    <span className="font-mono" style={{ color: 'var(--text-dark)' }}>{trackResult.report_id}</span>
+                  </div>
+                  <div>
+                    <span className="block text-xs font-bold uppercase" style={{ color: 'var(--text-light)' }}>Location Found</span>
+                    <span style={{ color: 'var(--text-dark)' }}>{trackResult.location}</span>
+                  </div>
+                  <div>
+                    <span className="block text-xs font-bold uppercase" style={{ color: 'var(--text-light)' }}>Description</span>
+                    <p className="text-sm italic mt-1 pl-3" style={{ color: 'var(--text-mid)', borderLeft: '2px solid #CBD5E0' }}>"{trackResult.description}"</p>
+                  </div>
+                  <div>
+                    <span className="block text-xs font-bold uppercase" style={{ color: 'var(--text-light)' }}>Date Logged</span>
+                    <span className="text-sm" style={{ color: 'var(--text-mid)' }}>{new Date(trackResult.date_time).toLocaleString()}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 };
 
-export default SearchMissingPerson; 
+export default SearchMissingPerson;

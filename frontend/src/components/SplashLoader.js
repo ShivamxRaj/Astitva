@@ -1,46 +1,99 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const SplashLoader = () => {
+  const [isFading, setIsFading] = useState(false);
+
+  useEffect(() => {
+    // Start fading out slightly before the 2-second mark when App.js unmounts it
+    const fadeTimer = setTimeout(() => {
+      setIsFading(true);
+    }, 1600);
+
+    return () => clearTimeout(fadeTimer);
+  }, []);
+
+  // Subtle starfield (static faint white dots)
+  const stars = [
+    { top: '15%', left: '20%', size: '3px', opacity: 0.4 },
+    { top: '25%', left: '75%', size: '2px', opacity: 0.6 },
+    { top: '65%', left: '15%', size: '2px', opacity: 0.3 },
+    { top: '75%', left: '85%', size: '4px', opacity: 0.5 },
+    { top: '45%', left: '8%', size: '2px', opacity: 0.7 },
+    { top: '35%', left: '90%', size: '3px', opacity: 0.4 },
+    { top: '85%', left: '40%', size: '2px', opacity: 0.6 },
+    { top: '10%', left: '50%', size: '3px', opacity: 0.5 },
+  ];
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#22313a] transition-all duration-700">
-      {/* Spinner with logo */}
-      <div className="relative w-40 h-40 flex items-center justify-center">
-        {/* Animated outer lines - all softly glowing */}
-        <svg className="absolute inset-0 w-full h-full animate-spin-slow" viewBox="0 0 160 160">
-          {[...Array(12)].map((_, i) => (
-            <rect
-              key={i}
-              x="78"
-              y="18"
-              width="4"
-              height="24"
-              rx="2"
-              fill="#b8e0ff"
-              opacity={0.7}
-              style={{
-                transform: `rotate(${i * 30}deg)`,
-                transformOrigin: '80px 80px',
-                filter: 'drop-shadow(0 0 10px #b8e0ff88)',
-                transition: 'opacity 0.5s',
-              }}
-            />
-          ))}
-        </svg>
-        {/* Center logo placeholder (replace with your real logo if needed) */}
-        <svg width="80" height="80" viewBox="0 0 80 80" className="relative z-10">
-          <g fill="none" stroke="#b8e0ff" strokeWidth="4" strokeLinecap="round">
-            <polyline points="40,60 50,50 40,40 30,50 40,60" />
-            <polyline points="40,48 46,42 40,36 34,42 40,48" />
-            <polyline points="40,38 43,35 40,32 37,35 40,38" />
-          </g>
-        </svg>
+    <>
+      <style>{`
+        .soul-ascend {
+          animation: soulAscend 2s ease-in-out infinite;
+        }
+        @keyframes soulAscend {
+          0% {
+            transform: translateY(15px) scale(0.8);
+            opacity: 0;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+          }
+          50% {
+            opacity: 0.85;
+            box-shadow: 0 0 25px rgba(126, 85, 255, 0.6), 0 0 50px rgba(255, 255, 255, 0.4);
+          }
+          100% {
+            transform: translateY(-35px) scale(1.3);
+            opacity: 0;
+            box-shadow: 0 0 10px rgba(126, 85, 255, 0);
+          }
+        }
+      `}</style>
+
+      <div 
+        className={`fixed inset-0 z-50 flex flex-col items-center justify-center transition-opacity duration-400 ease-in-out ${
+          isFading ? 'opacity-0' : 'opacity-100'
+        }`}
+        style={{ backgroundColor: '#1B3A6B' }}
+      >
+        {/* Starfield */}
+        {stars.map((star, i) => (
+          <div 
+            key={i}
+            className="absolute rounded-full bg-white"
+            style={{
+              top: star.top,
+              left: star.left,
+              width: star.size,
+              height: star.size,
+              opacity: star.opacity
+            }}
+          />
+        ))}
+
+        {/* Glowing Orb Animation (Option B) */}
+        <div className="relative w-16 h-16 flex items-center justify-center mb-6">
+          <div className="absolute w-6 h-6 bg-white rounded-full soul-ascend" />
+        </div>
+
+        {/* Brand Name */}
+        <h1 
+          className="text-5xl md:text-6xl font-bold tracking-wider mb-4"
+          style={{
+            background: 'linear-gradient(91deg, #ffffff, #7e55ff)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text'
+          }}
+        >
+          Avyakta
+        </h1>
+
+        {/* Tagline */}
+        <p className="text-blue-100 text-sm md:text-base tracking-widest font-light opacity-80">
+          Bringing dignity to the forgotten...
+        </p>
       </div>
-    </div>
+    </>
   );
 };
 
-export default SplashLoader;
-
-// CSS (add to your global CSS or Tailwind config):
-// .animate-spin-slow { animation: spin 2.5s linear infinite; }
-// @keyframes spin { 100% { transform: rotate(360deg); } } 
+export default SplashLoader; 

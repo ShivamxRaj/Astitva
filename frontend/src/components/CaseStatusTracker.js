@@ -2,10 +2,10 @@ import React from 'react';
 import { CheckCircleIcon, ClockIcon, MagnifyingGlassIcon, HeartIcon } from '@heroicons/react/24/outline';
 
 const steps = [
-  { id: 1, label: 'Submitted', labelHi: 'जमा किया', labelPa: 'ਜਮ੍ਹਾਂ ਕੀਤਾ', icon: CheckCircleIcon, color: '#2E7D9C' },
-  { id: 2, label: 'Under Review', labelHi: 'समीक्षाधीन', labelPa: 'ਸਮੀਖਿਆ ਅਧੀਨ', icon: ClockIcon, color: '#F59E0B' },
-  { id: 3, label: 'Matched', labelHi: 'मिलान हुआ', labelPa: 'ਮੇਲ ਖਾਧਾ', icon: MagnifyingGlassIcon, color: '#8B5CF6' },
-  { id: 4, label: 'Resolved', labelHi: 'हल हुआ', labelPa: 'ਹੱਲ ਹੋਇਆ', icon: HeartIcon, color: '#27AE60' },
+  { id: 1, label: 'Submitted', labelHi: 'जमा किया', labelPa: 'ਜਮ੍ਹਾਂ ਕੀਤਾ', icon: CheckCircleIcon, color: 'var(--teal)' },
+  { id: 2, label: 'Under Review', labelHi: 'समीक्षाधीन', labelPa: 'ਸਮੀਖਿਆ ਅਧੀਨ', icon: ClockIcon, color: 'var(--amber-warn)' },
+  { id: 3, label: 'Matched', labelHi: 'मिलान हुआ', labelPa: 'ਮੇਲ ਖਾਧਾ', icon: MagnifyingGlassIcon, color: 'var(--navy)' },
+  { id: 4, label: 'Resolved', labelHi: 'हल हुआ', labelPa: 'ਹੱਲ ਹੋਇਆ', icon: HeartIcon, color: 'var(--success-green)' },
 ];
 
 const CaseStatusTracker = ({ currentStep = 0, lang = 'en' }) => {
@@ -48,7 +48,7 @@ const CaseStatusTracker = ({ currentStep = 0, lang = 'en' }) => {
               {index < steps.length - 1 && (
                 <div
                   className="status-connector"
-                  style={{ backgroundColor: index < currentStep ? '#2E7D9C' : '#E2E8F0' }}
+                  style={{ backgroundColor: index < currentStep ? 'var(--teal)' : '#E2E8F0' }}
                   aria-hidden="true"
                 />
               )}

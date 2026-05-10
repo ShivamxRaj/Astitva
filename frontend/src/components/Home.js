@@ -16,54 +16,53 @@ import {
 import Testimonials from './Testimonials';
 import CaseStatusTracker from './CaseStatusTracker';
 
-/* ── Cosmic Animation (hero-only, preserved intentionally) ── */
+/* ── Cosmic Animation (hero-only, reduced to peaceful/gentle counts) ── */
 const CosmicAnimation = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none">
-    {[...Array(80)].map((_, i) => (
+    {/* Falling stars: 80 → 20 */}
+    {[...Array(20)].map((_, i) => (
       <div key={`fs-${i}`} className="absolute animate-falling-star"
-        style={{ left: `${Math.random()*100}%`, animationDelay: `${Math.random()*15}s`, animationDuration: `${10+Math.random()*20}s`, animationIterationCount:'infinite' }}>
-        <div className="w-1 h-1 bg-gradient-to-r from-yellow-200 to-orange-300 rounded-full opacity-90 animate-twinkle"
-          style={{ animationDelay:`${Math.random()*3}s`, animationDuration:`${1.5+Math.random()*2}s` }} />
+        style={{ left: `${Math.random()*100}%`, animationDelay: `${Math.random()*15}s`, animationDuration: `${15+Math.random()*30}s`, animationIterationCount:'infinite' }}>
+        <div className="w-1 h-1 bg-gradient-to-r from-yellow-200 to-orange-300 rounded-full opacity-70 animate-twinkle"
+          style={{ animationDelay:`${Math.random()*3}s`, animationDuration:`${2.5+Math.random()*3}s` }} />
       </div>
     ))}
-    {[...Array(25)].map((_, i) => (
+    {/* Ascending souls: 25 → 8 */}
+    {[...Array(8)].map((_, i) => (
       <div key={`as-${i}`} className="absolute animate-ascending-soul"
-        style={{ left:`${Math.random()*100}%`, bottom:'-20px', animationDelay:`${Math.random()*20}s`, animationDuration:`${25+Math.random()*35}s`, animationIterationCount:'infinite' }}>
+        style={{ left:`${Math.random()*100}%`, bottom:'-20px', animationDelay:`${Math.random()*20}s`, animationDuration:`${38+Math.random()*52}s`, animationIterationCount:'infinite' }}>
         <div className="relative">
-          <div className="w-3 h-3 bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-500 rounded-full opacity-80 animate-soul-glow"
-            style={{ animationDuration:`${3+Math.random()*4}s` }} />
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-gradient-to-r from-transparent via-cyan-200 to-transparent rounded-full opacity-40 animate-soul-trail" />
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-gradient-to-r from-transparent via-blue-300 to-transparent rounded-full opacity-20 animate-soul-outer-glow" />
+          <div className="w-3 h-3 bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-500 rounded-full opacity-70 animate-soul-glow"
+            style={{ animationDuration:`${4.5+Math.random()*6}s` }} />
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-gradient-to-r from-transparent via-cyan-200 to-transparent rounded-full opacity-30 animate-soul-trail" />
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-gradient-to-r from-transparent via-blue-300 to-transparent rounded-full opacity-15 animate-soul-outer-glow" />
         </div>
       </div>
     ))}
-    {[...Array(12)].map((_, i) => (
+    {/* Shooting stars: 12 → 4 */}
+    {[...Array(4)].map((_, i) => (
       <div key={`ss-${i}`} className="absolute animate-shooting-star"
-        style={{ top:`${Math.random()*60}%`, left:`${Math.random()*100}%`, animationDelay:`${Math.random()*25}s`, animationDuration:`${20+Math.random()*30}s`, animationIterationCount:'infinite' }}>
+        style={{ top:`${Math.random()*60}%`, left:`${Math.random()*100}%`, animationDelay:`${Math.random()*25}s`, animationDuration:`${30+Math.random()*45}s`, animationIterationCount:'infinite' }}>
         <div className="relative">
-          <div className="w-1 h-1 bg-white rounded-full opacity-90" />
-          <div className="w-32 h-0.5 bg-gradient-to-r from-transparent via-white to-transparent transform rotate-45 origin-right opacity-70" />
+          <div className="w-1 h-1 bg-white rounded-full opacity-80" />
+          <div className="w-32 h-0.5 bg-gradient-to-r from-transparent via-white to-transparent transform rotate-45 origin-right opacity-50" />
         </div>
       </div>
     ))}
-    {[...Array(40)].map((_, i) => (
+    {/* Constellation dots: 40 → 15 */}
+    {[...Array(15)].map((_, i) => (
       <div key={`c-${i}`} className="absolute animate-constellation"
-        style={{ top:`${Math.random()*100}%`, left:`${Math.random()*100}%`, animationDelay:`${Math.random()*10}s`, animationDuration:`${8+Math.random()*12}s`, animationIterationCount:'infinite' }}>
-        <div className="w-0.5 h-0.5 bg-blue-200 rounded-full opacity-60 animate-constellation-glow"
-          style={{ animationDuration:`${2+Math.random()*3}s` }} />
+        style={{ top:`${Math.random()*100}%`, left:`${Math.random()*100}%`, animationDelay:`${Math.random()*10}s`, animationDuration:`${12+Math.random()*18}s`, animationIterationCount:'infinite' }}>
+        <div className="w-0.5 h-0.5 bg-blue-200 rounded-full opacity-50 animate-constellation-glow"
+          style={{ animationDuration:`${3+Math.random()*4.5}s` }} />
       </div>
     ))}
-    {[...Array(6)].map((_, i) => (
-      <div key={`lr-${i}`} className="absolute animate-light-ray"
-        style={{ top:`${Math.random()*100}%`, left:`${Math.random()*100}%`, animationDelay:`${Math.random()*30}s`, animationDuration:`${40+Math.random()*50}s`, animationIterationCount:'infinite' }}>
-        <div className="w-1 h-32 bg-gradient-to-b from-transparent via-cyan-200 to-transparent opacity-30 transform rotate-45" />
-      </div>
-    ))}
-    {[...Array(60)].map((_, i) => (
+    {/* Floating particles: 60 → 15 */}
+    {[...Array(15)].map((_, i) => (
       <div key={`p-${i}`} className="absolute animate-floating-particle"
-        style={{ top:`${Math.random()*100}%`, left:`${Math.random()*100}%`, animationDelay:`${Math.random()*18}s`, animationDuration:`${15+Math.random()*25}s`, animationIterationCount:'infinite' }}>
-        <div className="w-0.5 h-0.5 bg-gradient-to-r from-white to-cyan-200 rounded-full opacity-50 animate-particle-glow"
-          style={{ animationDuration:`${2+Math.random()*4}s` }} />
+        style={{ top:`${Math.random()*100}%`, left:`${Math.random()*100}%`, animationDelay:`${Math.random()*18}s`, animationDuration:`${22+Math.random()*38}s`, animationIterationCount:'infinite' }}>
+        <div className="w-0.5 h-0.5 bg-gradient-to-r from-white to-cyan-200 rounded-full opacity-40 animate-particle-glow"
+          style={{ animationDuration:`${3+Math.random()*6}s` }} />
       </div>
     ))}
     <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-radial from-transparent via-cyan-500/10 to-transparent rounded-full animate-universe-glow" />
@@ -115,14 +114,26 @@ const Home = () => {
       <section className="relative min-h-screen overflow-hidden flex flex-col justify-center" style={{ backgroundColor: 'rgb(16, 8, 50)' }}>
         <CosmicAnimation />
 
+        {/* Radial gradient overlay — darkens edges, keeps centre readable */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: 'radial-gradient(ellipse 80% 60% at 50% 50%, rgba(16,8,50,0.0) 0%, rgba(16,8,50,0.4) 50%, rgba(16,8,50,0.85) 100%)'
+        }} />
+
         <div className="relative z-10 container-responsive text-center py-16">
 
           {/* Trust Badge */}
           <div className={`flex justify-center mb-6 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold"
-              style={{ background: 'rgba(255,255,255,0.12)', color: '#90CDF4', border: '1px solid rgba(144,205,244,0.3)' }}>
-              <ShieldCheckIcon style={{ width:'0.9rem', height:'0.9rem' }} aria-hidden="true" />
-              Officially registered humanitarian portal — Est. 2020
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 text-xs font-semibold"
+              style={{
+                background: 'rgba(255,255,255,0.08)',
+                color: '#A8C8FF',
+                border: '1px solid rgba(255,255,255,0.2)',
+                borderRadius: '999px',
+                backdropFilter: 'blur(8px)',
+                fontSize: '0.8rem',
+                padding: '6px 16px',
+              }}>
+              ✦ Officially registered humanitarian portal — Est. 2020
             </span>
           </div>
 
@@ -137,25 +148,9 @@ const Home = () => {
             {t('home.hero.description')}
           </p>
           <p className={`text-sm sm:text-base max-w-2xl mx-auto mb-10 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-            style={{ color:'#A0AEC0' }}>
+            style={{ color:'#8BAFD4', marginTop:'8px' }}>
             Connecting families with unclaimed bodies since 2020 · Punjab, India
           </p>
-
-          {/* ── Two Primary CTA Paths ── */}
-          <div className={`flex flex-col sm:flex-row justify-center items-center gap-4 mb-12 transition-all duration-1000 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <Link to="/search" aria-label="Search for a missing person"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-white text-base sm:text-lg transition-all duration-300 hover:scale-105"
-              style={{ background:'linear-gradient(135deg, #2E7D9C, #1B5E7A)', boxShadow:'0 8px 32px rgba(46,125,156,0.45)', minHeight:'56px', maxWidth:'320px' }}>
-              <MagnifyingGlassIcon style={{ width:'1.3rem', height:'1.3rem', flexShrink:0 }} aria-hidden="true" />
-              {t('home.hero.search')}
-            </Link>
-            <Link to="/report" aria-label="Report an unclaimed body"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-white text-base sm:text-lg shadow-2xl hover:scale-105 transition-all duration-300"
-              style={{ background:'linear-gradient(135deg, #C0392B, #962D22)', boxShadow:'0 8px 32px rgba(192,57,43,0.45)', minHeight:'56px', maxWidth:'320px' }}>
-              <ExclamationTriangleIcon style={{ width:'1.3rem', height:'1.3rem', flexShrink:0 }} aria-hidden="true" />
-              {t('home.hero.cta')}
-            </Link>
-          </div>
 
 
           {/* ── Case Status Tracker Preview ── */}
@@ -167,12 +162,18 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce" aria-hidden="true">
-          <div className="w-6 h-10 rounded-full border-2 border-white/30 flex justify-center pt-2">
-            <div className="w-1 h-3 bg-white/50 rounded-full animate-pulse" />
+        {/* Scroll indicator — mouse icon with gentle bounce */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce z-10" aria-hidden="true">
+          <div className="w-6 h-10 rounded-full border-2 flex justify-center pt-2" style={{ borderColor:'rgba(255,255,255,0.4)' }}>
+            <div className="w-1 h-3 rounded-full animate-pulse" style={{ background:'rgba(255,255,255,0.4)' }} />
           </div>
         </div>
+
+        {/* Bottom fade — hero bleeds smoothly into next section */}
+        <div className="absolute bottom-0 left-0 right-0 pointer-events-none" style={{
+          height: '120px',
+          background: 'linear-gradient(to bottom, transparent, rgb(16,8,50))'
+        }} />
       </section>
 
       {/* ══════════════════════════════════════════════════

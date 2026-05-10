@@ -1,274 +1,434 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import RatingForm from "./RatingForm";
 import RecentFeedback from "./RecentFeedback";
 
 const TESTIMONIALS = [
   {
-    icon: "🌟",
     text: "I never thought reporting an unclaimed soul could be this simple. Avyakta gave me courage when I was afraid to step forward.",
-    author: "jaspreet kaur",
-    location: "punjab",
+    author: "Jaspreet Kaur",
+    role: "Sister of Missing Person",
+    location: "Punjab",
+    badge: "Family",
     rating: 5,
   },
   {
-    icon: "💡",
     text: "I was scared of police and paperwork. But this platform made me feel safe. I could report anonymously and still make a difference.",
     author: "Shreya Singh",
+    role: "Concerned Citizen",
     location: "Delhi",
+    badge: "Volunteer",
     rating: 5,
   },
   {
-    icon: "🕯",
     text: "When I saw someone lying unconscious, I didn't know what to do. This site guided me like a guardian angel. It saved a life that day.",
-    author: "A Common Man with a Big Heart",
+    author: "Arun Mehta",
+    role: "Auto-rickshaw Driver",
     location: "Mumbai",
+    badge: "Volunteer",
     rating: 5,
   },
   {
-    icon: "🙏",
     text: "Our village never had such a system. Avyakta is not just a website. It's hope. It's dignity. It's voice for the voiceless.",
-    author: "Panchayat Member",
+    author: "Rakesh Yadav",
+    role: "Panchayat Member",
     location: "Bihar",
+    badge: "Officer",
     rating: 5,
   },
   {
-    icon: "👁‍🗨",
     text: "This is more than tech. This is humanity encoded into a platform. I wish every state had something like Avyakta.",
-    author: "Social Worker",
+    author: "Nandini Patil",
+    role: "Social Worker",
     location: "Maharashtra",
+    badge: "Volunteer",
     rating: 5,
   },
   {
-    icon: "💬",
     text: "I could chat with a bot and get help instantly. I didn't feel alone. Avyakta made me feel heard.",
     author: "Shivam Raj",
+    role: "Reporting Witness",
     location: "Kolkata",
+    badge: "Family",
+    rating: 5,
+  },
+  {
+    text: "As a station officer, the dashboard makes case tracking effortless. Every unclaimed body now has a digital file within minutes.",
+    author: "Inspector Sharma",
+    role: "Police Officer",
+    location: "Chandigarh",
+    badge: "Officer",
+    rating: 5,
+  },
+  {
+    text: "We use Avyakta to coordinate between hospitals and morgues. It has reduced identification time by nearly 60% in our district.",
+    author: "Dr. Meena Rao",
+    role: "District Medical Officer",
+    location: "Lucknow",
+    badge: "Medical",
     rating: 5,
   },
 ];
 
-const StarRating = ({ rating }) => {
+/* ── Helper: extract initials from name ── */
+function getInitials(name) {
+  if (!name) return "?";
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+/* ── Helper: badge color based on type ── */
+function badgeLabel(badge) {
+  const map = { Family: "Family", Officer: "Officer", Volunteer: "Volunteer", Medical: "Medical" };
+  return map[badge] || badge;
+}
+
+/* ── Small star row (14px) ── */
+const SmallStars = ({ rating }) => (
+  <div className="flex gap-0.5">
+    {[...Array(5)].map((_, i) => (
+      <span key={i} style={{ fontSize: "14px", color: i < rating ? "#D4870A" : "rgba(255,255,255,0.15)" }}>★</span>
+    ))}
+  </div>
+);
+
+/* ── Single testimonial card ── */
+const TestimonialCard = ({ item, style, visible }) => {
+  const [expanded, setExpanded] = useState(false);
+  const needsTruncate = item.text.length > 180;
+
   return (
-    <div className="flex justify-center gap-1 mb-4">
-      {[...Array(5)].map((_, index) => (
+    <div
+      className="testimonial-card flex flex-col h-full"
+      style={{
+        background: "rgba(255,255,255,0.05)",
+        border: "1px solid rgba(255,255,255,0.10)",
+        borderRadius: "12px",
+        padding: "28px",
+        backdropFilter: "blur(8px)",
+        WebkitBackdropFilter: "blur(8px)",
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(16px)",
+        transition: "opacity 0.5s ease-out, transform 0.5s ease-out, border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease",
+        cursor: "default",
+        ...style,
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = "rgba(46,125,156,0.4)";
+        e.currentTarget.style.background = "rgba(255,255,255,0.08)";
+        e.currentTarget.style.transform = "translateY(-4px)";
+        e.currentTarget.style.boxShadow = "0 12px 32px rgba(0,0,0,0.2)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = "rgba(255,255,255,0.10)";
+        e.currentTarget.style.background = "rgba(255,255,255,0.05)";
+        e.currentTarget.style.transform = "translateY(0)";
+        e.currentTarget.style.boxShadow = "none";
+      }}
+    >
+      {/* Top row: open-quote + stars */}
+      <div className="flex items-start justify-between mb-3">
         <span
-          key={index}
-          className={`text-xl transition-all duration-300 ${
-            index < rating
-              ? "text-yellow-400 drop-shadow-[0_0_8px_rgba(255,255,0,0.6)]"
-              : "text-gray-500"
-          }`}
+          style={{
+            color: "#2E7D9C",
+            fontSize: "4rem",
+            lineHeight: "0.8",
+            fontFamily: "Georgia, serif",
+            opacity: 0.6,
+            userSelect: "none",
+          }}
+          aria-hidden="true"
         >
-          ★
+          &ldquo;
         </span>
-      ))}
+        {item.rating === 5 && <SmallStars rating={5} />}
+      </div>
+
+      {/* Quote text */}
+      <blockquote
+        className="flex-1"
+        style={{
+          fontSize: "0.95rem",
+          lineHeight: "1.7",
+          color: "#D6E8FF",
+          fontStyle: "italic",
+        }}
+      >
+        {needsTruncate && !expanded ? (
+          <>
+            {item.text.slice(0, 180).trim()}…{" "}
+            <button
+              onClick={() => setExpanded(true)}
+              style={{
+                color: "#4BA3C3",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                fontStyle: "normal",
+                fontWeight: 500,
+                fontSize: "0.85rem",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.textDecoration = "underline")}
+              onMouseLeave={(e) => (e.currentTarget.style.textDecoration = "none")}
+            >
+              Read more
+            </button>
+          </>
+        ) : (
+          item.text
+        )}
+      </blockquote>
+
+      {/* Separator */}
+      <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", margin: "16px 0" }} />
+
+      {/* Author row */}
+      <div className="flex items-center gap-3">
+        {/* Avatar circle with initials */}
+        <div
+          className="flex-shrink-0 flex items-center justify-center rounded-full"
+          style={{
+            width: "40px",
+            height: "40px",
+            background: "linear-gradient(135deg, #1B3A6B, #2E7D9C)",
+            border: "2px solid rgba(46,125,156,0.4)",
+            color: "#fff",
+            fontSize: "0.85rem",
+            fontWeight: 600,
+          }}
+        >
+          {getInitials(item.author)}
+        </div>
+
+        {/* Name + role */}
+        <div className="flex-1 min-w-0">
+          <div
+            className="truncate"
+            style={{ color: "#F0F6FF", fontWeight: 600, fontSize: "0.9rem" }}
+          >
+            {item.author}
+          </div>
+          <div
+            className="truncate"
+            style={{ color: "#8BAFD4", fontSize: "0.8rem" }}
+          >
+            {item.role} · {item.location}
+          </div>
+        </div>
+
+        {/* Badge pill */}
+        <span
+          className="flex-shrink-0"
+          style={{
+            background: "rgba(46,125,156,0.15)",
+            border: "1px solid rgba(46,125,156,0.3)",
+            color: "#7EB5D6",
+            fontSize: "0.7rem",
+            padding: "2px 10px",
+            borderRadius: "999px",
+            fontWeight: 500,
+          }}
+        >
+          {badgeLabel(item.badge)}
+        </span>
+      </div>
     </div>
   );
 };
 
+/* ═══════════════════════════════════════
+   Main Testimonials Component
+   ═══════════════════════════════════════ */
 const Testimonials = () => {
-  const [current, setCurrent] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [showRatingForm, setShowRatingForm] = useState(false);
   const [showRecentFeedback, setShowRecentFeedback] = useState(false);
   const [submissionSuccess, setSubmissionSuccess] = useState(null);
+  const [cardsVisible, setCardsVisible] = useState(false);
+  const sectionRef = useRef(null);
 
-  const next = () => setCurrent((c) => (c + 1) % TESTIMONIALS.length);
-  const prev = () => setCurrent((c) => (c - 1 + TESTIMONIALS.length) % TESTIMONIALS.length);
-
-  // Auto-slide functionality
+  /* IntersectionObserver — trigger card fade-in once */
   useEffect(() => {
-    if (!isAutoPlaying) return;
-
-    const interval = setInterval(() => {
-      next();
-    }, 2500); // 2.5 seconds
-
-    return () => clearInterval(interval);
-  }, [isAutoPlaying]);
-
-  // Pause auto-play when user interacts
-  const handleUserInteraction = () => {
-    setIsAutoPlaying(false);
-    // Resume auto-play after 5 seconds of no interaction
-    setTimeout(() => setIsAutoPlaying(true), 5000);
-  };
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setCardsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   const handleRatingSubmit = () => {
-    setSubmissionSuccess('✅ Thank you! Your feedback has been submitted for review.');
+    setSubmissionSuccess("✅ Thank you! Your feedback has been submitted for review.");
     setShowRatingForm(false);
     setTimeout(() => setSubmissionSuccess(null), 4000);
   };
 
   return (
-    <section className="relative py-20 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* Animated Background Elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute top-40 left-40 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
-      </div>
-
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-4xl mx-auto text-center mb-16">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-            What People Say
+    <section
+      ref={sectionRef}
+      className="relative py-16 sm:py-20 lg:py-24 overflow-hidden"
+      style={{
+        backgroundColor: "#1B3A6B",
+        backgroundImage: `
+          radial-gradient(circle at 20% 50%, rgba(46,125,156,0.08) 0%, transparent 60%),
+          radial-gradient(circle at 80% 20%, rgba(46,125,156,0.05) 0%, transparent 50%)
+        `,
+      }}
+    >
+      <div className="container-responsive relative z-10">
+        {/* ── Section Header ── */}
+        <div className="text-center mb-12 sm:mb-16">
+          <h2
+            className="font-merriweather font-bold mb-2"
+            style={{
+              color: "#F0F6FF",
+              fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
+            }}
+          >
+            Voices of Those We Served
           </h2>
-          <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed mb-8">
-            Real stories from families who found closure through our platform.
+          {/* Teal underline accent */}
+          <div
+            className="mx-auto"
+            style={{
+              width: "48px",
+              height: "3px",
+              background: "#2E7D9C",
+              marginTop: "8px",
+              borderRadius: "2px",
+            }}
+          />
+          <p
+            style={{
+              color: "#8BAFD4",
+              fontSize: "1rem",
+              marginTop: "12px",
+            }}
+          >
+            Real stories from families, officers, and volunteers
           </p>
-          
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button
-              onClick={() => setShowRatingForm(true)}
-              className="px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-2xl font-semibold hover:from-purple-700 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
-            >
-              <span className="flex items-center gap-2">
-                <span className="text-xl">⭐</span>
-                Rate Your Experience
-              </span>
-            </button>
-            <button
-              onClick={() => setShowRecentFeedback(!showRecentFeedback)}
-              className="px-8 py-4 bg-white/10 border border-white/20 text-white rounded-2xl font-semibold hover:bg-white/20 transition-all duration-300 transform hover:scale-105 backdrop-blur-sm"
-            >
-              <span className="flex items-center gap-2">
-                <span className="text-xl">💬</span>
-                {showRecentFeedback ? 'Hide Recent Feedback' : 'View Recent Feedback'}
-              </span>
-            </button>
-          </div>
         </div>
 
-        {/* Success Message */}
+        {/* ── Desktop Grid (hidden on mobile) ── */}
+        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {TESTIMONIALS.map((item, idx) => (
+            <TestimonialCard
+              key={idx}
+              item={item}
+              visible={cardsVisible}
+              style={{ transitionDelay: `${idx * 100}ms` }}
+            />
+          ))}
+        </div>
+
+        {/* ── Mobile Horizontal Scroll (visible on mobile only) ── */}
+        <div
+          className="md:hidden flex gap-4 overflow-x-auto pb-4 px-1"
+          style={{
+            scrollSnapType: "x mandatory",
+            WebkitOverflowScrolling: "touch",
+            msOverflowStyle: "none",
+            scrollbarWidth: "none",
+          }}
+        >
+          {TESTIMONIALS.map((item, idx) => (
+            <div
+              key={idx}
+              className="flex-shrink-0"
+              style={{
+                width: "85vw",
+                maxWidth: "360px",
+                scrollSnapAlign: "start",
+              }}
+            >
+              <TestimonialCard
+                item={item}
+                visible={cardsVisible}
+                style={{ transitionDelay: `${idx * 80}ms` }}
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Mobile swipe hint */}
+        <div className="md:hidden flex justify-center mt-4 gap-1.5">
+          {TESTIMONIALS.map((_, idx) => (
+            <div
+              key={idx}
+              style={{
+                width: "6px",
+                height: "6px",
+                borderRadius: "50%",
+                background: idx === 0 ? "#4BA3C3" : "rgba(255,255,255,0.2)",
+              }}
+            />
+          ))}
+        </div>
+
+        {/* ── Success Message ── */}
         {submissionSuccess && (
-          <div className="max-w-md mx-auto mb-8 bg-green-500/10 border border-green-400/20 rounded-2xl p-4 text-center">
-            <p className="text-green-400 font-medium">{submissionSuccess}</p>
+          <div className="max-w-md mx-auto mt-8 rounded-lg p-4 text-center" style={{ background: "rgba(39,174,96,0.12)", border: "1px solid rgba(39,174,96,0.25)" }}>
+            <p style={{ color: "#6FCF97", fontWeight: 500, fontSize: "0.9rem" }}>{submissionSuccess}</p>
           </div>
         )}
 
-        {/* Recent Feedback Section */}
+        {/* ── Recent Feedback ── */}
         {showRecentFeedback && (
-          <div className="max-w-6xl mx-auto mb-16">
+          <div className="max-w-6xl mx-auto mt-10">
             <RecentFeedback />
           </div>
         )}
 
-        <div className="relative max-w-4xl mx-auto">
-          {/* Testimonial Card */}
-          <div
-            className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl shadow-2xl px-8 py-12 text-center transition-all duration-700 animate-fade-in-up"
+        {/* ── Action Buttons (below grid) ── */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-12 sm:mt-16">
+          <button
+            onClick={() => setShowRatingForm(true)}
+            className="flex items-center gap-2 font-semibold transition-all duration-200"
             style={{
-              boxShadow: "0 4px 32px 0 rgba(147, 51, 234, 0.1), 0 0 0 2px rgba(255,255,255,0.04)",
-              minHeight: 380,
+              background: "transparent",
+              border: "1.5px solid rgba(46,125,156,0.5)",
+              color: "#7EB5D6",
+              borderRadius: "8px",
+              padding: "10px 24px",
+              fontSize: "0.9rem",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(46,125,156,0.1)";
+              e.currentTarget.style.borderColor = "#2E7D9C";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "transparent";
+              e.currentTarget.style.borderColor = "rgba(46,125,156,0.5)";
             }}
           >
-            {/* Remove the emoji/icon from the testimonial card */}
-            {/* <div className="flex justify-center mb-6">
-              <span
-                className="text-5xl md:text-6xl drop-shadow-[0_0_12px_rgba(147,51,234,0.5)] animate-pulse"
-                aria-hidden
-              >
-                {TESTIMONIALS[current].icon}
-              </span>
-            </div> */}
-            
-            {/* Star Rating */}
-            <StarRating rating={TESTIMONIALS[current].rating} />
-            
-            <blockquote className="text-xl md:text-2xl font-medium text-white leading-relaxed mb-8 transition-all duration-500 max-w-3xl mx-auto">
-              "{TESTIMONIALS[current].text}"
-            </blockquote>
-            
-            <div className="flex flex-col items-center gap-2">
-              <span className="text-lg font-semibold text-purple-300 drop-shadow-[0_0_6px_rgba(147,51,234,0.7)]">
-                — {TESTIMONIALS[current].author}
-              </span>
-              {TESTIMONIALS[current].location && (
-                <span className="text-sm text-gray-400">
-                  {TESTIMONIALS[current].location}
-                </span>
-              )}
-            </div>
-
-            {/* Auto-play indicator */}
-            <div className="flex justify-center mt-6">
-              <div className="flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm rounded-full border border-white/10">
-                <div className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  isAutoPlaying ? 'bg-green-400 animate-pulse' : 'bg-gray-400'
-                }`}></div>
-                <span className="text-xs text-gray-300">
-                  {isAutoPlaying ? 'Auto-playing' : 'Paused'}
-                </span>
-              </div>
-            </div>
-
-            {/* Navigation */}
-            <div className="flex justify-center gap-4 mt-8">
-              <button
-                aria-label="Previous testimonial"
-                onClick={() => {
-                  prev();
-                  handleUserInteraction();
-                }}
-                className="w-12 h-12 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 shadow-lg backdrop-blur-sm"
-              >
-                <span className="text-2xl">‹</span>
-              </button>
-              <button
-                aria-label="Next testimonial"
-                onClick={() => {
-                  next();
-                  handleUserInteraction();
-                }}
-                className="w-12 h-12 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 shadow-lg backdrop-blur-sm"
-              >
-                <span className="text-2xl">›</span>
-              </button>
-            </div>
-
-            {/* Dots */}
-            <div className="flex justify-center gap-3 mt-6">
-              {TESTIMONIALS.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => {
-                    setCurrent(idx);
-                    handleUserInteraction();
-                  }}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                    idx === current
-                      ? "bg-purple-400 shadow shadow-purple-400/50 scale-125"
-                      : "bg-white/30 hover:bg-white/50"
-                  }`}
-                  aria-label={`Go to testimonial ${idx + 1}`}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Additional Info */}
-        <div className="text-center mt-16">
-          <div className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 backdrop-blur-sm rounded-full border border-white/10">
-            <span className="text-purple-400">💙</span>
-            <span className="text-gray-300 text-sm">
-              <span className="text-purple-400 font-semibold">{TESTIMONIALS.length}</span> real stories of hope and closure
-            </span>
-          </div>
-          
-          {/* Average Rating Display */}
-          <div className="mt-4 inline-flex items-center gap-2 px-6 py-3 bg-white/5 backdrop-blur-sm rounded-full border border-white/10">
-            <div className="flex gap-1">
-              {[...Array(5)].map((_, index) => (
-                <span key={index} className="text-yellow-400 text-lg">★</span>
-              ))}
-            </div>
-            <span className="text-gray-300 text-sm">
-              <span className="text-purple-400 font-semibold">5.0</span> average rating
-            </span>
-          </div>
+            ⭐ Rate Your Experience
+          </button>
+          <button
+            onClick={() => setShowRecentFeedback(!showRecentFeedback)}
+            className="flex items-center gap-2 font-semibold transition-all duration-200"
+            style={{
+              background: "transparent",
+              border: "1.5px solid rgba(46,125,156,0.5)",
+              color: "#7EB5D6",
+              borderRadius: "8px",
+              padding: "10px 24px",
+              fontSize: "0.9rem",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(46,125,156,0.1)";
+              e.currentTarget.style.borderColor = "#2E7D9C";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "transparent";
+              e.currentTarget.style.borderColor = "rgba(46,125,156,0.5)";
+            }}
+          >
+            💬 {showRecentFeedback ? "Hide Recent Feedback" : "View Recent Feedback"}
+          </button>
         </div>
       </div>
 
@@ -278,8 +438,13 @@ const Testimonials = () => {
         onClose={() => setShowRatingForm(false)}
         onSubmit={handleRatingSubmit}
       />
+
+      {/* Hide scrollbar on mobile scroller */}
+      <style>{`
+        .md\\:hidden::-webkit-scrollbar { display: none; }
+      `}</style>
     </section>
   );
 };
 
-export default Testimonials; 
+export default Testimonials;

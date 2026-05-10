@@ -8,9 +8,8 @@ import AdminAuth from './components/AdminAuth';
 import AdminRatings from './components/AdminRatings';
 import AdminCases from './components/AdminCases';
 import About from './pages/About';
-import TestPage from './pages/TestPage';
-import EmergencyHelp from './components/EmergencyHelp';
-import FloatingActionButton from './components/FloatingActionButton';
+
+import AvyaktaBot from './components/AvyaktaBot';
 import Contact from './components/Contact';
 import LoadingPage from './components/LoadingPage';
 import FAQPage from './components/FAQPage';
@@ -152,7 +151,7 @@ function App() {
           <Routes>
             <Route exact path="/" element={<Home />} />
             <Route exact path="/about" element={<About />} />
-            <Route exact path="/test" element={<TestPage />} />
+
             <Route exact path="/admin/login" element={<AdminAuth />} />
             <Route exact path="/reset-password" element={<ResetPassword />} />
             <Route exact path="/admin/ratings" element={<ProtectedRoute><AdminRatings /></ProtectedRoute>} />
@@ -166,9 +165,8 @@ function App() {
             <Route exact path="/search" element={<SearchMissingPerson />} />
           </Routes>
         </main>
-        {!isLoading && <EmergencyHelp />}
-        {!isLoading && <FloatingActionButton />}
         <Footer />
+        {!isLoading && <AvyaktaBot />}
       </div>
       {isServerDown && <LoadingPage type="server" />}
     </Router>

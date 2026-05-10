@@ -2,11 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 
-function getRandomUsername() {
-  const animals = ['Lion', 'Tiger', 'Eagle', 'Wolf', 'Falcon', 'Panther', 'Dove', 'Fox', 'Bear', 'Hawk'];
-  return 'User_' + animals[Math.floor(Math.random() * animals.length)] + Math.floor(1000 + Math.random() * 9000);
-}
-
 // Helper to get local datetime string for datetime-local input
 function getLocalDateTimeString() {
   const now = new Date();
@@ -16,100 +11,65 @@ function getLocalDateTimeString() {
   return local.toISOString().slice(0, 16);
 }
 
-// Helper to format local datetime for display
-function formatLocalDateTime(dtString) {
-  if (!dtString) return '';
-  const dt = new Date(dtString);
-  if (isNaN(dt)) return dtString;
-  return dt.toLocaleString([], { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-}
-
 // Helper to generate a report ID
 function generateReportId() {
   const now = new Date();
   return `#AVY-${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}${Math.floor(1000 + Math.random() * 9000)}`;
 }
 
-const initialPublic = {
+const initialForm = {
   location: '',
   manualLocation: false,
   dateTime: '',
   image: null,
   description: '',
   contact: '',
-  otp: '',
-  otpSent: false,
-  otpVerified: false,
   message: '',
-  terms: false,
-};
-const initialAnon = {
-  username: getRandomUsername(),
-  dateTime: '',
-  location: '',
   terms: false,
 };
 
 const ReportUnclaimedBody = () => {
-  const [tab, setTab] = useState('public');
-  const [publicForm, setPublicForm] = useState(initialPublic);
-  const [anonForm, setAnonForm] = useState(initialAnon);
-  const [publicErrors, setPublicErrors] = useState({});
-  const [anonErrors, setAnonErrors] = useState({});
+  const [form, setForm] = useState(initialForm);
+  const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [submittedAnon, setSubmittedAnon] = useState(false);
-  const [step, setStep] = useState(1);
   const [imagePreview, setImagePreview] = useState(null);
   const [reportId, setReportId] = useState(null);
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    if (!publicForm.manualLocation && navigator.geolocation) {
+    if (!form.manualLocation && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
-          setPublicForm((f) => ({ ...f, location: `${pos.coords.latitude}, ${pos.coords.longitude}` }));
+          setForm((f) => ({ ...f, location: `${pos.coords.latitude}, ${pos.coords.longitude}` }));
         },
         () => {},
         { enableHighAccuracy: true }
       );
     }
-    if (!publicForm.dateTime) {
-      setPublicForm((f) => ({ ...f, dateTime: getLocalDateTimeString() }));
+    if (!form.dateTime) {
+      setForm((f) => ({ ...f, dateTime: getLocalDateTimeString() }));
     }
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          setAnonForm((f) => ({ ...f, location: `${pos.coords.latitude}, ${pos.coords.longitude}` }));
-        },
-        () => {},
-        { enableHighAccuracy: true }
-      );
-    }
-    if (!anonForm.dateTime) {
-      setAnonForm((f) => ({ ...f, dateTime: getLocalDateTimeString() }));
-    }
-  }, [publicForm.manualLocation]);
+  }, [form.manualLocation]);
 
-  // --- Public Form Logic ---
-  const validatePublic = () => {
+  const validate = () => {
     const e = {};
-    if (!publicForm.location) e.location = 'Location is required.';
-    if (!publicForm.dateTime) e.dateTime = 'Date & Time is required.';
-    if (!publicForm.description?.trim()) e.description = 'Description is required.';
-    if (publicForm.image && publicForm.image.size > 5 * 1024 * 1024) e.image = 'Max file size is 5MB.';
-    if (publicForm.image && !['image/jpeg', 'image/png'].includes(publicForm.image.type)) e.image = 'Only JPEG/PNG allowed.';
-    if (!publicForm.contact) e.contact = 'Contact is required for public report.';
-    if (!publicForm.otpVerified) e.otp = 'Please verify your contact with OTP.';
-    if (!publicForm.terms) e.terms = 'You must confirm the report is genuine.';
+    if (!form.location) e.location = 'Location is required.';
+    if (!form.dateTime) e.dateTime = 'Date & Time is required.';
+    if (!form.description?.trim()) e.description = 'Description is required.';
+    if (form.image && form.image.size > 5 * 1024 * 1024) e.image = 'Max file size is 5MB.';
+    if (form.image && !['image/jpeg', 'image/png'].includes(form.image.type)) e.image = 'Only JPEG/PNG allowed.';
+    if (!form.contact) e.contact = 'Contact information is required for follow-up.';
+    if (!form.terms) e.terms = 'You must confirm the report is genuine.';
     return e;
   };
-  const handlePublicChange = (e) => {
+
+  const handleChange = (e) => {
     const { name, value, type, checked, files } = e.target;
     if (type === 'checkbox') {
-      setPublicForm((f) => ({ ...f, [name]: checked }));
+      setForm((f) => ({ ...f, [name]: checked }));
     } else if (type === 'file') {
-      setPublicForm((f) => ({ ...f, image: files[0] }));
+      setForm((f) => ({ ...f, image: files[0] }));
       if (files[0]) {
         const reader = new FileReader();
         reader.onload = (ev) => setImagePreview(ev.target.result);
@@ -118,19 +78,14 @@ const ReportUnclaimedBody = () => {
         setImagePreview(null);
       }
     } else {
-      setPublicForm((f) => ({ ...f, [name]: value }));
+      setForm((f) => ({ ...f, [name]: value }));
     }
   };
-  const handleSendOtp = () => {
-    setPublicForm((f) => ({ ...f, otpSent: true }));
-  };
-  const handleVerifyOtp = () => {
-    setPublicForm((f) => ({ ...f, otpVerified: true }));
-  };
-  const handlePublicSubmit = async (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const eObj = validatePublic();
-    setPublicErrors(eObj);
+    const eObj = validate();
+    setErrors(eObj);
     if (Object.keys(eObj).length > 0) return;
     setSubmitting(true);
     
@@ -141,11 +96,11 @@ const ReportUnclaimedBody = () => {
         .from('cases')
         .insert([{
           report_id: newReportId,
-          report_type: 'public',
-          location: publicForm.location,
-          date_time: new Date(publicForm.dateTime).toISOString(),
-          description: publicForm.description + (publicForm.message ? `\n\nNotes: ${publicForm.message}` : ''),
-          contact: publicForm.contact,
+          report_type: 'general',
+          location: form.location,
+          date_time: new Date(form.dateTime).toISOString(),
+          description: form.description + (form.message ? `\n\nNotes: ${form.message}` : ''),
+          contact: form.contact,
           status: 'pending'
         }]);
 
@@ -153,60 +108,10 @@ const ReportUnclaimedBody = () => {
 
       setSubmitted(true);
       setReportId(newReportId);
-      setPublicForm(initialPublic);
+      setForm(initialForm);
       setImagePreview(null);
-      setStep(1);
     } catch (err) {
-      console.error('Failed to submit public report:', err);
-      alert('Failed to submit report. Please try again.');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  // --- Anonymous Form Logic ---
-  const validateAnon = () => {
-    const e = {};
-    if (!anonForm.username) e.username = 'Username is required.';
-    if (!anonForm.terms) e.terms = 'You must accept the terms.';
-    return e;
-  };
-  const handleAnonChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    if (type === 'checkbox') {
-      setAnonForm((f) => ({ ...f, [name]: checked }));
-    } else {
-      setAnonForm((f) => ({ ...f, [name]: value }));
-    }
-  };
-  const handleAnonSubmit = async (e) => {
-    e.preventDefault();
-    const eObj = validateAnon();
-    setAnonErrors(eObj);
-    if (Object.keys(eObj).length > 0) return;
-    setSubmitting(true);
-
-    const newReportId = generateReportId();
-
-    try {
-      const { error } = await supabase
-        .from('cases')
-        .insert([{
-          report_id: newReportId,
-          report_type: 'anonymous',
-          location: anonForm.location,
-          date_time: new Date(anonForm.dateTime).toISOString(),
-          description: `Anonymous Report by ${anonForm.username}`,
-          status: 'pending'
-        }]);
-
-      if (error) throw error;
-
-      setSubmittedAnon(true);
-      setReportId(newReportId);
-      setAnonForm({ ...initialAnon, username: getRandomUsername() });
-    } catch (err) {
-      console.error('Failed to submit anonymous report:', err);
+      console.error('Failed to submit report:', err);
       alert('Failed to submit report. Please try again.');
     } finally {
       setSubmitting(false);
@@ -219,396 +124,181 @@ const ReportUnclaimedBody = () => {
     }
   };
 
+  const inputStyle = {
+    border: '1.5px solid #CBD5E0',
+    borderRadius: '8px',
+    padding: '0.75rem 1rem',
+    fontSize: '1rem',
+    color: 'var(--text-dark)',
+    background: '#fff',
+    width: '100%',
+    transition: 'border-color 0.2s, box-shadow 0.2s',
+  };
+
   // --- UI ---
   if (submitted) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 py-10 animate-fade-in">
-        <div className="w-full max-w-xl bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl p-10 text-center animate-fade-in-up border border-blue-100">
+      <div className="min-h-screen pt-16 sm:pt-20 lg:pt-24 flex flex-col items-center justify-center section-light px-4">
+        <div className="inst-card w-full max-w-xl text-center">
           <div className="flex flex-col items-center mb-6">
-            <span className="block w-16 h-16 mb-2 animate-glow">
+            <span className="block w-16 h-16 mb-4">
               <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
-                <ellipse cx="12" cy="20" rx="5" ry="2" fill="#ffe066" opacity="0.3" />
-                <path className="animate-flicker" d="M12 20c3-4.5 3-9 0-13-3 4.5-3 9 0 13z" fill="#ffe066" />
-                <path className="animate-flicker" d="M12 16c1.5-2.5 1.5-5 0-7.5-1.5 2.5-1.5 5 0 7.5z" fill="#ffb700" />
+                <ellipse cx="12" cy="20" rx="5" ry="2" fill="var(--amber-warn)" opacity="0.3" />
+                <path d="M12 20c3-4.5 3-9 0-13-3 4.5-3 9 0 13z" fill="var(--amber-warn)" />
+                <path d="M12 16c1.5-2.5 1.5-5 0-7.5-1.5 2.5-1.5 5 0 7.5z" fill="var(--success-green)" />
               </svg>
             </span>
-            <h2 className="text-2xl font-bold mb-2 text-green-700">Thank you for your courage and compassion.</h2>
-            <p className="text-lg text-gray-700 mb-2">Your report has been received with heartfelt respect and will be reviewed by our team.<br/>You've taken a step toward giving someone their identity, and their dignity.</p>
-            <div className="italic text-gray-400 text-sm mb-2">“In silent departures, we find our greatest humanity.”</div>
-            {reportId && (
-              <div className="flex flex-col items-center gap-2 mt-2">
-                <div className="flex items-center gap-2 text-blue-800 font-mono text-sm">
-                  Report ID: <span className="font-bold">{reportId}</span>
-                  <button onClick={handleCopyReportId} title="Copy Report ID" className="ml-1 p-1 rounded hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" fill="#2563eb" opacity="0.15"/><rect x="3" y="3" width="13" height="13" rx="2" stroke="#2563eb" strokeWidth="2" fill="none"/></svg>
-                  </button>
-                </div>
-                <span className="text-xs text-gray-500">Tap to copy your Report ID</span>
-              </div>
-            )}
-          </div>
-          <div className="mt-6 text-blue-900 text-base font-medium flex flex-col items-center gap-2">
-            <span>💙 If you ever need guidance, reassurance, or further support...</span>
-            <button
-              className="mt-2 px-6 py-2 bg-gradient-to-r from-blue-600 to-green-500 text-white rounded-lg font-semibold shadow hover:from-blue-700 hover:to-green-600 flex items-center gap-2 text-lg"
-              onClick={() => navigate('/faq')}
-            >
-              <span role="img" aria-label="back">🔙</span> Back to Support &amp; Safety
-            </button>
-          </div>
-        </div>
-        <style>{`
-          @keyframes flicker { 0%{opacity:1;} 50%{opacity:0.7;} 100%{opacity:1;} }
-          .animate-flicker { animation: flicker 1.2s infinite alternate; }
-          .animate-glow { filter: drop-shadow(0 0 12px #ffe066) drop-shadow(0 0 24px #ffe06688); }
-          .animate-fade-in { animation: fadeIn 0.7s ease; }
-          .animate-fade-in-up { animation: fadeInUp 0.7s ease; }
-          @keyframes fadeIn { from { opacity: 0;} to { opacity: 1;} }
-          @keyframes fadeInUp { from { opacity: 0; transform: translateY(32px);} to { opacity: 1; transform: none; } }
-        `}</style>
-      </div>
-    );
-  }
-  if (submittedAnon) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 py-10 animate-fade-in">
-        <div className="w-full max-w-xl bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl p-10 text-center animate-fade-in-up border border-purple-100">
-          <div className="flex flex-col items-center mb-6">
-            <span className="block w-16 h-16 mb-2 animate-glow">
-              <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
-                <ellipse cx="12" cy="20" rx="5" ry="2" fill="#ffe066" opacity="0.3" />
-                <path className="animate-flicker" d="M12 20c3-4.5 3-9 0-13-3 4.5-3 9 0 13z" fill="#ffe066" />
-                <path className="animate-flicker" d="M12 16c1.5-2.5 1.5-5 0-7.5-1.5 2.5-1.5 5 0 7.5z" fill="#ffb700" />
-              </svg>
-            </span>
-            <h2 className="text-2xl font-bold mb-2 text-purple-700">Thank you for reporting anonymously.</h2>
-            <p className="text-lg text-gray-700 mb-2">Your anonymous report has been securely submitted and will be reviewed. You've helped bring dignity and closure.</p>
-            <div className="italic text-gray-400 text-sm mb-2">“Every voice matters, even in silence.”</div>
-            <div className="mt-4 text-green-700 text-base font-medium">💚 Thank you for your silent act of humanity. Your report is now part of a greater mission to bring truth, peace, and identity to those who can't speak for themselves.</div>
+            <h2 className="text-2xl font-bold mb-2" style={{ color: 'var(--navy)' }}>
+              Thank you for your courage and compassion.
+            </h2>
+            <p className="text-base sm:text-lg mb-4" style={{ color: 'var(--text-mid)' }}>
+              Your report has been received with heartfelt respect and will be reviewed by our team. You've taken a step toward giving someone their identity, and their dignity.
+            </p>
             {reportId && (
               <div className="flex flex-col items-center gap-2 mt-4">
-                <div className="flex items-center gap-2 text-purple-800 font-mono text-sm bg-purple-100 px-4 py-2 rounded-lg">
-                  Report ID: <span className="font-bold">{reportId}</span>
-                  <button onClick={handleCopyReportId} title="Copy Report ID" className="ml-1 p-1 rounded hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" fill="#7e22ce" opacity="0.15"/><rect x="3" y="3" width="13" height="13" rx="2" stroke="#7e22ce" strokeWidth="2" fill="none"/></svg>
+                <div className="flex items-center gap-2 font-mono text-sm sm:text-base px-4 py-3 rounded-lg w-full max-w-sm" style={{ background: 'rgba(46,125,156,0.1)', color: 'var(--navy)' }}>
+                  Report ID: <span className="font-bold flex-1 truncate text-left">{reportId}</span>
+                  <button onClick={handleCopyReportId} title="Copy Report ID" className="p-1.5 rounded hover:bg-white focus:outline-none focus:ring-2 focus:ring-teal flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" fill="var(--teal)" opacity="0.15"/><rect x="3" y="3" width="13" height="13" rx="2" stroke="var(--teal)" strokeWidth="2" fill="none"/></svg>
                   </button>
                 </div>
-                <span className="text-xs text-gray-500">Tap to copy. You can use this ID to track the case anonymously.</span>
+                <span className="text-xs" style={{ color: 'var(--text-light)' }}>Tap to copy. You can use this ID to track the case.</span>
               </div>
             )}
           </div>
-          <button className="mt-6 px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-500 text-white rounded-lg font-semibold shadow hover:from-purple-700 hover:to-pink-600" onClick={() => { setSubmittedAnon(false); setReportId(null); }}>Submit Another Anonymous Report</button>
+          
+          <button
+            className="btn-primary mt-6 w-full sm:w-auto px-8 py-3 text-lg"
+            onClick={() => navigate('/faq')}
+          >
+            Back to Support & Safety
+          </button>
         </div>
-        <style>{`
-          @keyframes flicker { 0%{opacity:1;} 50%{opacity:0.7;} 100%{opacity:1;} }
-          .animate-flicker { animation: flicker 1.2s infinite alternate; }
-          .animate-glow { filter: drop-shadow(0 0 12px #ffe066) drop-shadow(0 0 24px #ffe06688); }
-          .animate-fade-in { animation: fadeIn 0.7s ease; }
-          .animate-fade-in-up { animation: fadeInUp 0.7s ease; }
-          @keyframes fadeIn { from { opacity: 0;} to { opacity: 1;} }
-          @keyframes fadeInUp { from { opacity: 0; transform: translateY(32px);} to { opacity: 1; transform: none; } }
-        `}</style>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 flex flex-col">
+    <div className="min-h-screen pt-16 sm:pt-20 lg:pt-24 section-light pb-12">
       {/* Hero Section */}
-      <div className="w-full max-w-3xl mx-auto text-center pt-12 pb-6 px-4">
-        <div className="flex flex-col items-center mb-4">
-          <span className="block w-20 h-20 mb-2 animate-glow">
-            <svg width="80" height="80" viewBox="0 0 24 24" fill="none">
-              <ellipse cx="12" cy="20" rx="7" ry="3" fill="#ffe066" opacity="0.18" />
-              <path className="animate-flicker" d="M12 20c3-4.5 3-9 0-13-3 4.5-3 9 0 13z" fill="#ffe066" />
-              <path className="animate-flicker" d="M12 16c1.5-2.5 1.5-5 0-7.5-1.5 2.5-1.5 5 0 7.5z" fill="#ffb700" />
-            </svg>
-          </span>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-2">“A step toward giving the forgotten a name, a voice, and the respect they deserve.”</h1>
-          <div className="text-lg sm:text-xl text-blue-700 font-medium mb-2">Your report can be anonymous, safe, and confidential.</div>
-          <div className="italic text-gray-500 text-base mb-2">“Every report is a step toward justice and humanity.”</div>
-        </div>
-      </div>
-      {/* Why this matters section */}
-      <div className="w-full max-w-2xl mx-auto mb-6 px-4">
-        <div className="bg-yellow-50 border-l-4 border-yellow-400 rounded-lg p-4 shadow">
-          <h3 className="font-bold text-yellow-800 mb-1">Why this matters</h3>
-          <p className="text-yellow-900 text-base">Every year, thousands of unclaimed and unidentified bodies are found in India. Many are never identified, and families never get closure. For example, <b>30,000 honour killings</b> occur annually, but only 25–35 are reported. Your report can help bring dignity, justice, and peace to the unknown and their families.</p>
-        </div>
-      </div>
-      {/* Glassmorphism Card with Tabs */}
-      <div className="flex-1 flex items-center justify-center pb-10">
-        <div className="w-full max-w-5xl bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl p-6 md:p-12 flex flex-col md:flex-row gap-8 border border-blue-100 animate-fade-in-up">
-          {/* Pill Tabs */}
-          <div className="flex flex-col md:w-1/3 gap-4 items-center md:items-stretch">
-            <button onClick={() => { setTab('public'); setStep(1); }} className={`rounded-full px-6 py-3 font-bold text-lg shadow transition-all duration-300 ${tab==='public' ? 'bg-gradient-to-r from-blue-600 to-green-500 text-white scale-105' : 'bg-blue-100 text-blue-900 hover:bg-blue-200'}`}>Report Publicly</button>
-            <button onClick={() => { setTab('anon'); setStep(1); }} className={`rounded-full px-6 py-3 font-bold text-lg shadow transition-all duration-300 ${tab==='anon' ? 'bg-gradient-to-r from-purple-600 to-pink-500 text-white scale-105' : 'bg-purple-100 text-purple-900 hover:bg-purple-200'}`}>Report Anonymously</button>
+      <section className="section-dark section-padding text-center px-4">
+        <div className="container-responsive">
+          <div className="flex flex-col items-center max-w-3xl mx-auto">
+            <span className="block w-16 h-16 mb-4">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
+                <ellipse cx="12" cy="20" rx="7" ry="3" fill="var(--amber-warn)" opacity="0.3" />
+                <path d="M12 20c3-4.5 3-9 0-13-3 4.5-3 9 0 13z" fill="var(--amber-warn)" />
+                <path d="M12 16c1.5-2.5 1.5-5 0-7.5-1.5 2.5-1.5 5 0 7.5z" fill="var(--success-green)" />
+              </svg>
+            </span>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-merriweather font-bold mb-4" style={{ color: '#fff', lineHeight: '1.3' }}>
+              “A step toward giving the forgotten a name, a voice, and the respect they deserve.”
+            </h1>
+            <div className="text-base sm:text-lg lg:text-xl font-medium mb-3" style={{ color: '#CBD5E0' }}>Your report can help bring dignity and closure to families.</div>
           </div>
+        </div>
+      </section>
+
+      {/* Main Content Area */}
+      <div className="container-responsive mt-8 sm:mt-12">
+        <div className="w-full max-w-2xl mx-auto">
+          {/* Why this matters section */}
+          <div className="rounded-lg p-4 shadow-sm mb-8" style={{ background: 'rgba(245,158,11,0.1)', borderLeft: '4px solid var(--amber-warn)' }}>
+            <h3 className="font-bold mb-1 text-sm sm:text-base" style={{ color: 'var(--amber-warn)' }}>Why this matters</h3>
+            <p className="text-sm sm:text-base" style={{ color: 'var(--text-dark)' }}>Every year, thousands of unclaimed and unidentified bodies are found in India. Many are never identified. Your report can help bring justice and peace to the unknown and their families.</p>
+          </div>
+
           {/* Form Section */}
-          <div className="flex-1">
-            {/* Step Indicator */}
-            <div className="mb-4 flex items-center gap-2">
-              <div className="text-sm font-semibold text-blue-700 bg-blue-100 rounded-full px-3 py-1">Step 1 of 2</div>
-              <div className="flex-1 h-2 bg-blue-100 rounded-full overflow-hidden">
-                <div className="h-2 bg-gradient-to-r from-blue-600 to-green-500 rounded-full" style={{ width: '50%' }}></div>
+          <div className="form-card p-5 sm:p-8">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="text-xl sm:text-2xl font-bold mb-2 pb-4 border-b border-gray-200" style={{ color: 'var(--navy)' }}>Report Details</div>
+              
+              {/* Location */}
+              <div className="space-y-1">
+                <label className="block text-sm sm:text-base font-semibold" style={{ color: 'var(--navy)' }}>📍 Location of body found *</label>
+                <div className="flex items-center gap-2 mb-2">
+                  <input type="checkbox" name="manualLocation" checked={form.manualLocation} onChange={handleChange} id="manualLocation" className="w-4 h-4" />
+                  <label htmlFor="manualLocation" className="text-sm cursor-pointer" style={{ color: 'var(--text-dark)' }}>Enter location manually</label>
+                </div>
+                <input
+                  type="text"
+                  name="location"
+                  value={form.location}
+                  onChange={handleChange}
+                  style={{ ...inputStyle, background: form.manualLocation ? '#fff' : '#f8fafc', cursor: form.manualLocation ? 'text' : 'not-allowed' }}
+                  readOnly={!form.manualLocation}
+                  placeholder={form.manualLocation ? "Enter exact location (address, landmark, etc.)" : "Fetching GPS location..."}
+                  required
+                />
+                {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location}</p>}
               </div>
-            </div>
-            {tab === 'public' ? (
-              <form onSubmit={handlePublicSubmit} className="space-y-6">
-                <div className="text-xl font-bold text-blue-900 mb-2 flex items-center gap-2"><span role="img" aria-label="public">🧾</span> Public Report</div>
-                <div className="text-blue-700 mb-4 text-sm">Your report will be reviewed and you will be contacted for verification.</div>
-                {/* Location */}
-                <div className="relative">
-                  <label className="block font-semibold mb-1 text-blue-900">📍 Location of body found *</label>
-                  <div className="flex items-center gap-2 mb-2">
-                    <input
-                      type="checkbox"
-                      name="manualLocation"
-                      checked={publicForm.manualLocation}
-                      onChange={handlePublicChange}
-                      className="form-checkbox"
-                      id="manualLocation"
-                    />
-                    <label htmlFor="manualLocation" className="text-sm">Enter location manually</label>
-                  </div>
-                  {publicForm.manualLocation ? (
-                    <input
-                      type="text"
-                      name="location"
-                      value={publicForm.location}
-                      onChange={handlePublicChange}
-                      className="form-input w-full"
-                      placeholder="Enter location (address, landmark, etc.)"
-                      required
-                    />
-                  ) : (
-                    <input
-                      type="text"
-                      name="location"
-                      value={publicForm.location}
-                      readOnly
-                      className="form-input w-full bg-gray-100 cursor-not-allowed"
-                      placeholder="Fetching location..."
-                      required
-                    />
-                  )}
-                  {publicErrors.location && <p className="text-red-500 text-sm mt-1">{publicErrors.location}</p>}
-                  {/* Map View */}
-                  {publicForm.location && !publicForm.manualLocation && publicForm.location.includes(',') && (
-                    <div className="mt-2">
-                      <iframe
-                        title="Location Map"
-                        width="100%"
-                        height="180"
-                        frameBorder="0"
-                        style={{ border: 0, borderRadius: '12px' }}
-                        src={`https://www.openstreetmap.org/export/embed.html?bbox=${parseFloat(publicForm.location.split(',')[1])-0.01}%2C${parseFloat(publicForm.location.split(',')[0])-0.01}%2C${parseFloat(publicForm.location.split(',')[1])+0.01}%2C${parseFloat(publicForm.location.split(',')[0])+0.01}&layer=mapnik&marker=${publicForm.location}`}
-                        allowFullScreen
-                      ></iframe>
-                      <div className="text-xs text-gray-500 mt-1">Map view (approximate)</div>
-                    </div>
-                  )}
-                </div>
-                {/* Date & Time */}
-                <div className="relative">
-                  <label className="block font-semibold mb-1 text-blue-900">📅 Date & Time of sighting *</label>
-                  <input
-                    type="datetime-local"
-                    name="dateTime"
-                    value={publicForm.dateTime}
-                    onChange={handlePublicChange}
-                    className="form-input w-full"
-                    required
-                  />
-                  {publicErrors.dateTime && <p className="text-red-500 text-sm mt-1">{publicErrors.dateTime}</p>}
-                </div>
-                {/* Image Upload */}
-                <div className="relative">
-                  <label className="block font-semibold mb-1 text-blue-900">📸 Upload Image (if any)</label>
-                  <input
-                    type="file"
-                    name="image"
-                    accept="image/jpeg,image/png"
-                    onChange={handlePublicChange}
-                    className="form-input w-full"
-                  />
-                  {imagePreview && (
-                    <div className="mt-2 flex flex-col items-center">
-                      <img src={imagePreview} alt="Preview" className="max-h-40 rounded-lg border border-gray-200 shadow" />
-                      <span className="text-xs text-gray-500 mt-1">Image preview</span>
-                    </div>
-                  )}
-                  {publicErrors.image && <p className="text-red-500 text-sm mt-1">{publicErrors.image}</p>}
-                </div>
-                {/* Description */}
-                <div className="relative">
-                  <label className="block font-semibold mb-1 text-blue-900">🧍 Description of the deceased *</label>
-                  <textarea
-                    name="description"
-                    value={publicForm.description}
-                    onChange={handlePublicChange}
-                    className="form-input w-full min-h-[80px]"
-                    placeholder="Visible features, clothes, tattoos, etc."
-                    required
-                  />
-                  {publicErrors.description && <p className="text-red-500 text-sm mt-1">{publicErrors.description}</p>}
-                </div>
-                {/* Contact */}
-                <div className="relative">
-                  <label className="block font-semibold mb-1 text-blue-900">📞 Contact number or Email *</label>
-                  <input
-                    type="text"
-                    name="contact"
-                    value={publicForm.contact}
-                    onChange={handlePublicChange}
-                    className="form-input w-full"
-                    placeholder="Phone or email (required)"
-                    required
-                  />
-                  {publicForm.contact && !publicForm.otpSent && (
-                    <button type="button" className="mt-2 px-4 py-1 bg-blue-600 text-white rounded" onClick={handleSendOtp}>Send OTP</button>
-                  )}
-                  {publicForm.otpSent && !publicForm.otpVerified && (
-                    <div className="flex items-center gap-2 mt-2">
-                      <input
-                        type="text"
-                        name="otp"
-                        value={publicForm.otp}
-                        onChange={handlePublicChange}
-                        className="form-input w-32"
-                        placeholder="Enter OTP"
-                      />
-                      <button type="button" className="px-3 py-1 bg-green-600 text-white rounded" onClick={handleVerifyOtp}>Verify</button>
-                    </div>
-                  )}
-                  {publicForm.otpVerified && <span className="ml-2 text-green-600 font-semibold">Verified</span>}
-                  {publicErrors.contact && <p className="text-red-500 text-sm mt-1">{publicErrors.contact}</p>}
-                  {publicErrors.otp && <p className="text-red-500 text-sm mt-1">{publicErrors.otp}</p>}
-                </div>
-                {/* Any other message */}
-                <div className="relative">
-                  <label className="block font-semibold mb-1 text-blue-900">📄 Any other message?</label>
-                  <textarea
-                    name="message"
-                    value={publicForm.message}
-                    onChange={handlePublicChange}
-                    className="form-input w-full min-h-[60px]"
-                    placeholder="Free form notes (optional)"
-                  />
-                </div>
-                {/* Terms disclaimer */}
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    name="terms"
-                    checked={publicForm.terms}
-                    onChange={handlePublicChange}
-                    className="form-checkbox"
-                    id="terms-public"
-                    required
-                  />
-                  <label htmlFor="terms-public" className="text-sm">I confirm this report is genuine, and I understand its impact. I submit it with honesty and compassion for the unknown.</label>
-                </div>
-                {publicErrors.terms && <p className="text-red-500 text-sm mt-1">{publicErrors.terms}</p>}
-                {/* Motivational line */}
-                <div className="text-green-700 text-sm font-semibold italic text-center mb-2">“Your courage can give closure to someone's family.”</div>
-                {/* Submit Button */}
-                <button
-                  type="submit"
-                  className="w-full mt-2 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-green-500 text-white font-bold shadow-lg hover:from-blue-700 hover:to-green-600 transition-all text-lg"
-                  disabled={submitting}
-                >
-                  {submitting ? 'Submitting...' : 'Submit Public Report'}
-                </button>
-              </form>
-            ) : (
-              <form onSubmit={handleAnonSubmit} className="space-y-6">
-                <div className="text-xl font-bold text-purple-900 mb-2 flex items-center gap-2"><span role="img" aria-label="anon">🕵️‍♂️</span> Anonymous Report</div>
-                {/* Emotional intro */}
-                <div className="mb-3 text-purple-700 text-sm italic flex items-center gap-2">
-                  <span role="img" aria-label="prayer">🙏</span> “Every anonymous report is a silent prayer for justice, a small step toward giving identity to someone forgotten. Your courage matters.”
-                </div>
-                <div className="text-purple-700 mb-4 text-sm">Your report will be stored anonymously. No personal details are collected.</div>
-                {/* Username */}
-                <div className="relative mb-1">
-                  <label className="block font-semibold mb-1 text-purple-900">🆔 Anonymous Username *</label>
-                  <input
-                    type="text"
-                    name="username"
-                    value={anonForm.username}
-                    onChange={handleAnonChange}
-                    className="form-input w-full bg-purple-50"
-                    required
-                  />
-                  <div className="text-xs text-gray-500 mt-1">This is your auto-generated name. You remain completely untraceable unless you choose to share your contact.</div>
-                  {anonErrors.username && <p className="text-red-500 text-sm mt-1">{anonErrors.username}</p>}
-                </div>
-                {/* Date & Time (auto) */}
-                <div className="relative">
-                  <label className="block font-semibold mb-1 text-purple-900">📅 Date & Time (auto)</label>
-                  <input
-                    type="text"
-                    value={formatLocalDateTime(anonForm.dateTime)}
-                    readOnly
-                    className="form-input w-full bg-gray-100 cursor-not-allowed"
-                  />
-                </div>
-                {/* Location (auto) */}
-                <div className="relative">
-                  <label className="block font-semibold mb-1 text-purple-900">📍 Location (auto)</label>
-                  <input
-                    type="text"
-                    value={anonForm.location}
-                    readOnly
-                    className="form-input w-full bg-gray-100 cursor-not-allowed"
-                  />
-                </div>
-                {/* Spam/Fake Detection Warning Note */}
-                <div className="mb-2 text-red-600 text-sm font-semibold flex items-center gap-2">
-                  <span role="img" aria-label="warning">🚨</span> Submitting a false or fake report not only wastes police time, but can also delay justice for someone in need. Please report with honesty and compassion.
-                </div>
-                {/* Terms disclaimer */}
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    name="terms"
-                    checked={anonForm.terms}
-                    onChange={handleAnonChange}
-                    className="form-checkbox"
-                    id="terms-anon"
-                    required
-                  />
-                  <label htmlFor="terms-anon" className="text-sm">I confirm this report is genuine, and I understand its impact. I submit it with honesty and compassion for the unknown.</label>
-                </div>
-                {anonErrors.terms && <p className="text-red-500 text-sm mt-1">{anonErrors.terms}</p>}
-                {/* Motivational line */}
-                <div className="text-gray-500 text-sm font-semibold italic text-center mb-2">“Your courage can give closure to someone's family.”</div>
-                {/* Submit Button */}
-                <button
-                  type="submit"
-                  className="w-full mt-2 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 text-white font-bold shadow-lg hover:from-purple-700 hover:to-pink-600 transition-all text-lg"
-                  disabled={submitting}
-                >
-                  {submitting ? 'Submitting...' : '🙌 Deliver with Compassion'}
-                </button>
-                {/* Emotional Reminder at the End */}
-                <div className="mt-3 text-green-700 text-sm text-center font-semibold">“Your genuine report could help a mother find her son, or a sister find her brother. This is not just a report—it's a human responsibility.”</div>
-              </form>
-            )}
+              
+              {/* Date & Time */}
+              <div className="space-y-1">
+                <label className="block text-sm sm:text-base font-semibold" style={{ color: 'var(--navy)' }}>📅 Date & Time of sighting *</label>
+                <input type="datetime-local" name="dateTime" value={form.dateTime} onChange={handleChange} style={inputStyle} required />
+                {errors.dateTime && <p className="text-red-500 text-sm mt-1">{errors.dateTime}</p>}
+              </div>
+              
+              {/* Image Upload */}
+              <div className="space-y-1">
+                <label className="block text-sm sm:text-base font-semibold" style={{ color: 'var(--navy)' }}>📸 Upload Photo (if any)</label>
+                <input type="file" name="image" accept="image/jpeg,image/png" onChange={handleChange} style={{ ...inputStyle, padding: '0.5rem' }} />
+                {imagePreview && <img src={imagePreview} alt="Preview" className="mt-3 rounded-lg shadow-sm w-full max-w-[200px] h-auto object-cover" />}
+                {errors.image && <p className="text-red-500 text-sm mt-1">{errors.image}</p>}
+              </div>
+              
+              {/* Description */}
+              <div className="space-y-1">
+                <label className="block text-sm sm:text-base font-semibold" style={{ color: 'var(--navy)' }}>🧍 Description of the deceased *</label>
+                <textarea name="description" value={form.description} onChange={handleChange} style={{ ...inputStyle, minHeight: '100px' }} placeholder="Please describe visible features, clothing, tattoos, approximate age, gender, etc." required />
+                {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
+              </div>
+              
+              {/* Contact */}
+              <div className="space-y-1">
+                <label className="block text-sm sm:text-base font-semibold" style={{ color: 'var(--navy)' }}>📞 Your Contact Information *</label>
+                <input type="text" name="contact" value={form.contact} onChange={handleChange} style={inputStyle} placeholder="Phone number or email address (required for follow-up)" required />
+                <p className="text-xs mt-1" style={{ color: 'var(--text-light)' }}>We will only contact you if authorities need more information about this report. Your identity is secure.</p>
+                {errors.contact && <p className="text-red-500 text-sm mt-1">{errors.contact}</p>}
+              </div>
+              
+              {/* Any other message */}
+              <div className="space-y-1">
+                <label className="block text-sm sm:text-base font-semibold" style={{ color: 'var(--navy)' }}>📄 Any additional information?</label>
+                <textarea name="message" value={form.message} onChange={handleChange} style={{ ...inputStyle, minHeight: '80px' }} placeholder="Free form notes, circumstances, or anything else that might help (optional)" />
+              </div>
+              
+              {/* Terms disclaimer */}
+              <div className="flex items-start gap-3 mt-8 pt-6 border-t border-gray-200">
+                <input type="checkbox" name="terms" checked={form.terms} onChange={handleChange} id="terms" required className="mt-1 w-5 h-5 rounded border-gray-300 text-teal-600 focus:ring-teal-500" />
+                <label htmlFor="terms" className="text-sm sm:text-base leading-snug cursor-pointer" style={{ color: 'var(--text-dark)' }}>
+                  I confirm this report is genuine. I understand that submitting false reports delays justice for someone in need. I submit this with honesty and compassion for the unknown.
+                </label>
+              </div>
+              {errors.terms && <p className="text-red-500 text-sm mt-1">{errors.terms}</p>}
+              
+              {/* Submit Button */}
+              <button 
+                type="submit" 
+                className="btn-primary w-full mt-6" 
+                disabled={submitting} 
+                style={{ 
+                  borderRadius: '12px', 
+                  padding: '1rem', 
+                  fontSize: '1.1rem', 
+                  opacity: submitting ? 0.7 : 1,
+                  background: 'var(--teal)'
+                }}
+              >
+                {submitting ? 'Submitting Report...' : 'Submit Report'}
+              </button>
+            </form>
           </div>
         </div>
       </div>
-      <style>{`
-        @keyframes flicker { 0%{opacity:1;} 50%{opacity:0.7;} 100%{opacity:1;} }
-        .animate-flicker { animation: flicker 1.2s infinite alternate; }
-        .animate-glow { filter: drop-shadow(0 0 12px #ffe066) drop-shadow(0 0 24px #ffe06688); }
-        .animate-fade-in { animation: fadeIn 0.7s ease; }
-        .animate-fade-in-up { animation: fadeInUp 0.7s ease; }
-        @keyframes fadeIn { from { opacity: 0;} to { opacity: 1;} }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(32px);} to { opacity: 1; transform: none; } }
-      `}</style>
     </div>
   );
 };
 
-export default ReportUnclaimedBody; 
+export default ReportUnclaimedBody;

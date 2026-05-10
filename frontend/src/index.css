@@ -114,6 +114,85 @@
     padding: 4rem 1rem;
   }
 
+  /* ── Alternating Section Backgrounds ── */
+  .section-light {
+    background: var(--off-white);
+    color: var(--text-dark);
+  }
+  .section-dark {
+    background: var(--navy);
+    color: #fff;
+  }
+  .section-dark h1, .section-dark h2, .section-dark h3,
+  .section-dark h4, .section-dark h5, .section-dark h6 {
+    color: #fff;
+  }
+  .section-cream {
+    background: var(--warm-white);
+    color: var(--text-dark);
+  }
+
+  /* ── Danger Button (alias for btn-urgent) ── */
+  .btn-danger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #C0392B, #962D22);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 0.85rem 2rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    min-height: 44px;
+    box-shadow: 0 4px 14px rgba(192,57,43,0.3);
+  }
+  .btn-danger:hover {
+    background: linear-gradient(135deg, #962D22, #7A2219);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(192,57,43,0.45);
+  }
+
+  /* ── Form Card (institutional wrapper for forms) ── */
+  .form-card {
+    background: var(--warm-white);
+    border: 1.5px solid #E2E8F0;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 24px rgba(27,58,107,0.08);
+  }
+  .form-card label {
+    color: var(--navy);
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 0.4rem;
+    display: block;
+  }
+  .form-card input, .form-card select, .form-card textarea {
+    border: 1.5px solid #CBD5E0;
+    border-radius: 8px;
+    padding: 0.65rem 0.85rem;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    background: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+  }
+  .form-card input:focus, .form-card select:focus, .form-card textarea:focus {
+    outline: none;
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(46,125,156,0.15);
+  }
+  .form-card .error-text {
+    color: var(--alert-red);
+    font-size: 0.8rem;
+    margin-top: 0.3rem;
+  }
+
   /* ── Trust Badge ── */
   .trust-badge {
     display: inline-flex;
