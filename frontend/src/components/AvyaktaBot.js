@@ -38,7 +38,7 @@ const RESPONSES = {
   helpline: {
     keywords: ['helpline', 'phone', 'call', 'number', 'contact', 'dial', 'ring'],
     text: `Our 24/7 helpline: 1800-XXX-XXXX (Free)\nWhatsApp: Available via the WhatsApp button\nEmail: support@avyakta.org\n\nFor life-threatening emergencies, please call 112 immediately.`,
-    chips: ['Open WhatsApp', 'Emergency Help'],
+    chips: ['Open WhatsApp', 'Support Us'],
   },
   human: {
     keywords: ['human', 'officer', 'real person', 'agent', 'support', 'baat', 'talk'],
@@ -153,9 +153,9 @@ const AvyaktaBot = () => {
       setIsOpen(false);
       return;
     }
-    if (lower === 'emergency help') {
+    if (lower === 'support us') {
       // Dispatch custom event that Navbar listens for
-      window.dispatchEvent(new CustomEvent('open-emergency-modal'));
+      window.dispatchEvent(new CustomEvent('open-donation-modal'));
       return;
     }
     if (lower === 'call helpline' || lower === 'talk to helpline') {
