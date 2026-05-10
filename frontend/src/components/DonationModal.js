@@ -33,7 +33,7 @@ const DonationModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   const handleCopyUPI = () => {
-    navigator.clipboard.writeText('avyakta@upi');
+    navigator.clipboard.writeText('shivamxraj@sbi');
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -383,9 +383,9 @@ const DonationModal = ({ isOpen, onClose }) => {
                   >
                     {/* Placeholder image tag - replace src when deploying */}
                     <img
-                      src="/logo192.png" // Temporary placeholder until user adds actual QR
+                      src="/images/donation-qr.png" // User must place the QR code image here
                       alt="UPI QR Code"
-                      style={{ width: '100%', height: '100%', objectFit: 'contain', opacity: 0.2 }}
+                      style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                       onError={(e) => { e.target.style.display = 'none'; }}
                     />
                     <div className="absolute text-center text-xs text-gray-400">QR Code</div>
@@ -409,7 +409,7 @@ const DonationModal = ({ isOpen, onClose }) => {
                           fontWeight: 600,
                         }}
                       >
-                        avyakta@upi
+                        shivamxraj@sbi
                       </span>
                       <button
                         onClick={handleCopyUPI}
