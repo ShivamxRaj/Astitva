@@ -141,23 +141,7 @@ function App() {
 
   }, [i18n.language]);
 
-  // Handle server down scenario
-  useEffect(() => {
-    const checkServerStatus = async () => {
-      try {
-        // Simulate server check
-        const response = await fetch('/api/health');
-        if (!response.ok) {
-          setIsServerDown(true);
-        }
-      } catch (error) {
-        // In development, this will fail, but that's okay
-        console.log('Server check failed (expected in development)');
-      }
-    };
-
-    checkServerStatus();
-  }, []);
+  // Server health check removed as the app now relies directly on Supabase.
 
   return (
     <Router>
