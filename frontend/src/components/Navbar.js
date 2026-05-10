@@ -8,10 +8,9 @@ import {
   PhoneIcon,
   ShieldCheckIcon,
   HeartIcon,
-  QrCodeIcon,
-  CreditCardIcon
 } from '@heroicons/react/24/outline';
 import logo from '../assets/logo.png';
+import DonationModal from './DonationModal';
 
 const HELPLINE = '1800-XXX-XXXX';
 const WHATSAPP_URL = 'https://wa.me/916299446452?text=Hello%20Avyakta%2C%20I%20need%20assistance.';
@@ -161,32 +160,38 @@ const Navbar = () => {
                   </Link>
 
                   {/* Support Us Button — Desktop */}
-                  <button
-                    onClick={() => setDonationOpen(true)}
-                    className="flex items-center gap-2 font-bold text-white transition-all duration-200"
-                    style={{
-                      background: 'linear-gradient(135deg, #27AE60, #2E7D32)',
-                      borderRadius: '999px',
-                      padding: '8px 18px',
-                      fontSize: '0.85rem',
-                      fontWeight: 700,
-                      border: 'none',
-                      cursor: 'pointer',
-                      boxShadow: '0 4px 14px rgba(39, 174, 96, 0.3)'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.boxShadow = '0 6px 20px rgba(39, 174, 96, 0.5)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 4px 14px rgba(39, 174, 96, 0.3)';
-                    }}
-                    aria-label="Support Us"
-                  >
-                    <HeartIcon style={{ width: '1.2rem', height: '1.2rem' }} />
-                    Support Us
-                  </button>
+                  <div className="relative group flex items-center">
+                    {/* Tooltip */}
+                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-3 py-1.5 bg-gray-900 text-white text-xs rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                      Help us bring dignity to the forgotten
+                    </div>
+                    <button
+                      onClick={() => setDonationOpen(true)}
+                      className="font-bold text-white transition-all duration-200"
+                      style={{
+                        background: 'linear-gradient(135deg, #D4870A, #E8991A)',
+                        borderRadius: '999px',
+                        padding: '8px 18px',
+                        fontSize: '0.85rem',
+                        fontWeight: 700,
+                        border: 'none',
+                        cursor: 'pointer',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'linear-gradient(135deg, #B8720A, #D4870A)';
+                        e.currentTarget.style.boxShadow = '0 4px 16px rgba(212,135,10,0.4)';
+                        e.currentTarget.style.transform = 'translateY(-1px)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'linear-gradient(135deg, #D4870A, #E8991A)';
+                        e.currentTarget.style.boxShadow = 'none';
+                        e.currentTarget.style.transform = 'translateY(0)';
+                      }}
+                      aria-label="Support Us"
+                    >
+                      💛 Donate
+                    </button>
+                  </div>
                 </div>
 
                 {/* Mobile header buttons */}
@@ -194,12 +199,11 @@ const Navbar = () => {
                   {/* Support pill on mobile header */}
                   <button
                     onClick={() => setDonationOpen(true)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold text-white"
-                    style={{ background: 'linear-gradient(135deg, #27AE60, #2E7D32)' }}
+                    className="px-3 py-1.5 rounded-full text-xs font-bold text-white"
+                    style={{ background: 'linear-gradient(135deg, #D4870A, #E8991A)' }}
                     aria-label="Support Us"
                   >
-                    <HeartIcon style={{ width: '1rem', height: '1rem' }} />
-                    Support
+                    💛 Donate
                   </button>
 
                   <Link
@@ -231,11 +235,10 @@ const Navbar = () => {
                 <Disclosure.Button
                   as="button"
                   onClick={() => setDonationOpen(true)}
-                  className="w-full flex items-center gap-2 px-4 py-3 rounded-md text-base font-bold text-white"
-                  style={{ background: 'linear-gradient(135deg, #27AE60, #2E7D32)' }}
+                  className="w-full text-left px-4 py-3 rounded-md text-base font-bold text-white"
+                  style={{ background: 'linear-gradient(135deg, #D4870A, #E8991A)' }}
                 >
-                  <HeartIcon style={{ width: '1.2rem', height: '1.2rem' }} />
-                  Support Us
+                  💛 Donate to Avyakta
                 </Disclosure.Button>
 
                 {navItems.map((item) => (
@@ -294,100 +297,7 @@ const Navbar = () => {
         )}
       </Disclosure>
 
-      {/* ═══════════════════════════════════
-          Donation Modal
-          ═══════════════════════════════════ */}
-      {donationOpen && (
-        <div
-          className="fixed inset-0 z-[60] flex items-center justify-center p-4"
-          style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}
-          onClick={(e) => e.target === e.currentTarget && setDonationOpen(false)}
-        >
-          <div
-            className="relative w-full max-w-md max-h-[90vh] overflow-y-auto"
-            style={{
-              borderRadius: '16px',
-              background: '#fff',
-              boxShadow: '0 25px 60px rgba(0,0,0,0.3)',
-              animation: 'modalIn 200ms ease-out',
-            }}
-          >
-            {/* Header */}
-            <div style={{ background: '#1B3A6B', padding: '20px 24px' }}>
-              <div className="flex justify-between items-center">
-                <div>
-                  <h2 className="text-xl sm:text-2xl font-bold text-white mb-1 flex items-center gap-2">
-                    <HeartIcon style={{ width: '1.4rem', height: '1.4rem', color: '#27AE60' }} />
-                    Support Avyakta
-                  </h2>
-                  <p style={{ color: '#8BAFD4', fontSize: '0.9rem' }}>
-                    Help us bring dignity to the unclaimed.
-                  </p>
-                </div>
-                <button
-                  onClick={() => setDonationOpen(false)}
-                  className="p-2 rounded-full hover:bg-white/10 transition-colors"
-                  aria-label="Close"
-                >
-                  <XMarkIcon style={{ width: '1.5rem', height: '1.5rem', color: '#fff' }} />
-                </button>
-              </div>
-            </div>
-
-            {/* Content */}
-            <div className="p-6">
-              <p className="text-center text-gray-600 mb-6 font-medium">
-                Your contribution goes directly towards identifying lost individuals, organizing respectful cremations, and maintaining our 24/7 volunteer network.
-              </p>
-
-              {/* UPI Option */}
-              <div className="mb-6 border border-gray-200 rounded-xl p-6 flex flex-col items-center bg-gray-50">
-                <div className="flex items-center gap-2 mb-4 text-gray-800 font-bold text-lg">
-                  <QrCodeIcon className="w-6 h-6 text-green-600" />
-                  Pay via UPI
-                </div>
-                {/* Dummy QR Code Placeholder */}
-                <div className="w-40 h-40 bg-white border-2 border-gray-200 p-2 rounded-lg flex items-center justify-center mb-4">
-                  <div className="text-center opacity-50">
-                    <QrCodeIcon className="w-16 h-16 mx-auto mb-2 text-gray-400" />
-                    <span className="text-xs">Scan to Pay</span>
-                  </div>
-                </div>
-                <div className="bg-white px-4 py-2 rounded-lg border border-gray-200 font-mono text-sm text-gray-700 shadow-sm">
-                  avyakta@upi
-                </div>
-              </div>
-
-              {/* Razorpay Option */}
-              <div className="border border-gray-200 rounded-xl p-6 flex flex-col items-center bg-gray-50">
-                <div className="flex items-center gap-2 mb-4 text-gray-800 font-bold text-lg">
-                  <CreditCardIcon className="w-6 h-6 text-blue-600" />
-                  Credit / Debit / Netbanking
-                </div>
-                <button
-                  className="w-full flex justify-center items-center gap-2 text-white font-bold py-3 px-6 rounded-lg transition-all"
-                  style={{ background: '#3399cc' }}
-                  onClick={() => alert("This would redirect to the Razorpay Payment Gateway.")}
-                >
-                  Pay with Razorpay
-                </button>
-              </div>
-              
-              <p className="text-xs text-center text-gray-400 mt-6">
-                All donations are eligible for tax exemption under 80G.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ── CSS for modal animation ── */}
-      <style>{`
-        @keyframes modalIn {
-          from { opacity: 0; transform: scale(0.95) translateY(10px); }
-          to   { opacity: 1; transform: scale(1) translateY(0); }
-        }
-      `}</style>
+      <DonationModal isOpen={donationOpen} onClose={() => setDonationOpen(false)} />
     </>
   );
 };
