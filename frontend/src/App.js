@@ -17,8 +17,8 @@ import Testimonials from './components/Testimonials';
 import Guidelines from './pages/Guidelines';
 import CookiePolicy from './pages/CookiePolicy';
 import SplashLoader from './components/SplashLoader';
-import ReportUnclaimedBody from './components/ReportUnclaimedBody';
-import SearchMissingPerson from './pages/SearchMissingPerson';
+import ReportForm from './components/ReportForm';
+import AISearch from './components/AISearch';
 import ProtectedRoute from './components/ProtectedRoute';
 import ResetPassword from './components/ResetPassword';
 import './i18n';
@@ -161,8 +161,8 @@ function App() {
             <Route exact path="/testimonials" element={<Testimonials />} />
             <Route exact path="/guidelines" element={<Guidelines />} />
             <Route exact path="/cookies" element={<CookiePolicy />} />
-            <Route exact path="/report" element={<ReportUnclaimedBody />} />
-            <Route exact path="/search" element={<SearchMissingPerson />} />
+            <Route exact path="/report" element={<ReportForm />} />
+            <Route exact path="/search" element={<AISearch />} />
           </Routes>
         </main>
         <Footer />

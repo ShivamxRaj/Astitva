@@ -50,12 +50,35 @@ const AdminCases = () => {
   useEffect(() => { fetchCases(); }, [filter]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const updateStatus = async (id, status) => {
-    const { error: err } = await supabase
+    console.log('Updating case:', id, 'to status:', status);
+    const { data, error: err } = await supabase
       .from('cases')
       .update({ status })
-      .eq('id', id);
+      .eq('id', id)
+      .select();
 
-    if (err) { setError(err.message); return; }
+    if (err) { 
+      console.error('Supabase Error:', err);
+      setError('Database Error: ' + err.message); 
+      return; 
+    }
+
+    if (!data || data.length === 0) {
+      console.warn('No rows updated. Data is null or empty array.');
+      // Check if it's an ID mismatch or RLS
+      const { data: check, error: checkErr } = await supabase.from('cases').select('id').eq('id', id).maybeSingle();
+      
+      if (checkErr) {
+        setError('Database error during validation: ' + checkErr.message);
+      } else if (!check) {
+        setError(`Critical Error: Case with internal ID "${id}" was not found in the database. Please refresh.`);
+      } else {
+        setError('Permission Denied: Supabase RLS policies are blocking this update. Please enable UPDATE policy for the "cases" table in your Supabase dashboard.');
+      }
+      return;
+    }
+
+    console.log('Update Successful:', data);
     
     if (filter !== 'all') {
       setCases(prev => prev.filter(c => c.id !== id));
@@ -190,7 +213,22 @@ const AdminCases = () => {
             {cases.map(c => (
               <div key={c.id} className="rounded-2xl p-6 transition-all hover:scale-[1.005]"
                 style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }}>
-                <div className="flex flex-col lg:flex-row lg:items-start gap-5">
+                <div className="flex flex-col lg:flex-row lg:items-center gap-6">
+                  {/* Case Image */}
+                  <div className="w-full lg:w-32 h-32 flex-shrink-0">
+                    {c.image_url ? (
+                      <img 
+                        src={c.image_url} 
+                        alt="Case" 
+                        className="w-full h-full object-cover rounded-xl border border-white/10"
+                        onError={(e) => { e.target.src = 'https://via.placeholder.com/150?text=No+Image'; }}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-white/5 rounded-xl flex items-center justify-center border border-white/10">
+                        <span className="text-2xl opacity-50">👤</span>
+                      </div>
+                    )}
+                  </div>
 
                   {/* Info */}
                   <div className="flex-1">

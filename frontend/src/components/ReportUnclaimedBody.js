@@ -92,6 +92,30 @@ const ReportUnclaimedBody = () => {
     const newReportId = generateReportId();
     
     try {
+      let imageUrl = null;
+
+      // 1. Upload Image to Supabase Storage if exists
+      if (form.image) {
+        const file = form.image;
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${newReportId}-${Math.random()}.${fileExt}`;
+        const filePath = `cases/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('case-images')
+          .upload(filePath, file);
+
+        if (uploadError) throw uploadError;
+
+        // 2. Get Public URL
+        const { data: { publicUrl } } = supabase.storage
+          .from('case-images')
+          .getPublicUrl(filePath);
+        
+        imageUrl = publicUrl;
+      }
+
+      // 3. Insert into Database
       const { error } = await supabase
         .from('cases')
         .insert([{
@@ -101,7 +125,8 @@ const ReportUnclaimedBody = () => {
           date_time: new Date(form.dateTime).toISOString(),
           description: form.description + (form.message ? `\n\nNotes: ${form.message}` : ''),
           contact: form.contact,
-          status: 'pending'
+          status: 'pending',
+          image_url: imageUrl
         }]);
 
       if (error) throw error;
