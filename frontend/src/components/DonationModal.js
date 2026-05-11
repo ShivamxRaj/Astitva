@@ -71,7 +71,7 @@ const DonationModal = ({ isOpen, onClose }) => {
 
       // 2. Initialize Razorpay Checkout
       const options = {
-        key: process.env.REACT_APP_RAZORPAY_KEY_ID || 'rzp_test_SnnIfRUhlH1kHJ',
+        key: process.env.REACT_APP_RAZORPAY_KEY_ID || 'rzp_test_SoACRQ4kcZ0fM8',
         amount: data.order.amount,
         currency: data.order.currency,
         name: 'Avyakta',
