@@ -97,7 +97,7 @@ router.post('/search', async (req, res) => {
     const { name, gender, age, location, date, marks, description } = req.body;
 
     const { data: allCases, error: fetchError } = await supabase
-      .from('orphan_cases')
+      .from('cases')
       .select('*');
 
     if (fetchError) throw fetchError;

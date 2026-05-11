@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import axios from 'axios';
 
 const initialForm = {
   fullName: '',
@@ -55,11 +56,29 @@ const SearchMissingPerson = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
-    setAiSummary("Based on the information provided, we're analyzing available records. Please stay connected. Every detail matters.");
-    setTimeout(() => {
-      setResults([]);
+    setAiSummary("Gemini AI is analyzing records across India. Please wait...");
+    setResults([]);
+    try {
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+      const res = await axios.post(`${apiUrl}/api/cases/search`, {
+        name: form.fullName,
+        gender: form.gender,
+        age: form.age,
+        location: form.lastSeenLocation,
+        date: form.dateLastSeen,
+        marks: form.identifyingMarks,
+        description: `Accessories: ${form.accessories}, Relationship: ${form.relationship}`
+      });
+      if (res.data.success && res.data.matches) {
+        setResults(res.data.matches);
+        setAiSummary(`Analysis complete. Found ${res.data.matches.length} possible matches based on your criteria.`);
+      }
+    } catch (error) {
+      console.error(error);
+      setAiSummary("An error occurred during AI analysis. Please try again.");
+    } finally {
       setSubmitting(false);
-    }, 2000);
+    }
   };
 
   const handleTrackSubmit = async (e) => {
@@ -254,8 +273,28 @@ const SearchMissingPerson = () => {
           {/* Results */}
           <div className="mt-8">
             {searchTab === 'ai_search' && results.length > 0 && (
-              <div className="inst-card">
+              <div className="space-y-4">
                 <h4 className="text-lg font-semibold mb-2" style={{ color: 'var(--navy)' }}>Possible Matches</h4>
+                {results.map((match, idx) => (
+                  <div key={idx} className="inst-card flex flex-col md:flex-row gap-4" style={{ padding: '1rem' }}>
+                    {match.image_url ? (
+                      <img src={match.image_url} alt="Match" className="w-full md:w-32 h-32 object-cover rounded shadow-sm flex-shrink-0" />
+                    ) : (
+                      <div className="w-full md:w-32 h-32 bg-gray-200 rounded flex items-center justify-center text-gray-500 text-sm flex-shrink-0">No Photo</div>
+                    )}
+                    <div className="flex-1">
+                      <div className="flex justify-between items-start">
+                        <span className="font-bold text-lg" style={{ color: 'var(--navy)' }}>{match.location}</span>
+                        <span className="px-2 py-1 bg-amber-100 text-amber-700 font-bold rounded text-xs">{match.matchScore}% Match</span>
+                      </div>
+                      <p className="text-sm mt-1" style={{ color: 'var(--text-mid)' }}>Date Logged: {new Date(match.date_time).toLocaleDateString()}</p>
+                      <p className="text-sm mt-2 font-medium" style={{ color: 'var(--text-dark)' }}>{match.description}</p>
+                      <div className="mt-3 p-2 bg-blue-50 text-blue-800 text-xs rounded border border-blue-100 italic">
+                        <strong>AI Insight:</strong> {match.matchReason}
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
 
