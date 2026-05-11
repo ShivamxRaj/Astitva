@@ -22,7 +22,7 @@ const formatDate = (d) =>
 
 const AdminCases = () => {
   const [cases, setCases] = useState([]);
-  const [filter, setFilter] = useState('pending'); // 'pending' | 'investigating' | 'resolved' | 'all'
+  const [filter, setFilter] = useState('unidentified'); // 'unidentified' | 'investigating' | 'identified' | 'all'
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [toast, setToast] = useState('');
@@ -38,7 +38,7 @@ const AdminCases = () => {
   const fetchCases = async () => {
     setLoading(true);
     setError('');
-    let query = supabase.from('cases').select('*').order('created_at', { ascending: false });
+    let query = supabase.from('orphan_cases').select('*').order('created_at', { ascending: false });
     if (filter !== 'all') query = query.eq('status', filter);
 
     const { data, error: err } = await query;
@@ -52,7 +52,7 @@ const AdminCases = () => {
   const updateStatus = async (id, status) => {
     console.log('Updating case:', id, 'to status:', status);
     const { data, error: err } = await supabase
-      .from('cases')
+      .from('orphan_cases')
       .update({ status })
       .eq('id', id)
       .select();
@@ -66,14 +66,14 @@ const AdminCases = () => {
     if (!data || data.length === 0) {
       console.warn('No rows updated. Data is null or empty array.');
       // Check if it's an ID mismatch or RLS
-      const { data: check, error: checkErr } = await supabase.from('cases').select('id').eq('id', id).maybeSingle();
+      const { data: check, error: checkErr } = await supabase.from('orphan_cases').select('id').eq('id', id).maybeSingle();
       
       if (checkErr) {
         setError('Database error during validation: ' + checkErr.message);
       } else if (!check) {
         setError(`Critical Error: Case with internal ID "${id}" was not found in the database. Please refresh.`);
       } else {
-        setError('Permission Denied: Supabase RLS policies are blocking this update. Please enable UPDATE policy for the "cases" table in your Supabase dashboard.');
+        setError('Permission Denied: Supabase RLS policies are blocking this update. Please enable UPDATE policy for the "orphan_cases" table in your Supabase dashboard.');
       }
       return;
     }
@@ -86,19 +86,19 @@ const AdminCases = () => {
       setCases(prev => prev.map(c => c.id === id ? { ...c, status } : c));
     }
     
-    showToast(status === 'resolved' ? '✅ Case marked as resolved!' : status === 'investigating' ? '🔍 Case under investigation' : '❌ Case rejected');
+    showToast(status === 'identified' ? '✅ Case marked as identified!' : status === 'investigating' ? '🔍 Case under investigation' : '❌ Case rejected');
   };
 
   const stats = {
-    pending:  cases.filter(c => c.status === 'pending').length,
+    pending:  cases.filter(c => c.status === 'unidentified').length,
     investigating: cases.filter(c => c.status === 'investigating').length,
-    resolved: cases.filter(c => c.status === 'resolved').length,
+    resolved: cases.filter(c => c.status === 'identified').length,
   };
 
   const FILTERS = [
-    { key: 'pending',  label: '⏳ Pending' },
+    { key: 'unidentified',  label: '⏳ Unidentified' },
     { key: 'investigating', label: '🔍 Investigating' },
-    { key: 'resolved', label: '✅ Resolved' },
+    { key: 'identified', label: '✅ Identified' },
     { key: 'rejected', label: '❌ Rejected' },
     { key: 'all',      label: '📋 All' },
   ];
@@ -161,9 +161,9 @@ const AdminCases = () => {
         {/* Stats */}
         <div className="grid grid-cols-3 gap-4 mb-6">
           {[
-            { label: 'Pending',         value: stats.pending, color: '#F59E0B' },
+            { label: 'Unidentified',         value: stats.pending, color: '#F59E0B' },
             { label: 'Investigating',   value: stats.investigating,    color: '#3B82F6' },
-            { label: 'Resolved',        value: stats.resolved,     color: '#27AE60' },
+            { label: 'Identified',        value: stats.resolved,     color: '#27AE60' },
           ].map(s => (
             <div key={s.label} className="rounded-2xl p-5 text-center"
               style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }}>
@@ -216,9 +216,9 @@ const AdminCases = () => {
                 <div className="flex flex-col lg:flex-row lg:items-center gap-6">
                   {/* Case Image */}
                   <div className="w-full lg:w-32 h-32 flex-shrink-0">
-                    {c.image_url ? (
+                    {c.photo_url ? (
                       <img 
-                        src={c.image_url} 
+                        src={c.photo_url} 
                         alt="Case" 
                         className="w-full h-full object-cover rounded-xl border border-white/10"
                         onError={(e) => { e.target.src = 'https://via.placeholder.com/150?text=No+Image'; }}
@@ -233,11 +233,11 @@ const AdminCases = () => {
                   {/* Info */}
                   <div className="flex-1">
                     <div className="flex flex-wrap items-center gap-3 mb-3">
-                      <h3 className="font-mono text-white text-lg font-bold">{c.report_id}</h3>
+                      <h3 className="font-mono text-white text-lg font-bold">{c.case_id}</h3>
                       <span className="text-xs px-2 py-0.5 rounded-full font-semibold"
                         style={{
-                          background: c.status === 'resolved' ? '#D1FAE5' : c.status === 'rejected' ? '#FEE2E2' : c.status === 'investigating' ? '#DBEAFE' : '#FEF3C7',
-                          color:      c.status === 'resolved' ? '#065F46' : c.status === 'rejected' ? '#991B1B' : c.status === 'investigating' ? '#1E40AF' : '#92400E',
+                          background: c.status === 'identified' ? '#D1FAE5' : c.status === 'rejected' ? '#FEE2E2' : c.status === 'investigating' ? '#DBEAFE' : '#FEF3C7',
+                          color:      c.status === 'identified' ? '#065F46' : c.status === 'rejected' ? '#991B1B' : c.status === 'investigating' ? '#1E40AF' : '#92400E',
                         }}>
                         {c.status.toUpperCase()}
                       </span>
@@ -264,10 +264,10 @@ const AdminCases = () => {
                         <CalendarIcon style={{ width: '0.8rem', height: '0.8rem' }} aria-hidden="true" />
                         Logged: {formatDate(c.created_at)}
                       </span>
-                      {c.contact && (
+                      {c.contact_info && (
                         <span className="flex items-center gap-1 bg-white/5 px-2 py-1 rounded text-green-300">
                           <ChatBubbleOvalLeftEllipsisIcon style={{ width: '0.8rem', height: '0.8rem' }} aria-hidden="true" />
-                          {c.contact}
+                          {c.contact_info}
                         </span>
                       )}
                     </div>
@@ -275,7 +275,7 @@ const AdminCases = () => {
 
                   {/* Actions */}
                   <div className="flex gap-2 lg:flex-col lg:w-40 mt-4 lg:mt-0">
-                    {c.status === 'pending' && (
+                    {c.status === 'unidentified' && (
                       <button onClick={() => updateStatus(c.id, 'investigating')}
                         className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg font-semibold text-xs transition-all hover:opacity-90"
                         style={{ background: '#3B82F6', color: '#fff' }}
@@ -284,16 +284,16 @@ const AdminCases = () => {
                         Investigate
                       </button>
                     )}
-                    {(c.status === 'pending' || c.status === 'investigating') && (
-                      <button onClick={() => updateStatus(c.id, 'resolved')}
+                    {(c.status === 'unidentified' || c.status === 'investigating') && (
+                      <button onClick={() => updateStatus(c.id, 'identified')}
                         className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg font-semibold text-xs transition-all hover:opacity-90"
                         style={{ background: '#27AE60', color: '#fff' }}
                         aria-label="Resolve">
                         <DocumentCheckIcon style={{ width: '1rem', height: '1rem' }} aria-hidden="true" />
-                        Mark Resolved
+                        Mark Identified
                       </button>
                     )}
-                    {c.status === 'pending' && (
+                    {c.status === 'unidentified' && (
                       <button onClick={() => updateStatus(c.id, 'rejected')}
                         className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg font-semibold text-xs transition-all hover:opacity-90"
                         style={{ background: 'rgba(192,57,43,0.8)', color: '#fff' }}
