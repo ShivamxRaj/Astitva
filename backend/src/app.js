@@ -10,6 +10,11 @@ connectDB();
 
 // Middleware
 app.use(cors());
+
+// Root Route
+app.get('/', (req, res) => {
+  res.json({ message: 'Avyakta Backend API is Live!', status: 'Healthy' });
+});
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
