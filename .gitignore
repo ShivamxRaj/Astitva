@@ -1,9 +1,13 @@
 # Dependencies
 node_modules/
+**/node_modules/
 
 # Build output
 build/
 dist/
+**/build/
+**/dist/
+public/
 
 # Environment variables
 .env
