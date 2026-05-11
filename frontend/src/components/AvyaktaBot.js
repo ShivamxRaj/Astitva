@@ -104,6 +104,21 @@ const AvyaktaBot = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  /* Global event listener to open chat */
+  useEffect(() => {
+    const handleOpenChat = () => {
+      setIsOpen(true);
+      setHasOpened(true);
+      if (messages.length === 0) {
+        setMessages([
+          { from: 'bot', text: RESPONSES.greeting.text, chips: RESPONSES.greeting.chips, time: new Date() },
+        ]);
+      }
+    };
+    window.addEventListener('open-chat', handleOpenChat);
+    return () => window.removeEventListener('open-chat', handleOpenChat);
+  }, [messages.length]);
+
   /* Focus input when chat opens */
   useEffect(() => {
     if (isOpen) inputRef.current?.focus();

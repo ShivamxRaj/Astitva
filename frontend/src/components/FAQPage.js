@@ -12,14 +12,14 @@ import {
   ExclamationTriangleIcon,
   XMarkIcon
 } from '@heroicons/react/24/outline';
-import FloatingActionButton from './FloatingActionButton';
+} from '@heroicons/react/24/outline';
 
 const FAQPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [expandedItems, setExpandedItems] = useState(new Set());
   const [isSearching, setIsSearching] = useState(false);
-  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
 
   const categories = {
     all: { name: 'All Questions', icon: <InformationCircleIcon className="w-5 h-5" /> },
@@ -148,7 +148,7 @@ const FAQPage = () => {
           </h1>
           <p className="text-lg md:text-xl max-w-3xl mx-auto" style={{ color: 'var(--text-mid)' }}>
             Find answers to common questions. Can't find what you're looking for? 
-            <button onClick={() => setIsChatOpen(true)} className="ml-1 font-semibold hover:underline" style={{ color: 'var(--teal)' }}>
+            <button onClick={() => window.dispatchEvent(new Event('open-chat'))} className="ml-1 font-semibold hover:underline" style={{ color: 'var(--teal)' }}>
               Ask our chatbot.
             </button>
           </p>
@@ -261,7 +261,7 @@ const FAQPage = () => {
           <h3 className="text-2xl font-bold mb-3" style={{ color: 'var(--navy)' }}>Still need help?</h3>
           <p className="mb-6" style={{ color: 'var(--text-mid)' }}>Our support team is here to help you. Get in touch with us for personalized assistance.</p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <button onClick={() => setIsChatOpen(true)} className="btn-primary">
+            <button onClick={() => window.dispatchEvent(new Event('open-chat'))} className="btn-primary">
               <ChatBubbleLeftRightIcon className="w-5 h-5 mr-2" /> Chat with us
             </button>
             <a href="/contact" className="btn-secondary">
@@ -270,11 +270,6 @@ const FAQPage = () => {
           </div>
         </div>
       </div>
-
-      <FloatingActionButton 
-        isChatOpen={isChatOpen}
-        onChatToggle={setIsChatOpen}
-      />
     </div>
   );
 };
