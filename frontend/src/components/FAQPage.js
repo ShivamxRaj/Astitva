@@ -12,13 +12,11 @@ import {
   ExclamationTriangleIcon,
   XMarkIcon
 } from '@heroicons/react/24/outline';
-} from '@heroicons/react/24/outline';
 
 const FAQPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [expandedItems, setExpandedItems] = useState(new Set());
-  const [isSearching, setIsSearching] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
 
   const categories = {
