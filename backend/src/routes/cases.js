@@ -8,8 +8,8 @@ const Case = require('../models/Case');
 
 // Initialize Supabase
 const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY
+  process.env.SUPABASE_URL || 'https://xyz.supabase.co',
+  process.env.SUPABASE_SERVICE_KEY || 'public-anon-key'
 );
 
 // Initialize Gemini AI
