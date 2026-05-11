@@ -91,9 +91,9 @@ const SearchMissingPerson = () => {
 
     try {
       const { data, error } = await supabase
-        .from('cases')
-        .select('report_id, location, description, date_time, status')
-        .eq('report_id', trackId.trim())
+        .from('orphan_cases')
+        .select('case_id, location, description, created_at, status')
+        .eq('case_id', trackId.trim())
         .single();
 
       if (error) {
@@ -277,8 +277,8 @@ const SearchMissingPerson = () => {
                 <h4 className="text-lg font-semibold mb-2" style={{ color: 'var(--navy)' }}>Possible Matches</h4>
                 {results.map((match, idx) => (
                   <div key={idx} className="inst-card flex flex-col md:flex-row gap-4" style={{ padding: '1rem' }}>
-                    {match.image_url ? (
-                      <img src={match.image_url} alt="Match" className="w-full md:w-32 h-32 object-cover rounded shadow-sm flex-shrink-0" />
+                    {match.photo_url ? (
+                      <img src={match.photo_url} alt="Match" className="w-full md:w-32 h-32 object-cover rounded shadow-sm flex-shrink-0" />
                     ) : (
                       <div className="w-full md:w-32 h-32 bg-gray-200 rounded flex items-center justify-center text-gray-500 text-sm flex-shrink-0">No Photo</div>
                     )}
@@ -287,7 +287,7 @@ const SearchMissingPerson = () => {
                         <span className="font-bold text-lg" style={{ color: 'var(--navy)' }}>{match.location}</span>
                         <span className="px-2 py-1 bg-amber-100 text-amber-700 font-bold rounded text-xs">{match.matchScore}% Match</span>
                       </div>
-                      <p className="text-sm mt-1" style={{ color: 'var(--text-mid)' }}>Date Logged: {new Date(match.date_time).toLocaleDateString()}</p>
+                      <p className="text-sm mt-1" style={{ color: 'var(--text-mid)' }}>Date Logged: {new Date(match.date_of_sighting || match.created_at).toLocaleDateString()}</p>
                       <p className="text-sm mt-2 font-medium" style={{ color: 'var(--text-dark)' }}>{match.description}</p>
                       <div className="mt-3 p-2 bg-blue-50 text-blue-800 text-xs rounded border border-blue-100 italic">
                         <strong>AI Insight:</strong> {match.matchReason}
@@ -312,7 +312,7 @@ const SearchMissingPerson = () => {
                 <div className="p-6 space-y-4">
                   <div>
                     <span className="block text-xs font-bold uppercase" style={{ color: 'var(--text-light)' }}>Report ID</span>
-                    <span className="font-mono" style={{ color: 'var(--text-dark)' }}>{trackResult.report_id}</span>
+                    <span className="font-mono" style={{ color: 'var(--text-dark)' }}>{trackResult.case_id}</span>
                   </div>
                   <div>
                     <span className="block text-xs font-bold uppercase" style={{ color: 'var(--text-light)' }}>Location Found</span>
@@ -324,7 +324,7 @@ const SearchMissingPerson = () => {
                   </div>
                   <div>
                     <span className="block text-xs font-bold uppercase" style={{ color: 'var(--text-light)' }}>Date Logged</span>
-                    <span className="text-sm" style={{ color: 'var(--text-mid)' }}>{new Date(trackResult.date_time).toLocaleString()}</span>
+                    <span className="text-sm" style={{ color: 'var(--text-mid)' }}>{new Date(trackResult.created_at).toLocaleString()}</span>
                   </div>
                 </div>
               </div>

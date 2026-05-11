@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
+import axios from 'axios';
 
 // Helper to get local datetime string for datetime-local input
 function getLocalDateTimeString() {
@@ -89,55 +90,34 @@ const ReportUnclaimedBody = () => {
     if (Object.keys(eObj).length > 0) return;
     setSubmitting(true);
     
-    const newReportId = generateReportId();
-    
     try {
-      let imageUrl = null;
-
-      // 1. Upload Image to Supabase Storage if exists
+      const formData = new FormData();
+      formData.append('location', form.location);
+      formData.append('date_of_sighting', form.dateTime);
+      formData.append('description', form.description);
+      formData.append('contact_info', form.contact);
+      formData.append('additional_info', form.message);
+      
       if (form.image) {
-        const file = form.image;
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${newReportId}-${Math.random()}.${fileExt}`;
-        const filePath = `cases/${fileName}`;
-
-        const { error: uploadError } = await supabase.storage
-          .from('case-images')
-          .upload(filePath, file);
-
-        if (uploadError) throw uploadError;
-
-        // 2. Get Public URL
-        const { data: { publicUrl } } = supabase.storage
-          .from('case-images')
-          .getPublicUrl(filePath);
-        
-        imageUrl = publicUrl;
+        formData.append('photo', form.image);
       }
 
-      // 3. Insert into Database
-      const { error } = await supabase
-        .from('cases')
-        .insert([{
-          report_id: newReportId,
-          report_type: 'general',
-          location: form.location,
-          date_time: new Date(form.dateTime).toISOString(),
-          description: form.description + (form.message ? `\n\nNotes: ${form.message}` : ''),
-          contact: form.contact,
-          status: 'pending',
-          image_url: imageUrl
-        }]);
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+      const res = await axios.post(`${apiUrl}/api/cases/report`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
 
-      if (error) throw error;
-
-      setSubmitted(true);
-      setReportId(newReportId);
-      setForm(initialForm);
-      setImagePreview(null);
+      if (res.data.success) {
+        setSubmitted(true);
+        setReportId(res.data.case_id);
+        setForm(initialForm);
+        setImagePreview(null);
+      } else {
+        throw new Error(res.data.message || 'Unknown error');
+      }
     } catch (err) {
       console.error('Failed to submit report:', err);
-      alert('Failed to submit report. Please try again.');
+      alert('Failed to submit report. Please try again. Error: ' + (err.message || JSON.stringify(err)));
     } finally {
       setSubmitting(false);
     }
