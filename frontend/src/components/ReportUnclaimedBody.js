@@ -91,33 +91,73 @@ const ReportUnclaimedBody = () => {
     setSubmitting(true);
     
     try {
-      const formData = new FormData();
-      formData.append('location', form.location);
-      formData.append('date_of_sighting', form.dateTime);
-      formData.append('description', form.description);
-      formData.append('contact_info', form.contact);
-      formData.append('additional_info', form.message);
-      
+      let photo_url = null;
+      const case_id = generateReportId();
+
       if (form.image) {
-        formData.append('photo', form.image);
+        const fileExt = form.image.name.split('.').pop();
+        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+        const safeCaseId = case_id.replace('#', '');
+        const filePath = `cases/${safeCaseId}/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('case-photos')
+          .upload(filePath, form.image);
+
+        if (!uploadError) {
+          const { data: { publicUrl } } = supabase.storage
+            .from('case-photos')
+            .getPublicUrl(filePath);
+          photo_url = publicUrl;
+        } else {
+          console.warn('Storage upload error:', uploadError);
+        }
       }
 
-      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
-      const res = await axios.post(`${apiUrl}/api/cases/report`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      const caseData = {
+        case_id,
+        location: form.location,
+        date_of_sighting: form.dateTime,
+        description: form.description,
+        contact_info: form.contact,
+        additional_info: form.message,
+        photo_url,
+        status: 'unidentified',
+        created_at: new Date().toISOString()
+      };
 
-      if (res.data.success) {
-        setSubmitted(true);
-        setReportId(res.data.case_id);
-        setForm(initialForm);
-        setImagePreview(null);
+      // Try inserting directly into Supabase first to make the live site fully serverless
+      const { error: dbError } = await supabase.from('orphan_cases').insert([caseData]);
+      
+      if (dbError) {
+        console.warn('Direct insert blocked/failed, falling back to proxy backend:', dbError);
+        const formData = new FormData();
+        formData.append('location', form.location);
+        formData.append('date_of_sighting', form.dateTime);
+        formData.append('description', form.description);
+        formData.append('contact_info', form.contact);
+        formData.append('additional_info', form.message);
+        if (form.image) {
+          formData.append('photo', form.image);
+        }
+        const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+        const res = await axios.post(`${apiUrl}/api/cases/report`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        if (!res.data.success) {
+          throw new Error(res.data.message || 'Backend submission failed');
+        }
+        setReportId(res.data.case_id || case_id);
       } else {
-        throw new Error(res.data.message || 'Unknown error');
+        setReportId(case_id);
       }
+
+      setSubmitted(true);
+      setForm(initialForm);
+      setImagePreview(null);
     } catch (err) {
       console.error('Failed to submit report:', err);
-      const backendError = err.response?.data?.message || err.message || JSON.stringify(err);
+      const backendError = err.response?.data?.message || err.message || 'Network connection failed';
       alert('Failed to submit report. Please try again. Error: ' + backendError);
     } finally {
       setSubmitting(false);
