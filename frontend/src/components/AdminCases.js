@@ -38,47 +38,42 @@ const AdminCases = () => {
   const fetchCases = async () => {
     setLoading(true);
     setError('');
-    let query = supabase.from('orphan_cases').select('*').order('created_at', { ascending: false });
-    if (filter !== 'all') query = query.eq('status', filter);
-
-    const { data, error: err } = await query;
-    if (err) { setError('Failed to load cases: ' + err.message); }
-    else { setCases(data || []); }
-    setLoading(false);
+    try {
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+      const res = await fetch(`${apiUrl}/api/cases/all`);
+      if (!res.ok) throw new Error('Failed to fetch from server');
+      const data = await res.json();
+      
+      let filteredData = data;
+      if (filter !== 'all') {
+        filteredData = data.filter(c => c.status === filter);
+      }
+      setCases(filteredData || []);
+    } catch (err) {
+      setError('Failed to load cases: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => { fetchCases(); }, [filter]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const updateStatus = async (id, status) => {
     console.log('Updating case:', id, 'to status:', status);
-    const { data, error: err } = await supabase
-      .from('orphan_cases')
-      .update({ status })
-      .eq('id', id)
-      .select();
-
-    if (err) { 
-      console.error('Supabase Error:', err);
-      setError('Database Error: ' + err.message); 
-      return; 
-    }
-
-    if (!data || data.length === 0) {
-      console.warn('No rows updated. Data is null or empty array.');
-      // Check if it's an ID mismatch or RLS
-      const { data: check, error: checkErr } = await supabase.from('orphan_cases').select('id').eq('id', id).maybeSingle();
+    try {
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+      const res = await fetch(`${apiUrl}/api/cases/update-status/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+      });
+      const resData = await res.json();
       
-      if (checkErr) {
-        setError('Database error during validation: ' + checkErr.message);
-      } else if (!check) {
-        setError(`Critical Error: Case with internal ID "${id}" was not found in the database. Please refresh.`);
-      } else {
-        setError('Permission Denied: Supabase RLS policies are blocking this update. Please enable UPDATE policy for the "orphan_cases" table in your Supabase dashboard.');
+      if (!res.ok || !resData.success) {
+        throw new Error(resData.message || 'Failed to update case');
       }
-      return;
-    }
 
-    console.log('Update Successful:', data);
+      console.log('Update Successful:', resData.case);
     
     if (filter !== 'all') {
       setCases(prev => prev.filter(c => c.id !== id));
@@ -87,6 +82,10 @@ const AdminCases = () => {
     }
     
     showToast(status === 'identified' ? '✅ Case marked as identified!' : status === 'investigating' ? '🔍 Case under investigation' : '❌ Case rejected');
+    } catch (err) {
+      console.error('API Error:', err);
+      setError('Error: ' + err.message);
+    }
   };
 
   const stats = {

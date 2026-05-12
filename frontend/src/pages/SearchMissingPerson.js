@@ -90,23 +90,19 @@ const SearchMissingPerson = () => {
     setTrackResult(null);
 
     try {
-      const { data, error } = await supabase
-        .from('orphan_cases')
-        .select('case_id, location, description, created_at, status')
-        .eq('case_id', trackId.trim())
-        .single();
-
-      if (error) {
-        if (error.code === 'PGRST116') {
-          setTrackError("No report found with this ID. Please check the ID and try again.");
-        } else {
-          setTrackError("Failed to fetch the report. Please try again later.");
-        }
-      } else if (data) {
-        setTrackResult(data);
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+      const cleanedId = trackId.trim().replace(/[^\w#-]/g, '');
+      const res = await axios.post(`${apiUrl}/api/cases/track`, { case_id: cleanedId });
+      
+      if (res.data.success) {
+        setTrackResult(res.data.case);
       }
     } catch (err) {
-      setTrackError("An error occurred while tracking the report.");
+      if (err.response && err.response.status === 404) {
+        setTrackError("No report found with this ID. Please check the ID and try again.");
+      } else {
+        setTrackError("An error occurred while tracking the report.");
+      }
     } finally {
       setSubmitting(false);
     }

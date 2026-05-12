@@ -117,7 +117,8 @@ const ReportUnclaimedBody = () => {
       }
     } catch (err) {
       console.error('Failed to submit report:', err);
-      alert('Failed to submit report. Please try again. Error: ' + (err.message || JSON.stringify(err)));
+      const backendError = err.response?.data?.message || err.message || JSON.stringify(err);
+      alert('Failed to submit report. Please try again. Error: ' + backendError);
     } finally {
       setSubmitting(false);
     }

@@ -65,7 +65,8 @@ const ReportForm = () => {
         window.scrollTo(0, 0);
       }
     } catch (error) {
-      alert('Error submitting report: ' + error.message);
+      const backendError = error.response?.data?.message || error.message;
+      alert('Error submitting report: ' + backendError);
     } finally {
       setIsSubmitting(false);
     }

@@ -28,20 +28,25 @@ router.post('/report', upload.single('photo'), async (req, res) => {
       identifying_marks, contact_info, additional_info
     } = req.body;
 
-    const case_id = "AVY-" + Date.now();
+    const now = new Date();
+    const case_id = `#AVY-${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}${Math.floor(1000 + Math.random() * 9000)}`;
     let photo_url = null;
 
     if (req.file) {
       const file = req.file;
       const fileExt = file.originalname.split('.').pop();
       const fileName = `${uuidv4()}.${fileExt}`;
-      const filePath = `cases/${case_id}/${fileName}`;
+      const safeCaseId = case_id.replace('#', '');
+      const filePath = `cases/${safeCaseId}/${fileName}`;
 
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('case-photos')
         .upload(filePath, file.buffer, { contentType: file.mimetype });
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error('SUPABASE UPLOAD ERROR:', JSON.stringify(uploadError, null, 2));
+        throw uploadError;
+      }
 
       const { data: { publicUrl } } = supabase.storage.from('case-photos').getPublicUrl(filePath);
       photo_url = publicUrl;
@@ -50,12 +55,12 @@ router.post('/report', upload.single('photo'), async (req, res) => {
     const caseData = {
       case_id,
       location,
-      latitude: parseFloat(latitude),
-      longitude: parseFloat(longitude),
+      latitude: latitude ? parseFloat(latitude) : null,
+      longitude: longitude ? parseFloat(longitude) : null,
       date_of_sighting,
       description,
       gender,
-      approximate_age: parseInt(approximate_age),
+      approximate_age: approximate_age ? parseInt(approximate_age) : null,
       height_cm,
       clothing,
       identifying_marks,
@@ -86,6 +91,47 @@ router.get('/all', async (req, res) => {
       .order('created_at', { ascending: false });
     if (error) throw error;
     res.json(data);
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// --- TRACK CASE ROUTE ---
+router.post('/track', async (req, res) => {
+  try {
+    const { case_id } = req.body;
+    const { data, error } = await supabase
+      .from('orphan_cases')
+      .select('*')
+      .eq('case_id', case_id)
+      .single();
+      
+    if (error) {
+      if (error.code === 'PGRST116') return res.status(404).json({ success: false, message: "No report found with this ID." });
+      throw error;
+    }
+    res.json({ success: true, case: data });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// --- UPDATE CASE STATUS ROUTE ---
+router.patch('/update-status/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    
+    const { data, error } = await supabase
+      .from('orphan_cases')
+      .update({ status })
+      .eq('id', id)
+      .select();
+
+    if (error) throw error;
+    if (!data || data.length === 0) return res.status(404).json({ success: false, message: "Case not found." });
+    
+    res.json({ success: true, case: data[0] });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
