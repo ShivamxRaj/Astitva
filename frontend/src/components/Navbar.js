@@ -11,6 +11,7 @@ import {
 } from '@heroicons/react/24/outline';
 import logo from '../assets/logo.png';
 import DonationModal from './DonationModal';
+import { supabase } from '../lib/supabaseClient';
 
 const HELPLINE = '+91 62994 46452';
 const WHATSAPP_URL = 'https://wa.me/916299446452?text=Hello%20Avyakta%2C%20I%20need%20assistance.';
@@ -24,10 +25,30 @@ const LANG_OPTIONS = [
 const Navbar = () => {
   const { i18n, t } = useTranslation();
   const [donationOpen, setDonationOpen] = useState(false);
+  const [pendingCount, setPendingCount] = useState(0);
 
   const switchLang = (code) => {
     if (code !== i18n.language) i18n.changeLanguage(code);
   };
+
+  useEffect(() => {
+    const fetchPendingCount = async () => {
+      try {
+        const { count, error } = await supabase
+          .from('orphan_cases')
+          .select('*', { count: 'exact', head: true })
+          .eq('status', 'unidentified');
+        if (!error && count !== null) {
+          setPendingCount(count);
+        }
+      } catch (err) {
+        // Silent fallback
+      }
+    };
+    fetchPendingCount();
+    const interval = setInterval(fetchPendingCount, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   /* Listen for 'open-donation-modal' event from AvyaktaBot */
   useEffect(() => {
@@ -149,15 +170,28 @@ const Navbar = () => {
                     🚨 {reportLabel}
                   </Link>
 
-                  {/* Admin Login — discrete */}
-                  <Link
-                    to="/admin/login"
-                    className="px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200"
-                    style={{ color: '#93C5FD', border: '1px solid rgba(147,197,253,0.3)' }}
-                    aria-label="Admin Login"
-                  >
-                    🔐 {adminLabel}
-                  </Link>
+                  {/* Admin Login — discrete with live pending notifications badge */}
+                  <div className="relative inline-block">
+                    <Link
+                      to="/admin/login"
+                      className="px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center gap-1.5"
+                      style={{ color: '#93C5FD', border: '1px solid rgba(147,197,253,0.3)' }}
+                      aria-label="Admin Login"
+                    >
+                      🔐 {adminLabel}
+                      {pendingCount > 0 && (
+                        <span className="flex h-2 w-2 relative">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                        </span>
+                      )}
+                    </Link>
+                    {pendingCount > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.2 rounded-full border border-[#1B3A6B] animate-bounce shadow">
+                        {pendingCount}
+                      </span>
+                    )}
+                  </div>
 
                   {/* Support Us Button — Desktop */}
                   <div className="relative group flex items-center">
@@ -283,12 +317,18 @@ const Navbar = () => {
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-white/10">
+                <div className="pt-3 border-t border-white/10 flex items-center justify-between px-4">
                   <Link
                     to="/admin/login"
-                    className="block px-4 py-3 rounded-md text-sm font-semibold text-blue-200 hover:bg-white/10"
+                    className="py-3 rounded-md text-sm font-semibold text-blue-200 hover:text-white flex items-center gap-2"
                   >
                     🔐 Admin Login
+                    {pendingCount > 0 && (
+                      <span className="flex items-center gap-1 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full animate-pulse">
+                        <span className="h-1.5 w-1.5 rounded-full bg-white animate-ping"></span>
+                        {pendingCount} Pending
+                      </span>
+                    )}
                   </Link>
                 </div>
               </div>

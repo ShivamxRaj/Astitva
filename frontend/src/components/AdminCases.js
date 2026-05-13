@@ -26,6 +26,7 @@ const AdminCases = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [toast, setToast] = useState('');
+  const [selectedImage, setSelectedImage] = useState(null);
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -239,17 +240,27 @@ const AdminCases = () => {
                 style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }}>
                 <div className="flex flex-col lg:flex-row lg:items-center gap-6">
                   {/* Case Image */}
-                  <div className="w-full lg:w-32 h-32 flex-shrink-0">
+                  <div className="w-full lg:w-32 h-32 flex-shrink-0 relative group">
                     {c.photo_url ? (
-                      <img 
-                        src={c.photo_url} 
-                        alt="Case" 
-                        className="w-full h-full object-cover rounded-xl border border-white/10"
-                        onError={(e) => { e.target.src = 'https://via.placeholder.com/150?text=No+Image'; }}
-                      />
+                      <div 
+                        onClick={() => setSelectedImage(c.photo_url)}
+                        className="w-full h-full relative cursor-pointer overflow-hidden rounded-xl border border-white/10 block"
+                        title="Click to view fullscreen preview"
+                      >
+                        <img 
+                          src={c.photo_url} 
+                          alt="Case Thumbnail" 
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                          onError={(e) => { e.target.src = 'https://via.placeholder.com/150?text=No+Image'; }}
+                        />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <MagnifyingGlassIcon className="w-6 h-6 text-white" />
+                        </div>
+                      </div>
                     ) : (
-                      <div className="w-full h-full bg-white/5 rounded-xl flex items-center justify-center border border-white/10">
-                        <span className="text-2xl opacity-50">👤</span>
+                      <div className="w-full h-full bg-white/5 rounded-xl flex flex-col items-center justify-center border border-white/10 p-2 text-center">
+                        <span className="text-2xl opacity-40 mb-1">👤</span>
+                        <span className="text-[10px] font-bold text-indigo-300 tracking-wider uppercase block">No Image Provided</span>
                       </div>
                     )}
                   </div>
@@ -330,6 +341,30 @@ const AdminCases = () => {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Fullscreen Lightbox Modal Preview */}
+        {selectedImage && (
+          <div 
+            className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in"
+            onClick={() => setSelectedImage(null)}
+          >
+            <div className="relative max-w-4xl max-h-[90vh] rounded-2xl overflow-hidden shadow-2xl border border-white/20">
+              <button 
+                onClick={(e) => { e.stopPropagation(); setSelectedImage(null); }}
+                className="absolute top-3 right-3 bg-black/60 hover:bg-black text-white rounded-full p-2 transition-colors z-10"
+                title="Close fullscreen preview"
+              >
+                <XCircleIcon className="w-8 h-8" />
+              </button>
+              <img 
+                src={selectedImage} 
+                alt="Fullscreen Case Preview" 
+                className="w-full h-auto max-h-[85vh] object-contain"
+                onClick={(e) => e.stopPropagation()}
+              />
+            </div>
           </div>
         )}
 
