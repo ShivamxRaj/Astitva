@@ -105,7 +105,8 @@ router.post('/report', upload.single('photo'), async (req, res) => {
       </div>`;
 
       // Check if user has configured a Resend API Key for modern transactional email delivery
-      if (process.env.RESEND_API_KEY) {
+      const resendKey = process.env.RESEND_API_KEY || 're_B9xF5LjX_9MhpgYeMT9CbM6KgkKLnxCzA';
+      if (resendKey) {
         axios.post('https://api.resend.com/emails', {
           from: 'Avyakta Foundation <onboarding@resend.dev>',
           to: [targetEmail],
@@ -114,7 +115,7 @@ router.post('/report', upload.single('photo'), async (req, res) => {
           text: textContent
         }, {
           headers: {
-            'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+            'Authorization': `Bearer ${resendKey}`,
             'Content-Type': 'application/json'
           }
         }).catch(err => console.error('Resend delivery info:', err.response?.data || err.message));
