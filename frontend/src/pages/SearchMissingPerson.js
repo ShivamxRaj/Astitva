@@ -56,26 +56,33 @@ const SearchMissingPerson = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
-    setAiSummary("Gemini AI is analyzing records across India. Please wait...");
+    setAiSummary("Gemini AI Vision & Text engine is analyzing records across India. Please wait...");
     setResults([]);
     try {
       const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
-      const res = await axios.post(`${apiUrl}/api/cases/search`, {
-        name: form.fullName,
-        gender: form.gender,
-        age: form.age,
-        location: form.lastSeenLocation,
-        date: form.dateLastSeen,
-        marks: form.identifyingMarks,
-        description: `Accessories: ${form.accessories}, Relationship: ${form.relationship}`
+      
+      const formData = new FormData();
+      formData.append('name', form.fullName || '');
+      formData.append('gender', form.gender || '');
+      formData.append('age', form.age || '');
+      formData.append('location', form.lastSeenLocation || '');
+      formData.append('date', form.dateLastSeen || '');
+      formData.append('marks', form.identifyingMarks || '');
+      formData.append('description', `Accessories: ${form.accessories}, Relationship: ${form.relationship}`);
+      if (form.photo) {
+        formData.append('photo', form.photo);
+      }
+
+      const res = await axios.post(`${apiUrl}/api/cases/search`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
       if (res.data.success && res.data.matches) {
         setResults(res.data.matches);
-        setAiSummary(`Analysis complete. Found ${res.data.matches.length} possible matches based on your criteria.`);
+        setAiSummary(`Analysis complete. Found ${res.data.matches.length} possible matches based on your physical criteria and AI visual comparison.`);
       }
     } catch (error) {
       console.error(error);
-      setAiSummary("An error occurred during AI analysis. Please try again.");
+      setAiSummary("An error occurred during AI multimodal analysis. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -296,8 +303,18 @@ const SearchMissingPerson = () => {
                       <div className="w-full md:w-32 h-32 bg-gray-200 rounded flex items-center justify-center text-gray-500 text-sm flex-shrink-0">No Photo</div>
                     )}
                     <div className="flex-1">
-                      <div className="flex justify-between items-start">
-                        <span className="font-bold text-lg" style={{ color: 'var(--navy)' }}>{match.location}</span>
+                      <div className="flex flex-wrap justify-between items-start gap-2">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="font-bold text-lg" style={{ color: 'var(--navy)' }}>{match.location}</span>
+                          {(match.status === 'identified' || match.status === 'investigating' || match.status === 'approved') && (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm" title="Officially verified by Avyakta Foundation">
+                              <svg className="w-3.5 h-3.5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path>
+                              </svg>
+                              Verified by Avyakta
+                            </span>
+                          )}
+                        </div>
                         <span className="px-2 py-1 bg-amber-100 text-amber-700 font-bold rounded text-xs">{match.matchScore}% Match</span>
                       </div>
                       <p className="text-sm mt-1" style={{ color: 'var(--text-mid)' }}>Date Logged: {new Date(match.date_of_sighting || match.created_at).toLocaleDateString()}</p>
@@ -313,11 +330,21 @@ const SearchMissingPerson = () => {
 
             {searchTab === 'track_report' && trackResult && (
               <div className="inst-card overflow-hidden" style={{ padding: 0 }}>
-                <div className="px-6 py-4 flex justify-between items-center" style={{ background: 'rgba(46,125,156,0.06)', borderBottom: '1px solid #E2E8F0' }}>
-                  <h4 className="text-lg font-bold" style={{ color: 'var(--navy)' }}>Report Details</h4>
+                <div className="px-6 py-4 flex flex-wrap justify-between items-center gap-2" style={{ background: 'rgba(46,125,156,0.06)', borderBottom: '1px solid #E2E8F0' }}>
+                  <div className="flex items-center gap-2">
+                    <h4 className="text-lg font-bold" style={{ color: 'var(--navy)' }}>Report Details</h4>
+                    {(trackResult.status === 'identified' || trackResult.status === 'investigating' || trackResult.status === 'approved') && (
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm">
+                        <svg className="w-3.5 h-3.5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path>
+                        </svg>
+                        Verified by Avyakta
+                      </span>
+                    )}
+                  </div>
                   <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider" style={{
-                    background: trackResult.status === 'approved' ? 'rgba(39,174,96,0.12)' : trackResult.status === 'rejected' ? 'rgba(192,57,43,0.12)' : 'rgba(245,158,11,0.12)',
-                    color: trackResult.status === 'approved' ? 'var(--success-green)' : trackResult.status === 'rejected' ? 'var(--alert-red)' : 'var(--amber-warn)'
+                    background: (trackResult.status === 'approved' || trackResult.status === 'identified') ? 'rgba(39,174,96,0.12)' : trackResult.status === 'rejected' ? 'rgba(192,57,43,0.12)' : 'rgba(245,158,11,0.12)',
+                    color: (trackResult.status === 'approved' || trackResult.status === 'identified') ? 'var(--success-green)' : trackResult.status === 'rejected' ? 'var(--alert-red)' : 'var(--amber-warn)'
                   }}>
                     {trackResult.status}
                   </span>

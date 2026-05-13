@@ -138,7 +138,7 @@ router.patch('/update-status/:id', async (req, res) => {
 });
 
 // --- SEARCH CASES ROUTE (Gemini AI Powered) ---
-router.post('/search', async (req, res) => {
+router.post('/search', upload.single('photo'), async (req, res) => {
   try {
     const { name, gender, age, location, date, marks, description } = req.body;
 
@@ -148,32 +148,53 @@ router.post('/search', async (req, res) => {
 
     if (fetchError) throw fetchError;
 
-    const prompt = `You are an AI matching system for Avyakta, a missing persons platform in India.
+    let prompt = `You are an AI matching system for Avyakta, a missing persons platform in India.
 Given a family's search details and a list of reported unidentified cases from the database,
 find the best matches. 
 
 Family is searching for:
-Name: ${name}
-Gender: ${gender}
-Age: ${age}
-Last seen location: ${location}
-Date: ${date}
-Identifying marks: ${marks}
-Description: ${description}
+Name: ${name || 'N/A'}
+Gender: ${gender || 'N/A'}
+Age: ${age || 'N/A'}
+Last seen location: ${location || 'N/A'}
+Date: ${date || 'N/A'}
+Identifying marks: ${marks || 'N/A'}
+Description: ${description || 'N/A'}
 
 Database cases (JSON):
-${JSON.stringify(allCases)}
+${JSON.stringify(allCases || [])}
 
 Return ONLY a valid JSON array of matched cases with two extra fields added to each matching case object:
 1. "matchScore" (0-100)
-2. "matchReason" (A short sentence explaining why it matches)
+2. "matchReason" (A short sentence explaining why it matches)`;
 
-Rules:
+    let contents = [prompt];
+
+    if (req.file) {
+      const imagePart = {
+        inlineData: {
+          data: req.file.buffer.toString("base64"),
+          mimeType: req.file.mimetype
+        }
+      };
+      prompt += `\n\nCRITICAL MULTIMODAL INSTRUCTION: The family has also uploaded a photo of the missing person (provided as an inline image attachment). Compare the facial features, age build, hair, and clothing in the uploaded photo against the database case records (which have descriptive marks, clothing details, and photo_url links). Boost the matchScore significantly if visual characteristics in the uploaded image correspond to the physical characteristics recorded in the database cases!`;
+      // recreate contents array with both prompt string and inline image part
+      contents = [prompt, imagePart];
+    }
+
+    prompt += `\n\nRules:
 - Sort by matchScore descending.
 - Only include cases with matchScore above 40.
 - Return ONLY the JSON array. No markdown, no "here is the json", no other text.`;
 
-    const result = await model.generateContent(prompt);
+    // Reconstruct contents if prompt string got updated rules
+    if (req.file) {
+      contents[0] = prompt;
+    } else {
+      contents = [prompt];
+    }
+
+    const result = await model.generateContent(contents);
     const responseText = result.response.text();
     
     // Clean JSON response (remove markdown if any)

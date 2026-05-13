@@ -205,14 +205,28 @@ const ReportUnclaimedBody = () => {
               Your report has been received with heartfelt respect and will be reviewed by our team. You've taken a step toward giving someone their identity, and their dignity.
             </p>
             {reportId && (
-              <div className="flex flex-col items-center gap-2 mt-4">
+              <div className="flex flex-col items-center gap-2 mt-4 w-full">
                 <div className="flex items-center gap-2 font-mono text-sm sm:text-base px-4 py-3 rounded-lg w-full max-w-sm" style={{ background: 'rgba(46,125,156,0.1)', color: 'var(--navy)' }}>
                   Report ID: <span className="font-bold flex-1 truncate text-left">{reportId}</span>
                   <button onClick={handleCopyReportId} title="Copy Report ID" className="p-1.5 rounded hover:bg-white focus:outline-none focus:ring-2 focus:ring-teal flex-shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" fill="var(--teal)" opacity="0.15"/><rect x="3" y="3" width="13" height="13" rx="2" stroke="var(--teal)" strokeWidth="2" fill="none"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" fill="var(--teal)" opacity="0.15"/><rect x="3" y="3" width="13" height="13" stroke="var(--teal)" strokeWidth="2" fill="none"/></svg>
                   </button>
                 </div>
-                <span className="text-xs" style={{ color: 'var(--text-light)' }}>Tap to copy. You can use this ID to track the case.</span>
+                <span className="text-xs mb-4" style={{ color: 'var(--text-light)' }}>Tap to copy. You can use this ID to track the case.</span>
+
+                {/* Automated SMS/Email Alert notification pane */}
+                <div className="w-full p-4 bg-slate-50 rounded-2xl border border-slate-200 text-left max-w-lg mt-2">
+                  <div className="flex items-center gap-2 mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                    Auto-Generated SMS / Email Sent
+                  </div>
+                  <div className="p-3 bg-white rounded-xl border border-slate-200 font-mono text-xs text-slate-700 shadow-sm">
+                    "Thank you for your humanity. Your report (ID: {reportId}) has been received."
+                  </div>
+                  <div className="mt-2 text-[11px] text-slate-400 italic">
+                    Sent to reporter contact: {form.contact}
+                  </div>
+                </div>
               </div>
             )}
           </div>

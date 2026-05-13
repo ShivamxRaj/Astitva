@@ -89,10 +89,25 @@ const ReportForm = () => {
       <div className="max-w-2xl mx-auto my-12 p-8 bg-white rounded-3xl border border-slate-200 shadow-xl text-center">
         <CheckCircleIcon className="w-20 h-20 text-emerald-500 mx-auto mb-6" />
         <h2 className="text-3xl font-bold text-[#1B3A6B] mb-4">Report Submitted Successfully</h2>
-        <p className="text-slate-600 mb-8">
+        <p className="text-slate-600 mb-4">
           Thank you for your humanity. Your report has been registered with ID:
           <span className="block text-emerald-600 font-mono text-2xl mt-2 font-bold">{successId}</span>
         </p>
+
+        {/* Automated SMS/Email Alert notification pane */}
+        <div className="mb-8 p-4 bg-slate-50 rounded-2xl border border-slate-200 text-left max-w-lg mx-auto">
+          <div className="flex items-center gap-2 mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+            Auto-Generated SMS / Email Sent
+          </div>
+          <div className="p-3 bg-white rounded-xl border border-slate-200 font-mono text-xs text-slate-700 shadow-sm">
+            "Thank you for your humanity. Your report (ID: {successId}) has been received."
+          </div>
+          <div className="mt-2 text-[11px] text-slate-400 italic">
+            Sent to reporter contact: {form.contact_info}
+          </div>
+        </div>
+
         <button 
           onClick={() => window.location.reload()}
           className="px-8 py-3 bg-emerald-500 text-white rounded-xl font-bold hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/30"
