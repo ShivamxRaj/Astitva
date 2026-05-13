@@ -94,15 +94,21 @@ const AdminRatings = () => {
           <div className="bg-white/10 p-1 rounded-xl flex gap-1 border border-white/20">
             <button 
               onClick={() => navigate('/admin/cases')}
-              className="px-6 py-2 rounded-lg font-bold text-sm text-blue-200 hover:bg-white/10 transition-all"
+              className="px-5 py-2 rounded-lg font-bold text-sm text-blue-200 hover:bg-white/10 transition-all"
             >
               Cases / Reports
             </button>
             <button 
               onClick={() => navigate('/admin/ratings')}
-              className="px-6 py-2 rounded-lg font-bold text-sm bg-white text-blue-900 shadow"
+              className="px-5 py-2 rounded-lg font-bold text-sm bg-white text-blue-900 shadow"
             >
               Feedback / Ratings
+            </button>
+            <button 
+              onClick={() => navigate('/admin/contacts')}
+              className="px-5 py-2 rounded-lg font-bold text-sm text-blue-200 hover:bg-white/10 transition-all"
+            >
+              Contact Messages
             </button>
           </div>
           <button

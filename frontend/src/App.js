@@ -7,6 +7,7 @@ import Home from './components/Home';
 import AdminAuth from './components/AdminAuth';
 import AdminRatings from './components/AdminRatings';
 import AdminCases from './components/AdminCases';
+import AdminContacts from './components/AdminContacts';
 import About from './pages/About';
 
 import AvyaktaBot from './components/AvyaktaBot';
@@ -156,6 +157,7 @@ function App() {
             <Route exact path="/reset-password" element={<ResetPassword />} />
             <Route exact path="/admin/ratings" element={<ProtectedRoute><AdminRatings /></ProtectedRoute>} />
             <Route exact path="/admin/cases" element={<ProtectedRoute><AdminCases /></ProtectedRoute>} />
+            <Route exact path="/admin/contacts" element={<ProtectedRoute><AdminContacts /></ProtectedRoute>} />
             <Route exact path="/contact" element={<Contact />} />
             <Route exact path="/faq" element={<FAQPage />} />
             <Route exact path="/testimonials" element={<Testimonials />} />

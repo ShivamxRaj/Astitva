@@ -324,14 +324,14 @@ function Contact() {
                   </h3>
                   <div className="relative w-full h-48 sm:h-56 lg:h-64 rounded-xl overflow-hidden" style={{ border: '1.5px solid #E2E8F0' }}>
                     <iframe
-                      src="https://www.google.com/maps?q=25.7011,85.1832&z=17&output=embed"
+                      src="https://www.google.com/maps?q=28.6304,77.2177&z=15&output=embed"
                       width="100%"
                       height="100%"
                       style={{ border: 0 }}
                       allowFullScreen=""
                       loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"
-                      title="Avyakta Office Location - Sabalpur Hasti Tola (Bihar)"
+                      title="Avyakta National Headquarters - New Delhi"
                       className="rounded-xl"
                     ></iframe>
                   </div>
@@ -339,15 +339,15 @@ function Contact() {
                     <div className="flex items-center justify-center space-x-2">
                       <div className="w-3 h-3 rounded-full animate-pulse" style={{ background: 'var(--alert-red)' }}></div>
                       <p className="text-xs sm:text-sm font-medium" style={{ color: 'var(--teal)' }}>
-                        Avyakta Office - Sabalpur Hasti Tola, Sonepur, Saran, Bihar
+                        Avyakta Main Office - Connaught Place, New Delhi, India
                       </p>
                     </div>
                     <p className="text-xs mt-1 text-center" style={{ color: 'var(--text-light)' }}>
-                      Sabalpur Hasti Tola, Sonepur, Saran, Bihar<br />Pin Code - 841101
+                      Connaught Place, New Delhi, Delhi<br />Pin Code - 110001
                     </p>
                     <div className="mt-2 text-center">
                       <a
-                        href="https://www.google.com/maps/dir/?api=1&destination=25.7011,85.1832"
+                        href="https://www.google.com/maps/dir/?api=1&destination=28.6304,77.2177"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="btn-primary inline-block"

@@ -92,30 +92,32 @@ const SearchMissingPerson = () => {
     try {
       const cleanedId = trackId.trim().replace(/[^\w#-]/g, '');
       
-      // Native REST fetch bypasses browser env secret blocks
-      const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || 'https://xnzxenupdsjzcxpbpxqs.supabase.co';
-      const p1 = 'sb_se';
-      const p2 = 'cret____RXzBAUa-';
-      const p3 = '_IWabSEtVSw_tnc9t7HF';
-      const secretKey = p1 + p2 + p3;
-
-      const response = await fetch(`${supabaseUrl}/rest/v1/orphan_cases?case_id=eq.${encodeURIComponent(cleanedId)}&select=*`, {
-        headers: {
-          'apikey': secretKey,
-          'Authorization': `Bearer ${secretKey}`
+      let foundCase = null;
+      try {
+        const { data, error } = await supabase
+          .from('orphan_cases')
+          .select('*')
+          .eq('case_id', cleanedId)
+          .single();
+        
+        if (!error && data) {
+          foundCase = data;
         }
-      });
-
-      if (!response.ok) {
-        throw new Error('Not found');
+      } catch (e) {
+        console.warn('Direct public select failed, trying backend fallback...');
       }
 
-      const rows = await response.json();
-      if (!rows || rows.length === 0) {
-        throw new Error('Not found');
+      if (!foundCase) {
+        const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+        const res = await axios.post(`${apiUrl}/api/cases/track`, { case_id: cleanedId });
+        if (res.data?.success && res.data?.case) {
+          foundCase = res.data.case;
+        } else {
+          throw new Error('Not found');
+        }
       }
 
-      setTrackResult(rows[0]);
+      setTrackResult(foundCase);
     } catch (err) {
       setTrackError("No report found with this ID. Please check the ID and try again.");
     } finally {

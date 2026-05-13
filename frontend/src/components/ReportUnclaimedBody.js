@@ -126,30 +126,36 @@ const ReportUnclaimedBody = () => {
         created_at: new Date().toISOString()
       };
 
-      // Bypass Supabase JS library client-side blocks by using native browser fetch to call the REST API directly
-      const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || 'https://xnzxenupdsjzcxpbpxqs.supabase.co';
-      const p1 = 'sb_se';
-      const p2 = 'cret____RXzBAUa-';
-      const p3 = '_IWabSEtVSw_tnc9t7HF';
-      const secretKey = p1 + p2 + p3;
+      let finalReportId = case_id;
+      // Insert into Supabase using the standard public client to prevent browser secret key blocks
+      const { error: dbError } = await supabase
+        .from('orphan_cases')
+        .insert([caseData]);
 
-      const response = await fetch(`${supabaseUrl}/rest/v1/orphan_cases`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': secretKey,
-          'Authorization': `Bearer ${secretKey}`,
-          'Prefer': 'return=representation'
-        },
-        body: JSON.stringify(caseData)
-      });
-
-      if (!response.ok) {
-        const errText = await response.text();
-        throw new Error(`Database Error: ${response.status} ${errText}`);
+      if (dbError) {
+        console.warn('Public insert blocked by RLS policies, seamlessly falling back to local backend server API...', dbError);
+        const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+        const formData = new FormData();
+        formData.append('location', form.location);
+        formData.append('date_of_sighting', form.dateTime);
+        formData.append('description', form.description);
+        formData.append('contact_info', form.contact);
+        formData.append('additional_info', form.message);
+        if (form.image) {
+          formData.append('photo', form.image);
+        }
+        const res = await axios.post(`${apiUrl}/api/cases/report`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        if (!res.data?.success) {
+          throw new Error(res.data?.message || 'Submission failed via backend server');
+        }
+        if (res.data?.case_id) {
+          finalReportId = res.data.case_id;
+        }
       }
 
-      setReportId(case_id);
+      setReportId(finalReportId);
       setSubmitted(true);
       setForm(initialForm);
       setImagePreview(null);
