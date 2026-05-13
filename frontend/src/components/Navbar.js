@@ -218,17 +218,12 @@ const Navbar = () => {
                     >
                       <span className="opacity-60">🛡️</span> {adminLabel}
                       {isAdmin && pendingCount > 0 && (
-                        <span className="flex h-1.5 w-1.5 relative ml-0.5">
+                        <span className="flex h-2 w-2 relative ml-0.5" title="New unverified report arrived">
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-500"></span>
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
                         </span>
                       )}
                     </Link>
-                    {isAdmin && pendingCount > 0 && (
-                      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[8px] font-bold px-1 py-0.1 rounded-full border border-[#1B3A6B] animate-pulse">
-                        {pendingCount}
-                      </span>
-                    )}
                   </div>
 
                   {/* Support Us Button — Desktop */}
@@ -362,9 +357,9 @@ const Navbar = () => {
                   >
                     🔐 Admin Login
                     {isAdmin && pendingCount > 0 && (
-                      <span className="flex items-center gap-1 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full animate-pulse">
-                        <span className="h-1.5 w-1.5 rounded-full bg-white animate-ping"></span>
-                        {pendingCount} Pending
+                      <span className="flex h-2.5 w-2.5 relative" title="New unverified report arrived">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
                       </span>
                     )}
                   </Link>
