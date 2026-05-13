@@ -20,6 +20,15 @@ const formatDate = (d) =>
     hour: '2-digit', minute: '2-digit',
   });
 
+const getCategoryTag = (text) => {
+  if (!text) return null;
+  const lower = text.toLowerCase();
+  if (lower.includes('officer')) return { label: 'OFFICER', bg: 'bg-blue-600 text-white font-extrabold shadow-sm border border-blue-400' };
+  if (lower.includes('family')) return { label: 'FAMILY', bg: 'bg-pink-600 text-white font-extrabold shadow-sm border border-pink-400' };
+  if (lower.includes('volunteer')) return { label: 'VOLUNTEER', bg: 'bg-amber-600 text-white font-extrabold shadow-sm border border-amber-400' };
+  return null;
+};
+
 const AdminCases = () => {
   const [cases, setCases] = useState([]);
   const [filter, setFilter] = useState('unidentified'); // 'unidentified' | 'investigating' | 'identified' | 'all'
@@ -276,6 +285,15 @@ const AdminCases = () => {
                         }}>
                         {c.status.toUpperCase()}
                       </span>
+                      {(() => {
+                        const tag = getCategoryTag(c.description || '') || getCategoryTag(c.additional_info || '');
+                        if (!tag) return null;
+                        return (
+                          <span className={`text-[10px] px-2 py-0.5 rounded tracking-wider shrink-0 ${tag.bg}`}>
+                            {tag.label}
+                          </span>
+                        );
+                      })()}
                       {c.report_type === 'anonymous' && (
                         <span className="text-xs px-2.5 py-0.5 rounded-full font-bold bg-purple-100 text-purple-800 shrink-0">
                           Anonymous

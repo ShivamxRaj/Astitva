@@ -170,24 +170,23 @@ const Navbar = () => {
                     🚨 {reportLabel}
                   </Link>
 
-                  {/* Admin Login — discrete with live pending notifications badge */}
-                  <div className="relative inline-block">
+                  {/* Admin Login — highly subtle/minimalist to prioritize Report Case / Donate CTA focus */}
+                  <div className="relative inline-block ml-1">
                     <Link
                       to="/admin/login"
-                      className="px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center gap-1.5"
-                      style={{ color: '#93C5FD', border: '1px solid rgba(147,197,253,0.3)' }}
+                      className="px-2 py-1.5 rounded text-[11px] font-medium text-blue-300/70 hover:text-blue-200 hover:bg-white/5 transition-all duration-200 flex items-center gap-1"
                       aria-label="Admin Login"
                     >
-                      🔐 {adminLabel}
+                      <span className="opacity-60">🛡️</span> {adminLabel}
                       {pendingCount > 0 && (
-                        <span className="flex h-2 w-2 relative">
+                        <span className="flex h-1.5 w-1.5 relative ml-0.5">
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-500"></span>
                         </span>
                       )}
                     </Link>
                     {pendingCount > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.2 rounded-full border border-[#1B3A6B] animate-bounce shadow">
+                      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[8px] font-bold px-1 py-0.1 rounded-full border border-[#1B3A6B] animate-pulse">
                         {pendingCount}
                       </span>
                     )}
