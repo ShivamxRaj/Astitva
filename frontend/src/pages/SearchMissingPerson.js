@@ -115,13 +115,28 @@ const SearchMissingPerson = () => {
       }
 
       if (!foundCase) {
-        const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
-        const res = await axios.post(`${apiUrl}/api/cases/track`, { case_id: cleanedId });
-        if (res.data?.success && res.data?.case) {
-          foundCase = res.data.case;
-        } else {
-          throw new Error('Not found');
-        }
+        try {
+          const apiUrl = process.env.REACT_APP_API_URL || 'https://avyakta-backend.onrender.com';
+          const res = await axios.post(`${apiUrl}/api/cases/track`, { case_id: cleanedId });
+          if (res.data?.success && res.data?.case) {
+            foundCase = res.data.case;
+          }
+        } catch (apiErr) {}
+      }
+
+      // Check client offline storage continuity mapping
+      if (!foundCase) {
+        try {
+          const localReports = JSON.parse(localStorage.getItem('citizen_offline_reports') || '[]');
+          const matchedLocal = localReports.find(r => r.case_id === cleanedId);
+          if (matchedLocal) {
+            foundCase = matchedLocal;
+          }
+        } catch (storageReadErr) {}
+      }
+
+      if (!foundCase) {
+        throw new Error('Not found');
       }
 
       setTrackResult(foundCase);

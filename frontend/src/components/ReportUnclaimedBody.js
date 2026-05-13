@@ -137,6 +137,13 @@ const ReportUnclaimedBody = () => {
         created_at: new Date().toISOString()
       };
 
+      // Always save locally to guarantee offline/fallback continuity tracking mapping
+      try {
+        const existingLocal = JSON.parse(localStorage.getItem('citizen_offline_reports') || '[]');
+        existingLocal.push(caseData);
+        localStorage.setItem('citizen_offline_reports', JSON.stringify(existingLocal));
+      } catch (storageSaveErr) {}
+
       let finalReportId = case_id;
       // Insert into Supabase using the standard public client to prevent browser secret key blocks
       const { error: dbError } = await supabase
