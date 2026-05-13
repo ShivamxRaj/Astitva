@@ -260,7 +260,10 @@ const AdminCases = () => {
                           src={c.photo_url} 
                           alt="Case Thumbnail" 
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                          onError={(e) => { e.target.src = 'https://via.placeholder.com/150?text=No+Image'; }}
+                          onError={(e) => { 
+                            e.target.onerror = null; 
+                            e.target.src = 'https://images.unsplash.com/photo-1544502062-f82887f03d1c?auto=format&fit=crop&w=300&q=80'; 
+                          }}
                         />
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                           <MagnifyingGlassIcon className="w-6 h-6 text-white" />
