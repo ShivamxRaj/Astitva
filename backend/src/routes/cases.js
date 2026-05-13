@@ -1,10 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
+const nodemailer = require('nodemailer');
 const { createClient } = require('@supabase/supabase-js');
 const { v4: uuidv4 } = require('uuid');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const Case = require('../models/Case');
+
+// Initialize Nodemailer SMTP Transporter
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER || 'avyaktahumanitarian@gmail.com',
+    pass: process.env.EMAIL_PASS || 'dummy_override_pass'
+  }
+});
 
 // Initialize Supabase
 const supabase = createClient(
@@ -75,6 +85,31 @@ router.post('/report', upload.single('photo'), async (req, res) => {
 
     const newCase = new Case(caseData);
     await newCase.save();
+
+    // Send automated email alert if contact info contains an email address
+    if (contact_info && contact_info.includes('@')) {
+      const emailMatch = contact_info.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/);
+      const targetEmail = emailMatch ? emailMatch[0] : contact_info.trim();
+      
+      const mailOptions = {
+        from: '"Avyakta Foundation" <avyaktahumanitarian@gmail.com>',
+        to: targetEmail,
+        subject: `Case Report Received - ID: ${case_id}`,
+        text: `Thank you for your humanity. Your report (ID: ${case_id}) has been received.\n\nLocation: ${location}\nDate: ${date_of_sighting}\n\nOur team is currently verifying the details to restore dignity to the individual.\n\nWarm regards,\nAvyakta Team`,
+        html: `<div style="font-family: Arial, sans-serif; color: #1B3A6B; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px;">
+          <h2 style="color: #1B3A6B;">Avyakta Foundation</h2>
+          <p><strong>Thank you for your humanity. Your report (ID: ${case_id}) has been received.</strong></p>
+          <p><strong>Location:</strong> ${location}</p>
+          <p><strong>Date Logged:</strong> ${new Date().toLocaleString()}</p>
+          <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 20px 0;" />
+          <p style="font-size: 13px; color: #64748b;">Our verification officers have been dispatched to analyze the record. You can use your Report ID to track live updates directly on our portal.</p>
+          <p style="font-size: 12px; color: #94a3b8;">Avyakta Humanitarian Assistance · Restoring dignity, one soul at a time</p>
+        </div>`
+      };
+
+      // Dispatch email asynchronously without blocking report creation API response
+      transporter.sendMail(mailOptions).catch(err => console.error('Automated email dispatch note:', err.message));
+    }
 
     res.status(201).json({ success: true, case_id, message: "Report submitted successfully" });
   } catch (error) {
