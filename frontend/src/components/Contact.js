@@ -23,7 +23,8 @@ function Contact() {
     switch (name) {
       case 'name':
         if (!value.trim()) return 'Name is required';
-        if (value.trim().length < 2) return 'Name must be at least 2 characters';
+        if (value.trim().length < 3) return 'Name must be at least 3 characters';
+        if (/([a-zA-Z])\1{3,}/.test(value.trim())) return 'Please enter a valid real name';
         if (!/^[a-zA-Z\s]+$/.test(value.trim())) return 'Name can only contain letters and spaces';
         return '';
       
@@ -43,8 +44,9 @@ function Contact() {
       
       case 'message':
         if (!value.trim()) return 'Message is required';
-        if (value.trim().length < 10) return 'Message must be at least 10 characters';
-        if (value.trim().length > 500) return 'Message must be less than 500 characters';
+        if (value.trim().length < 20) return 'Message must be at least 20 characters long';
+        if (value.trim().length > 1000) return 'Message must be less than 1000 characters';
+        if (/([a-zA-Z0-9])\1{5,}/.test(value.trim())) return 'Spam or repeated dummy characters are not permitted';
         return '';
       
       default:
@@ -282,7 +284,7 @@ function Contact() {
                     </div>
                     <div className="ml-3 sm:ml-4">
                       <h3 className="text-base sm:text-lg font-semibold mb-1" style={{ color: 'var(--navy)' }}>Helpline</h3>
-                      <p className="text-sm sm:text-base font-medium" style={{ color: 'var(--text-dark)' }}>+91 1800-XXX-XXXX</p>
+                      <p className="text-sm sm:text-base font-medium" style={{ color: 'var(--text-dark)' }}>+91 62994 46452</p>
                       <p className="text-xs sm:text-sm mt-1" style={{ color: 'var(--text-light)' }}>Available 24x7</p>
                     </div>
                   </div>

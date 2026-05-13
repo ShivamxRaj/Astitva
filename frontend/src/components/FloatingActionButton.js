@@ -74,7 +74,7 @@ const FloatingActionButton = ({ isChatOpen: externalIsChatOpen, onChatToggle }) 
 
 Key Information:
 - Emergency: Call 100 (Police), 102 (Ambulance), 101 (Fire)
-- Helpline: +91 1800-XXX-XXXX
+- Helpline: +91 62994 46452
 - Email: support@avyakta.org
 - Location: New Delhi, India
 - Specialized: Women (1091), Children (1098), Mental Health (9152987821)
@@ -171,7 +171,7 @@ Always prioritize safety and emergency situations. Be compassionate, helpful, an
     // Contact Information
     if (lowerMessage.includes('contact') || lowerMessage.includes('phone') || lowerMessage.includes('email') || lowerMessage.includes('reach') || lowerMessage.includes('call')) {
       return {
-        text: "📞 CONTACT INFORMATION\n\n24/7 Emergency Helpline:\n📞 +91 1800-XXX-XXXX\n\nGeneral Support:\n📧 Email: support@avyakta.org\n🌐 Website: www.avyakta.org\n📍 Location: New Delhi, India\n\nSpecialized Helplines:\n👩 Women: 1091\n👶 Children: 1098\n🚨 Police: 100\n🚑 Ambulance: 102\n🔥 Fire: 101\n\nResponse Times:\n• Emergency: Immediate\n• General queries: Within 24 hours\n• Reports: Within 48 hours\n\nWe're here 24/7 to help you!",
+        text: "📞 CONTACT INFORMATION\n\n24/7 Emergency Helpline:\n📞 +91 62994 46452\n\nGeneral Support:\n📧 Email: support@avyakta.org\n🌐 Website: www.avyakta.org\n📍 Location: New Delhi, India\n\nSpecialized Helplines:\n👩 Women: 1091\n👶 Children: 1098\n🚨 Police: 100\n🚑 Ambulance: 102\n🔥 Fire: 101\n\nResponse Times:\n• Emergency: Immediate\n• General queries: Within 24 hours\n• Reports: Within 48 hours\n\nWe're here 24/7 to help you!",
         quickActions: [
           { text: "📞 Call Helpline", action: "call_helpline" },
           { text: "📧 Send Email", action: "send_email" },
@@ -235,7 +235,7 @@ For accidents, injuries, or sudden illness, call 102 for an ambulance. Stay with
 We are dedicated to giving dignity to the forgotten, reuniting families, and supporting those in crisis. Our mission is to bring hope, justice, and peace to every soul.
 
 📞 *Contact & Support*
-• Helpline: +91 1800-XXX-XXXX
+• Helpline: +91 62994 46452
 • Email: support@avyakta.org
 • Website: www.avyakta.org
 • Location: New Delhi, India
@@ -276,7 +276,7 @@ Your pain is seen, your voice is heard, and your story matters. Together, we can
         response = { text: "🔥 Calling fire brigade (101) now. Evacuate the area immediately and wait for firefighters." };
         break;
       case 'call_helpline':
-        window.location.href = 'tel:+911800XXX';
+        window.location.href = 'tel:+916299446452';
         response = { text: "📞 Calling our helpline now. Our team will assist you immediately with any questions or concerns." };
         break;
       case 'women_helpline':
@@ -392,7 +392,7 @@ Your pain is seen, your voice is heard, and your story matters. Together, we can
         response = { text: "💻 Online reporting process:\n\n1️⃣ Visit www.avyakta.org\n2️⃣ Click 'Report Case'\n3️⃣ Choose case type\n4️⃣ Fill all details\n5️⃣ Upload evidence\n6️⃣ Submit and track\n\nYou'll receive a tracking number and regular updates on your case progress." };
         break;
       case 'call_help':
-        response = { text: "📞 For immediate help:\n\n🚨 Emergency: 100\n🚑 Ambulance: 102\n🔥 Fire: 101\n👩 Women: 1091\n👶 Children: 1098\n💙 Mental Health: 9152987821\n\nOur helpline: +91 1800-XXX-XXXX\n\nCall the appropriate number based on your situation. Help is available 24/7." };
+        response = { text: "📞 For immediate help:\n\n🚨 Emergency: 100\n🚑 Ambulance: 102\n🔥 Fire: 101\n👩 Women: 1091\n👶 Children: 1098\n💙 Mental Health: 9152987821\n\nOur helpline: +91 62994 46452\n\nCall the appropriate number based on your situation. Help is available 24/7." };
         break;
       case 'report_form':
         response = { text: "📋 Report form requirements:\n\nPersonal Details:\n• Full name\n• Contact number\n• Email address\n• Address\n\nCase Details:\n• Type of incident\n• Date and time\n• Location\n• Description\n• Evidence (photos/videos)\n\nWitness Information:\n• Names and contacts\n• Statements\n\nFill all fields accurately for faster processing." };
@@ -425,7 +425,7 @@ Your pain is seen, your voice is heard, and your story matters. Together, we can
         response = { text: "⚖️ Lawyer assistance:\n\nFree Legal Aid:\n• National Legal Services Authority\n• State Legal Services Authority\n• District Legal Services Authority\n\nServices:\n• Legal consultation\n• Court representation\n• Document preparation\n• Rights education\n\nContact your nearest legal services authority. Free legal aid is available for eligible cases." };
         break;
       case 'helpline':
-        response = { text: "📞 Helpline numbers:\n\nEmergency:\n🚨 Police: 100\n🚑 Ambulance: 102\n🔥 Fire: 101\n\nSpecialized:\n👩 Women: 1091\n👶 Children: 1098\n💙 Mental Health: 9152987821\n\nOur Helpline:\n📞 +91 1800-XXX-XXXX\n\nAll helplines are available 24/7. Call the appropriate number based on your situation." };
+        response = { text: "📞 Helpline numbers:\n\nEmergency:\n🚨 Police: 100\n🚑 Ambulance: 102\n🔥 Fire: 101\n\nSpecialized:\n👩 Women: 1091\n👶 Children: 1098\n💙 Mental Health: 9152987821\n\nOur Helpline:\n📞 +91 62994 46452\n\nAll helplines are available 24/7. Call the appropriate number based on your situation." };
         break;
       case 'support':
         response = { text: "💙 Support available:\n\nImmediate:\n• Emergency services\n• Crisis intervention\n• Safety assistance\n\nOngoing:\n• Legal support\n• Medical care\n• Counseling services\n• Financial aid\n• Family support\n\nLong-term:\n• Rehabilitation\n• Education\n• Employment\n• Community integration\n\nYou're not alone. Comprehensive support is available at every stage." };
@@ -443,7 +443,7 @@ Your pain is seen, your voice is heard, and your story matters. Together, we can
         response = { text: "📝 Registration process:\n\nWho Can Register:\n• Police officers\n• Medical professionals\n• NGO workers\n• Government officials\n• Authorized personnel\n• Common users\n\nSteps:\n1️⃣ Fill personal details\n2️⃣ Verify mobile with OTP\n3️⃣ Provide credentials\n4️⃣ Security verification\n5️⃣ Terms agreement\n6️⃣ Account activation\n\nVisit our admin page to start registration." };
         break;
       case 'help':
-        response = { text: "📞 Need help?\n\nTechnical Support:\n• Registration issues\n• Login problems\n• Website navigation\n• Report submission\n\nGeneral Support:\n• Information requests\n• Service inquiries\n• Coordination help\n• Resource guidance\n\nContact us:\n📞 +91 1800-XXX-XXXX\n📧 support@avyakta.org\n\nWe're here to help with any questions or issues." };
+        response = { text: "📞 Need help?\n\nTechnical Support:\n• Registration issues\n• Login problems\n• Website navigation\n• Report submission\n\nGeneral Support:\n• Information requests\n• Service inquiries\n• Coordination help\n• Resource guidance\n\nContact us:\n📞 +91 62994 46452\n📧 support@avyakta.org\n\nWe're here to help with any questions or issues." };
         break;
       case 'security':
         response = { text: "🔒 Security information:\n\nData Protection:\n• Encrypted storage\n• Secure transmission\n• Access controls\n• Regular backups\n\nAuthentication:\n• Multi-factor verification\n• OTP confirmation\n• Security codes\n• Session management\n\nPrivacy:\n• Confidential information\n• Limited access\n• Secure sharing\n• Data retention policies\n\nYour information is protected with industry-standard security measures." };

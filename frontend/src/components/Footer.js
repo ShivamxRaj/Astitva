@@ -7,7 +7,7 @@ import CookiePolicy from '../pages/CookiePolicy';
 import TermsOfService from '../pages/Guidelines';
 import { PrivacyPolicy } from '../pages/About';
 
-const HELPLINE     = '1800-XXX-XXXX';
+const HELPLINE     = '+91 62994 46452';
 const WHATSAPP_URL = 'https://wa.me/916299446452?text=Hello%20Avyakta%2C%20I%20need%20assistance.';
 
 const Footer = () => {

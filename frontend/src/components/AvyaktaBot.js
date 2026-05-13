@@ -37,12 +37,12 @@ const RESPONSES = {
   },
   helpline: {
     keywords: ['helpline', 'phone', 'call', 'number', 'contact', 'dial', 'ring'],
-    text: `Our 24/7 helpline: 1800-XXX-XXXX (Free)\nWhatsApp: Available via the WhatsApp button\nEmail: support@avyakta.org\n\nFor life-threatening emergencies, please call 112 immediately.`,
+    text: `Our 24/7 helpline: +91 62994 46452\nWhatsApp: Available via the WhatsApp button\nEmail: support@avyakta.org\n\nFor life-threatening emergencies, please call 112 immediately.`,
     chips: ['Open WhatsApp', 'Support Us'],
   },
   human: {
     keywords: ['human', 'officer', 'real person', 'agent', 'support', 'baat', 'talk'],
-    text: `I'll connect you with our support team.\nThe fastest way is WhatsApp — usually responded to within 2 hours during 9AM-8PM.\nFor urgent help, call 1800-XXX-XXXX`,
+    text: `I'll connect you with our support team.\nThe fastest way is WhatsApp — usually responded to within 2 hours during 9AM-8PM.\nFor urgent help, call +91 62994 46452`,
     chips: ['Open WhatsApp', 'Call helpline'],
   },
   thanks: {
@@ -174,7 +174,7 @@ const AvyaktaBot = () => {
       return;
     }
     if (lower === 'call helpline' || lower === 'talk to helpline') {
-      window.location.href = 'tel:1800-XXX-XXXX';
+      window.location.href = 'tel:+916299446452';
       return;
     }
     // For any other chip, treat it as a user message

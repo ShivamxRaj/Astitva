@@ -49,6 +49,18 @@ const ReportForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate for repeated character spam
+    const hasSpam = (str) => /([a-zA-Z0-9])\1{5,}/.test(str || '');
+    if (hasSpam(form.description) || hasSpam(form.location) || hasSpam(form.contact_info)) {
+      alert('Spam or repeated placeholder characters (e.g. fffffff) are not permitted. Please enter genuine case details.');
+      return;
+    }
+    if (form.description.trim().length < 10) {
+      alert('Please provide a more detailed general description (at least 10 characters).');
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       const formData = new FormData();
