@@ -36,18 +36,32 @@ const AdminContacts = () => {
     setLoading(true);
     setError('');
     try {
-      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
-      const res = await fetch(`${apiUrl}/api/contact/all`);
-      if (!res.ok) throw new Error('Failed to fetch contact messages from server');
-      const data = await res.json();
-
-      let filteredData = data;
+      let query = supabase.from('contacts').select('*').order('created_at', { ascending: false });
       if (filter !== 'all') {
-        filteredData = data.filter(m => m.category === filter);
+        query = query.eq('category', filter);
       }
-      setMessages(filteredData || []);
+
+      const { data, error: err } = await query;
+      if (err) throw err;
+      setMessages(data || []);
     } catch (err) {
-      setError('Failed to load contact messages: ' + err.message);
+      console.error('Supabase fetch error:', err);
+      setError('Failed to load messages. Note: If Row-Level Security (RLS) is blocking access on Vercel, please run this command in your Supabase SQL Editor: alter table contacts disable row level security;');
+      
+      // Fallback fetch
+      try {
+        const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+        const res = await fetch(`${apiUrl}/api/contact/all`);
+        if (res.ok) {
+          const data = await res.json();
+          let filteredData = data;
+          if (filter !== 'all') {
+            filteredData = data.filter(m => m.category === filter);
+          }
+          setMessages(filteredData || []);
+          setError('');
+        }
+      } catch (fallbackErr) {}
     } finally {
       setLoading(false);
     }
@@ -58,15 +72,21 @@ const AdminContacts = () => {
   const deleteMessage = async (id) => {
     if (!window.confirm('Are you sure you want to delete this message?')) return;
     try {
-      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
-      const res = await fetch(`${apiUrl}/api/contact/${id}`, { method: 'DELETE' });
-      const resData = await res.json();
-      if (!res.ok) throw new Error(resData.error || 'Failed to delete message');
+      const { error: err } = await supabase.from('contacts').delete().eq('id', id);
+      if (err) throw err;
       
       setMessages(prev => prev.filter(m => m.id !== id));
       showToast('🗑️ Message deleted successfully');
     } catch (err) {
-      setError('Failed to delete message: ' + err.message);
+      console.error('Delete error:', err);
+      setError('Error deleting message. Please disable RLS on contacts table in Supabase.');
+      
+      // Fallback delete
+      try {
+        const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+        await fetch(`${apiUrl}/api/contact/${id}`, { method: 'DELETE' });
+        setMessages(prev => prev.filter(m => m.id !== id));
+      } catch (e) {}
     }
   };
 

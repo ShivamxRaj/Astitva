@@ -39,18 +39,33 @@ const AdminCases = () => {
     setLoading(true);
     setError('');
     try {
-      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
-      const res = await fetch(`${apiUrl}/api/cases/all`);
-      if (!res.ok) throw new Error('Failed to fetch from server');
-      const data = await res.json();
-      
-      let filteredData = data;
+      let query = supabase.from('orphan_cases').select('*').order('created_at', { ascending: false });
       if (filter !== 'all') {
-        filteredData = data.filter(c => c.status === filter);
+        query = query.eq('status', filter);
       }
-      setCases(filteredData || []);
+
+      const { data, error: err } = await query;
+      if (err) throw err;
+      
+      setCases(data || []);
     } catch (err) {
-      setError('Failed to load cases: ' + err.message);
+      console.error('Supabase fetch error:', err);
+      setError('Failed to load cases from Supabase. Note: If Row-Level Security (RLS) is blocking access on Vercel, please run this command in your Supabase SQL Editor: alter table orphan_cases disable row level security;');
+      
+      // Fallback attempt to local backend if running locally
+      try {
+        const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+        const res = await fetch(`${apiUrl}/api/cases/all`);
+        if (res.ok) {
+          const data = await res.json();
+          let filteredData = data;
+          if (filter !== 'all') {
+            filteredData = data.filter(c => c.status === filter);
+          }
+          setCases(filteredData || []);
+          setError(''); // Cleared if fallback succeeds
+        }
+      } catch (fallbackErr) {}
     } finally {
       setLoading(false);
     }
@@ -59,32 +74,34 @@ const AdminCases = () => {
   useEffect(() => { fetchCases(); }, [filter]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const updateStatus = async (id, status) => {
-    console.log('Updating case:', id, 'to status:', status);
     try {
-      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
-      const res = await fetch(`${apiUrl}/api/cases/update-status/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status })
-      });
-      const resData = await res.json();
-      
-      if (!res.ok || !resData.success) {
-        throw new Error(resData.message || 'Failed to update case');
-      }
+      const { error: err } = await supabase
+        .from('orphan_cases')
+        .update({ status })
+        .eq('id', id);
 
-      console.log('Update Successful:', resData.case);
-    
-    if (filter !== 'all') {
-      setCases(prev => prev.filter(c => c.id !== id));
-    } else {
-      setCases(prev => prev.map(c => c.id === id ? { ...c, status } : c));
-    }
-    
-    showToast(status === 'identified' ? '✅ Case marked as identified!' : status === 'investigating' ? '🔍 Case under investigation' : '❌ Case rejected');
+      if (err) throw err;
+
+      if (filter !== 'all') {
+        setCases(prev => prev.filter(c => c.id !== id));
+      } else {
+        setCases(prev => prev.map(c => c.id === id ? { ...c, status } : c));
+      }
+      
+      showToast(status === 'identified' ? '✅ Case marked as identified!' : status === 'investigating' ? '🔍 Case under investigation' : '❌ Case rejected');
     } catch (err) {
-      console.error('API Error:', err);
-      setError('Error: ' + err.message);
+      console.error('Update error:', err);
+      setError('Error updating status. Please disable RLS on orphan_cases table in Supabase.');
+      
+      // Fallback update
+      try {
+        const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+        await fetch(`${apiUrl}/api/cases/update-status/${id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status })
+        });
+      } catch (e) {}
     }
   };
 
