@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Disclosure } from '@headlessui/react';
+import { Disclosure, Menu, Transition } from '@headlessui/react';
 import {
   Bars3Icon,
   XMarkIcon,
   PhoneIcon,
   ShieldCheckIcon,
   HeartIcon,
+  ChevronDownIcon,
+  GlobeAltIcon,
 } from '@heroicons/react/24/outline';
 import logo from '../assets/logo.png';
 import DonationModal from './DonationModal';
@@ -26,10 +28,25 @@ const Navbar = () => {
   const { i18n, t } = useTranslation();
   const [donationOpen, setDonationOpen] = useState(false);
   const [pendingCount, setPendingCount] = useState(0);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const switchLang = (code) => {
     if (code !== i18n.language) i18n.changeLanguage(code);
   };
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setIsAdmin(!!session);
+    };
+    checkAdmin();
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      setIsAdmin(!!session);
+    });
+    return () => {
+      authListener?.subscription?.unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     const fetchPendingCount = async () => {
@@ -131,24 +148,46 @@ const Navbar = () => {
 
                 {/* Desktop CTAs */}
                 <div className="hidden md:flex items-center gap-2">
-                  {/* Language Switcher */}
-                  <div className="flex items-center rounded-full overflow-hidden border border-white/20">
-                    {LANG_OPTIONS.map((lang) => (
-                      <button
-                        key={lang.code}
-                        onClick={() => switchLang(lang.code)}
-                        className={`px-2 py-1 text-xs font-semibold transition-all duration-200 ${
-                          i18n.language === lang.code
-                            ? 'bg-white text-blue-900'
-                            : 'text-blue-100 hover:bg-white/15'
-                        }`}
-                        aria-label={`Switch to ${lang.full}`}
-                        aria-pressed={i18n.language === lang.code}
-                      >
-                        {lang.label}
-                      </button>
-                    ))}
-                  </div>
+                  {/* Language Switcher Dropdown */}
+                  <Menu as="div" className="relative inline-block text-left">
+                    <Menu.Button 
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-blue-100 hover:text-white bg-white/10 hover:bg-white/20 border border-white/15 transition-all duration-200 focus:outline-none"
+                      title="Select Language / भाषा चुनें"
+                    >
+                      <GlobeAltIcon className="w-3.5 h-3.5 text-blue-300" />
+                      <span className="uppercase tracking-wider">{i18n.language || 'en'}</span>
+                      <ChevronDownIcon className="w-3 h-3 opacity-70" />
+                    </Menu.Button>
+                    <Transition
+                      as={Fragment}
+                      enter="transition ease-out duration-100"
+                      enterFrom="transform opacity-0 scale-95"
+                      enterTo="transform opacity-100 scale-100"
+                      leave="transition ease-in duration-75"
+                      leaveFrom="transform opacity-100 scale-100"
+                      leaveTo="transform opacity-0 scale-95"
+                    >
+                      <Menu.Items className="absolute right-0 mt-2 w-36 origin-top-right rounded-xl bg-white shadow-2xl ring-1 ring-black/5 focus:outline-none z-50 overflow-hidden border border-blue-50">
+                        <div className="py-1">
+                          {LANG_OPTIONS.map((lang) => (
+                            <Menu.Item key={lang.code}>
+                              {({ active }) => (
+                                <button
+                                  onClick={() => switchLang(lang.code)}
+                                  className={`w-full flex items-center justify-between px-4 py-2 text-xs font-semibold transition-colors ${
+                                    active ? 'bg-blue-50 text-blue-900' : 'text-gray-700'
+                                  } ${i18n.language === lang.code ? 'bg-blue-50/50 text-blue-950 font-bold' : ''}`}
+                                >
+                                  <span>{lang.full}</span>
+                                  <span className="text-[10px] text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded font-mono">{lang.label}</span>
+                                </button>
+                              )}
+                            </Menu.Item>
+                          ))}
+                        </div>
+                      </Menu.Items>
+                    </Transition>
+                  </Menu>
 
                   {/* Search Missing Person */}
                   <Link
@@ -178,14 +217,14 @@ const Navbar = () => {
                       aria-label="Admin Login"
                     >
                       <span className="opacity-60">🛡️</span> {adminLabel}
-                      {pendingCount > 0 && (
+                      {isAdmin && pendingCount > 0 && (
                         <span className="flex h-1.5 w-1.5 relative ml-0.5">
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                           <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-500"></span>
                         </span>
                       )}
                     </Link>
-                    {pendingCount > 0 && (
+                    {isAdmin && pendingCount > 0 && (
                       <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[8px] font-bold px-1 py-0.1 rounded-full border border-[#1B3A6B] animate-pulse">
                         {pendingCount}
                       </span>
@@ -322,7 +361,7 @@ const Navbar = () => {
                     className="py-3 rounded-md text-sm font-semibold text-blue-200 hover:text-white flex items-center gap-2"
                   >
                     🔐 Admin Login
-                    {pendingCount > 0 && (
+                    {isAdmin && pendingCount > 0 && (
                       <span className="flex items-center gap-1 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full animate-pulse">
                         <span className="h-1.5 w-1.5 rounded-full bg-white animate-ping"></span>
                         {pendingCount} Pending
