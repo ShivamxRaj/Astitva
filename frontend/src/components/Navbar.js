@@ -263,16 +263,6 @@ const Navbar = () => {
 
                 {/* Mobile header buttons */}
                 <div className="flex items-center gap-2 md:hidden">
-                  {/* Support pill on mobile header */}
-                  <button
-                    onClick={() => setDonationOpen(true)}
-                    className="px-3 py-1.5 rounded-full text-xs font-bold text-white"
-                    style={{ background: 'linear-gradient(135deg, #D4870A, #E8991A)' }}
-                    aria-label="Support Us"
-                  >
-                    💛 Donate
-                  </button>
-
                   <Link
                     to="/report"
                     className="px-3 py-1.5 rounded-lg text-xs font-bold text-white whitespace-nowrap"
