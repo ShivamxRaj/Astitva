@@ -240,43 +240,42 @@ const AdminContacts = () => {
                   <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
                     
                     {/* Message Details */}
-                    <div className="flex-1">
-                      <div className="flex flex-wrap items-center gap-3 mb-2">
-                        <h3 className="font-bold text-white text-lg">{m.name}</h3>
-                        <span className="text-xs px-2.5 py-0.5 rounded-full font-bold tracking-wider"
+                    <div className="flex-1 min-w-0 break-words overflow-hidden">
+                      <div className="flex flex-wrap items-center gap-2 mb-2">
+                        <h3 className="font-bold text-white text-lg truncate max-w-full">{m.name}</h3>
+                        <span className="text-xs px-2.5 py-0.5 rounded-full font-bold tracking-wider shrink-0"
                           style={{ background: badge.bg, color: badge.text }}>
                           {badge.label}
                         </span>
-                        <span className="text-xs text-blue-300 ml-auto flex items-center gap-1">
+                        <span className="text-xs text-blue-300 ml-auto flex items-center gap-1 shrink-0">
                           <ClockIcon style={{ width: '0.8rem', height: '0.8rem' }} />
                           {formatDate(m.created_at)}
                         </span>
                       </div>
 
                       {/* Contact specific links */}
-                      <div className="flex flex-wrap gap-4 text-xs font-medium mb-3 pt-1 border-t border-white/5" style={{ color: '#93C5FD' }}>
-                        <a href={`mailto:${m.email}`} className="flex items-center gap-1 hover:underline text-blue-200">
-                          <EnvelopeIcon style={{ width: '0.85rem', height: '0.85rem' }} />
-                          {m.email}
+                      <div className="flex flex-wrap gap-3 text-xs font-medium mb-3 pt-1 border-t border-white/5 overflow-hidden" style={{ color: '#93C5FD' }}>
+                        <a href={`mailto:${m.email}`} className="flex items-center gap-1 hover:underline text-blue-200 truncate max-w-full">
+                          <EnvelopeIcon style={{ width: '0.85rem', height: '0.85rem', flexShrink: 0 }} />
+                          <span className="truncate">{m.email}</span>
                         </a>
-                        <a href={`tel:${m.mobile}`} className="flex items-center gap-1 hover:underline text-green-300">
-                          <PhoneIcon style={{ width: '0.85rem', height: '0.85rem' }} />
-                          {m.mobile}
+                        <a href={`tel:${m.mobile}`} className="flex items-center gap-1 hover:underline text-green-300 truncate max-w-full">
+                          <PhoneIcon style={{ width: '0.85rem', height: '0.85rem', flexShrink: 0 }} />
+                          <span className="truncate">{m.mobile}</span>
                         </a>
                       </div>
 
-                      <blockquote className="text-blue-50 text-sm leading-relaxed italic border-l-2 pl-3 bg-white/5 p-3 rounded-r-lg"
-                        style={{ borderColor: badge.text }}>
+                      <blockquote className="text-blue-50 text-sm leading-relaxed italic border-l-2 pl-3 bg-white/5 p-3 rounded-r-lg break-words">
                         "{m.message}"
                       </blockquote>
                     </div>
 
                     {/* Delete Action */}
                     <button onClick={() => deleteMessage(m.id)}
-                      className="flex items-center justify-center gap-1 px-3 py-2 rounded-lg font-semibold text-xs transition-all hover:bg-red-500 hover:text-white self-end lg:self-center"
-                      style={{ background: 'rgba(239,68,68,0.15)', color: '#FCA5A5', border: '1px solid rgba(239,68,68,0.3)' }}
+                      className="flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl font-bold text-xs transition-all transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-red-500/30 w-full lg:w-auto mt-2 lg:mt-0 shrink-0 self-end lg:self-center"
+                      style={{ background: 'linear-gradient(135deg, #EF4444 0%, #B91C1C 100%)', color: '#FFFFFF' }}
                       aria-label="Delete message">
-                      <TrashIcon style={{ width: '0.9rem', height: '0.9rem' }} />
+                      <TrashIcon style={{ width: '1rem', height: '1rem' }} />
                       Delete
                     </button>
 

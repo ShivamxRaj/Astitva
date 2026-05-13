@@ -255,10 +255,10 @@ const AdminCases = () => {
                   </div>
 
                   {/* Info */}
-                  <div className="flex-1">
-                    <div className="flex flex-wrap items-center gap-3 mb-3">
-                      <h3 className="font-mono text-white text-lg font-bold">{c.case_id}</h3>
-                      <span className="text-xs px-2 py-0.5 rounded-full font-semibold"
+                  <div className="flex-1 min-w-0 break-words overflow-hidden">
+                    <div className="flex flex-wrap items-center gap-2 mb-3">
+                      <h3 className="font-mono text-white text-lg font-bold truncate max-w-full">{c.case_id}</h3>
+                      <span className="text-xs px-2.5 py-0.5 rounded-full font-bold tracking-wide shrink-0"
                         style={{
                           background: c.status === 'identified' ? '#D1FAE5' : c.status === 'rejected' ? '#FEE2E2' : c.status === 'investigating' ? '#DBEAFE' : '#FEF3C7',
                           color:      c.status === 'identified' ? '#065F46' : c.status === 'rejected' ? '#991B1B' : c.status === 'investigating' ? '#1E40AF' : '#92400E',
@@ -266,43 +266,43 @@ const AdminCases = () => {
                         {c.status.toUpperCase()}
                       </span>
                       {c.report_type === 'anonymous' && (
-                        <span className="text-xs px-2 py-0.5 rounded-full font-semibold bg-purple-100 text-purple-800">
+                        <span className="text-xs px-2.5 py-0.5 rounded-full font-bold bg-purple-100 text-purple-800 shrink-0">
                           Anonymous
                         </span>
                       )}
                     </div>
 
-                    <blockquote className="text-indigo-100 text-sm leading-relaxed mb-3 italic border-l-2 pl-3"
+                    <blockquote className="text-indigo-100 text-sm leading-relaxed mb-3 italic border-l-2 pl-3 break-words"
                       style={{ borderColor: '#6366F1' }}>
                       "{c.description}"
                     </blockquote>
 
-                    <div className="flex flex-wrap gap-4 text-xs mt-4" style={{ color: '#A5B4FC' }}>
+                    <div className="flex flex-wrap gap-3 text-xs mt-4 overflow-hidden" style={{ color: '#A5B4FC' }}>
                       {c.location && (
-                        <span className="flex items-center gap-1 bg-white/5 px-2 py-1 rounded">
-                          <MapPinIcon style={{ width: '0.8rem', height: '0.8rem' }} aria-hidden="true" />
-                          {c.location}
+                        <span className="flex items-center gap-1 bg-white/5 px-2.5 py-1 rounded truncate max-w-full">
+                          <MapPinIcon style={{ width: '0.8rem', height: '0.8rem', flexShrink: 0 }} aria-hidden="true" />
+                          <span className="truncate">{c.location}</span>
                         </span>
                       )}
-                      <span className="flex items-center gap-1 bg-white/5 px-2 py-1 rounded">
-                        <CalendarIcon style={{ width: '0.8rem', height: '0.8rem' }} aria-hidden="true" />
+                      <span className="flex items-center gap-1 bg-white/5 px-2.5 py-1 rounded shrink-0">
+                        <CalendarIcon style={{ width: '0.8rem', height: '0.8rem', flexShrink: 0 }} aria-hidden="true" />
                         Logged: {formatDate(c.created_at)}
                       </span>
                       {c.contact_info && (
-                        <span className="flex items-center gap-1 bg-white/5 px-2 py-1 rounded text-green-300">
-                          <ChatBubbleOvalLeftEllipsisIcon style={{ width: '0.8rem', height: '0.8rem' }} aria-hidden="true" />
-                          {c.contact_info}
+                        <span className="flex items-center gap-1 bg-white/5 px-2.5 py-1 rounded text-green-300 truncate max-w-full">
+                          <ChatBubbleOvalLeftEllipsisIcon style={{ width: '0.8rem', height: '0.8rem', flexShrink: 0 }} aria-hidden="true" />
+                          <span className="truncate">{c.contact_info}</span>
                         </span>
                       )}
                     </div>
                   </div>
 
                   {/* Actions */}
-                  <div className="flex gap-2 lg:flex-col lg:w-40 mt-4 lg:mt-0">
+                  <div className="flex flex-wrap gap-2 lg:flex-col lg:w-44 mt-4 lg:mt-0 shrink-0">
                     {c.status === 'unidentified' && (
                       <button onClick={() => updateStatus(c.id, 'investigating')}
-                        className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg font-semibold text-xs transition-all hover:opacity-90"
-                        style={{ background: '#3B82F6', color: '#fff' }}
+                        className="flex-1 min-w-[120px] flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl font-bold text-xs transition-all transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-blue-500/30"
+                        style={{ background: 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)', color: '#fff' }}
                         aria-label="Investigate">
                         <MagnifyingGlassIcon style={{ width: '1rem', height: '1rem' }} aria-hidden="true" />
                         Investigate
@@ -310,8 +310,8 @@ const AdminCases = () => {
                     )}
                     {(c.status === 'unidentified' || c.status === 'investigating') && (
                       <button onClick={() => updateStatus(c.id, 'identified')}
-                        className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg font-semibold text-xs transition-all hover:opacity-90"
-                        style={{ background: '#27AE60', color: '#fff' }}
+                        className="flex-1 min-w-[120px] flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl font-bold text-xs transition-all transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-green-500/30"
+                        style={{ background: 'linear-gradient(135deg, #10B981 0%, #047857 100%)', color: '#fff' }}
                         aria-label="Resolve">
                         <DocumentCheckIcon style={{ width: '1rem', height: '1rem' }} aria-hidden="true" />
                         Mark Identified
@@ -319,8 +319,8 @@ const AdminCases = () => {
                     )}
                     {c.status === 'unidentified' && (
                       <button onClick={() => updateStatus(c.id, 'rejected')}
-                        className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg font-semibold text-xs transition-all hover:opacity-90"
-                        style={{ background: 'rgba(192,57,43,0.8)', color: '#fff' }}
+                        className="flex-1 min-w-[120px] flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl font-bold text-xs transition-all transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-red-500/30"
+                        style={{ background: 'linear-gradient(135deg, #F97316 0%, #C2410C 100%)', color: '#fff' }}
                         aria-label="Reject">
                         <XCircleIcon style={{ width: '1rem', height: '1rem' }} aria-hidden="true" />
                         Reject (Spam)
