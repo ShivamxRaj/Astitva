@@ -80,6 +80,21 @@ const AdminCases = () => {
       setError('Failed to load cases. Please verify your Supabase keys on Vercel, or execute this command in your Supabase SQL Editor: alter table orphan_cases disable row level security;');
     } finally {
       setLoading(false);
+      // Guarantee offline citizen database entries are synchronized with active admin lists
+      try {
+        const offlineReports = JSON.parse(localStorage.getItem('citizen_offline_reports') || '[]');
+        if (offlineReports.length > 0) {
+          setCases(prev => {
+            const existingIds = new Set(prev.map(c => c.case_id));
+            const freshItems = offlineReports.filter(c => !existingIds.has(c.case_id));
+            let merged = [...freshItems, ...prev];
+            if (filter !== 'all') {
+              merged = merged.filter(c => c.status === filter);
+            }
+            return merged;
+          });
+        }
+      } catch (storageMergeErr) {}
     }
   };
 

@@ -127,9 +127,9 @@ const ReportUnclaimedBody = () => {
 
       const caseData = {
         case_id,
-        location: form.location,
-        date_of_sighting: form.dateTime,
-        description: form.description,
+        location: form.location || 'Location Not Specified',
+        date_of_sighting: form.dateTime ? new Date(form.dateTime).toISOString() : new Date().toISOString(),
+        description: form.description || 'No Description Provided',
         contact_info: form.contact,
         additional_info: form.message,
         photo_url,
