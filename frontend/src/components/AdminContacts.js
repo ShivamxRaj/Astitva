@@ -46,11 +46,9 @@ const AdminContacts = () => {
       setMessages(data || []);
     } catch (err) {
       console.error('Supabase fetch error:', err);
-      setError('Failed to load messages. Note: If Row-Level Security (RLS) is blocking access on Vercel, please run this command in your Supabase SQL Editor: alter table contacts disable row level security;');
-      
-      // Fallback fetch
+      // Fallback fetch from live cloud backend server
       try {
-        const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+        const apiUrl = process.env.REACT_APP_API_URL || 'https://avyakta-backend.onrender.com';
         const res = await fetch(`${apiUrl}/api/contact/all`);
         if (res.ok) {
           const data = await res.json();
@@ -60,8 +58,12 @@ const AdminContacts = () => {
           }
           setMessages(filteredData || []);
           setError('');
+          return;
         }
-      } catch (fallbackErr) {}
+      } catch (fallbackErr) {
+        console.error('Fallback fetch error:', fallbackErr);
+      }
+      setError('Failed to load messages. Please verify your Supabase keys on Vercel, or execute this command in your Supabase SQL Editor: alter table contacts disable row level security;');
     } finally {
       setLoading(false);
     }
@@ -83,7 +85,7 @@ const AdminContacts = () => {
       
       // Fallback delete
       try {
-        const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+        const apiUrl = process.env.REACT_APP_API_URL || 'https://avyakta-backend.onrender.com';
         await fetch(`${apiUrl}/api/contact/${id}`, { method: 'DELETE' });
         setMessages(prev => prev.filter(m => m.id !== id));
       } catch (e) {}

@@ -50,11 +50,9 @@ const AdminCases = () => {
       setCases(data || []);
     } catch (err) {
       console.error('Supabase fetch error:', err);
-      setError('Failed to load cases from Supabase. Note: If Row-Level Security (RLS) is blocking access on Vercel, please run this command in your Supabase SQL Editor: alter table orphan_cases disable row level security;');
-      
-      // Fallback attempt to local backend if running locally
+      // Fallback attempt to live cloud backend server
       try {
-        const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+        const apiUrl = process.env.REACT_APP_API_URL || 'https://avyakta-backend.onrender.com';
         const res = await fetch(`${apiUrl}/api/cases/all`);
         if (res.ok) {
           const data = await res.json();
@@ -64,8 +62,12 @@ const AdminCases = () => {
           }
           setCases(filteredData || []);
           setError(''); // Cleared if fallback succeeds
+          return;
         }
-      } catch (fallbackErr) {}
+      } catch (fallbackErr) {
+        console.error('Fallback fetch error:', fallbackErr);
+      }
+      setError('Failed to load cases. Please verify your Supabase keys on Vercel, or execute this command in your Supabase SQL Editor: alter table orphan_cases disable row level security;');
     } finally {
       setLoading(false);
     }
@@ -95,7 +97,7 @@ const AdminCases = () => {
       
       // Fallback update
       try {
-        const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+        const apiUrl = process.env.REACT_APP_API_URL || 'https://avyakta-backend.onrender.com';
         await fetch(`${apiUrl}/api/cases/update-status/${id}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
