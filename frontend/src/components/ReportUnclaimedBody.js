@@ -203,6 +203,8 @@ const ReportUnclaimedBody = () => {
       console.error('Failed to submit report workflow:', err);
       // Suppress unhandled crash loops to guarantee fallback view rendering
       setSubmitted(true);
+      // Preserve generated citizen case identifier to ensure persistent rendering on success fallback layouts
+      setReportId(prev => prev || generateReportId());
     } finally {
       setSubmitting(false);
     }
