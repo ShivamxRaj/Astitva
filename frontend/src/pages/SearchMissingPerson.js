@@ -59,7 +59,10 @@ const SearchMissingPerson = () => {
     setAiSummary("Gemini AI Vision & Text engine is analyzing records across India. Please wait...");
     setResults([]);
     try {
-      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+      let apiUrl = process.env.REACT_APP_API_URL || 'https://avyakta-backend.onrender.com';
+      if (apiUrl.includes('aapka-live-backend-url') || apiUrl.includes('localhost')) {
+        apiUrl = 'https://avyakta-backend.onrender.com';
+      }
       
       const formData = new FormData();
       formData.append('name', form.fullName || '');
@@ -116,7 +119,10 @@ const SearchMissingPerson = () => {
 
       if (!foundCase) {
         try {
-          const apiUrl = process.env.REACT_APP_API_URL || 'https://avyakta-backend.onrender.com';
+          let apiUrl = process.env.REACT_APP_API_URL || 'https://avyakta-backend.onrender.com';
+          if (apiUrl.includes('aapka-live-backend-url') || apiUrl.includes('localhost')) {
+            apiUrl = 'https://avyakta-backend.onrender.com';
+          }
           const res = await axios.post(`${apiUrl}/api/cases/track`, { case_id: cleanedId });
           if (res.data?.success && res.data?.case) {
             foundCase = res.data.case;
