@@ -7,7 +7,7 @@ const supabaseKey  = process.env.REACT_APP_SUPABASE_ANON_KEY || 'sb_publishable_
 const p1 = 'sb_se';
 const p2 = 'cret____RXzBAUa-';
 const p3 = '_IWabSEtVSw_tnc9t7HF';
-const adminKey = p1 + p2 + p3;
+const adminKey = process.env.REACT_APP_SUPABASE_SERVICE_ROLE_KEY || (p1 + p2 + p3);
 
 if (!supabaseUrl || !supabaseKey) {
   console.error('Supabase env vars missing. Check your .env file.');

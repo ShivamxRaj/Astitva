@@ -115,12 +115,16 @@ const ReportUnclaimedBody = () => {
           }
         } catch (storageErr) {
           console.warn('Supabase bucket permission restricted, executing instant ImgBB CDN hosting fallback guarantee...', storageErr);
-          // Upload directly to public ImgBB storage API to guarantee full rendering for missing person evidence
-          const imgData = new FormData();
-          imgData.append('image', form.image);
-          const imgRes = await axios.post('https://api.imgbb.com/1/upload?key=d5f001e3b6d2de9632490214a974ea0e', imgData);
-          if (imgRes.data?.success) {
-            photo_url = imgRes.data.data.url;
+          try {
+            const imgData = new FormData();
+            imgData.append('image', form.image);
+            const imgRes = await axios.post('https://api.imgbb.com/1/upload?key=d5f001e3b6d2de9632490214a974ea0e', imgData);
+            if (imgRes.data?.success) {
+              photo_url = imgRes.data.data.url;
+            }
+          } catch (imgbbErr) {
+            console.warn('ImgBB API fallback blocked by browser CORS/Adblock, using local Base64 image encoding guarantee...', imgbbErr);
+            photo_url = imagePreview;
           }
         }
       }
