@@ -224,18 +224,8 @@ Return ONLY a valid JSON array of matched cases with two extra fields added to e
 1. "matchScore" (0-100)
 2. "matchReason" (A short sentence explaining why it matches)`;
 
-    let contents = [prompt];
-
     if (req.file) {
-      const imagePart = {
-        inlineData: {
-          data: req.file.buffer.toString("base64"),
-          mimeType: req.file.mimetype
-        }
-      };
       prompt += `\n\nCRITICAL MULTIMODAL INSTRUCTION: The family has also uploaded a photo of the missing person (provided as an inline image attachment). Compare the facial features, age build, hair, and clothing in the uploaded photo against the database case records (which have descriptive marks, clothing details, and photo_url links). Boost the matchScore significantly if visual characteristics in the uploaded image correspond to the physical characteristics recorded in the database cases!`;
-      // recreate contents array with both prompt string and inline image part
-      contents = [prompt, imagePart];
     }
 
     prompt += `\n\nRules:
@@ -243,18 +233,28 @@ Return ONLY a valid JSON array of matched cases with two extra fields added to e
 - Only include cases with matchScore above 40.
 - Return ONLY the JSON array. No markdown, no "here is the json", no other text.`;
 
-    // Reconstruct contents if prompt string got updated rules
+    let contents;
     if (req.file) {
-      contents[0] = prompt;
+      const imagePart = {
+        inlineData: {
+          data: req.file.buffer.toString("base64"),
+          mimeType: req.file.mimetype
+        }
+      };
+      contents = [{ text: prompt }, imagePart];
     } else {
-      contents = [prompt];
+      contents = [{ text: prompt }];
     }
 
     const result = await model.generateContent(contents);
     const responseText = result.response.text();
     
-    // Clean JSON response (remove markdown if any)
-    const jsonStr = responseText.replace(/```json|```/g, "").trim();
+    // Clean JSON response (remove markdown if any and isolate array)
+    let jsonStr = responseText.replace(/```json|```/g, "").trim();
+    const arrayMatch = jsonStr.match(/\[[\s\S]*\]/);
+    if (arrayMatch) {
+      jsonStr = arrayMatch[0];
+    }
     const matches = JSON.parse(jsonStr);
 
     res.json({ success: true, matches });
