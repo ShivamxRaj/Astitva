@@ -36,12 +36,12 @@ router.post('/report', upload.single('photo'), async (req, res) => {
     const {
       location, latitude, longitude, date_of_sighting, description,
       gender, approximate_age, height_cm, clothing,
-      identifying_marks, contact_info, additional_info
+      identifying_marks, contact_info, additional_info, photo_url: body_photo_url
     } = req.body;
 
     const now = new Date();
     const case_id = `#AVY-${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}${Math.floor(1000 + Math.random() * 9000)}`;
-    let photo_url = null;
+    let photo_url = body_photo_url || null;
 
     if (req.file) {
       const file = req.file;
@@ -50,17 +50,18 @@ router.post('/report', upload.single('photo'), async (req, res) => {
       const safeCaseId = case_id.replace('#', '');
       const filePath = `cases/${safeCaseId}/${fileName}`;
 
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('case-photos')
-        .upload(filePath, file.buffer, { contentType: file.mimetype });
+      try {
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('case-photos')
+          .upload(filePath, file.buffer, { contentType: file.mimetype });
 
-      if (uploadError) {
-        console.error('SUPABASE UPLOAD ERROR:', JSON.stringify(uploadError, null, 2));
-        throw uploadError;
+        if (!uploadError) {
+          const { data: { publicUrl } } = supabase.storage.from('case-photos').getPublicUrl(filePath);
+          photo_url = publicUrl;
+        }
+      } catch (uploadErr) {
+        console.warn('Backend Supabase storage upload failed, falling back to body_photo_url if available', uploadErr);
       }
-
-      const { data: { publicUrl } } = supabase.storage.from('case-photos').getPublicUrl(filePath);
-      photo_url = publicUrl;
     }
 
     const caseData = {
