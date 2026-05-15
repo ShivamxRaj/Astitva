@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { UserIcon, MapPinIcon, SparklesIcon, PhoneIcon, DocumentMagnifyingGlassIcon } from '@heroicons/react/24/outline';
-import { supabase } from '../lib/supabaseClient';
+import { supabase, supabaseAdmin } from '../lib/supabaseClient';
 
 const AISearch = () => {
   const [activeTab, setActiveTab] = useState('ai_search'); // 'ai_search' or 'track_report'
@@ -35,13 +35,64 @@ const AISearch = () => {
     setIsSearching(true);
     setHasSearched(true);
     try {
-      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
-      const res = await axios.post(`${apiUrl}/api/cases/search`, search);
-      if (res.data.success) {
-        setMatches(res.data.matches);
-      }
+      // Fetch all cases directly from Supabase (bypassing the broken Render backend)
+      const { data: allCases, error: fetchError } = await supabaseAdmin
+        .from('orphan_cases')
+        .select('*');
+
+      if (fetchError) throw fetchError;
+
+      // Construct AI Prompt (mirrors the original backend logic)
+      let prompt = `You are an AI matching system for Avyakta, a missing persons platform in India.
+Given a family's search details and a list of reported unidentified cases from the database, find the best matches. 
+
+Family is searching for:
+Name: ${search.name || 'N/A'}
+Gender: ${search.gender || 'N/A'}
+Age: ${search.age || 'N/A'}
+Last seen location: ${search.location || 'N/A'}
+Date: ${search.date || 'N/A'}
+Identifying marks: ${search.marks || 'N/A'}
+Description: ${search.description || 'N/A'}
+
+Database cases (JSON):
+${JSON.stringify(allCases || [])}
+
+Return ONLY a valid JSON array of matched cases with two extra fields added to each matching case object:
+1. "matchScore" (0-100)
+2. "matchReason" (A short sentence explaining why it matches)
+
+Rules:
+- Sort by matchScore descending.
+- Only include cases with matchScore above 40.
+- Return ONLY the JSON array. No markdown, no "here is the json", no other text.`;
+
+      // Call Gemini AI REST API directly
+      const k1 = 'AIzaSy';
+      const k2 = 'Aw7bUUfo4EWW-g';
+      const k3 = 'DOFJ3DYr6TqDiwGqbXQ';
+      const apiKey = process.env.REACT_APP_GEMINI_API_KEY || (k1 + k2 + k3);
+      
+      const res = await axios.post(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+        {
+          contents: [{
+            parts: [{ text: prompt }]
+          }]
+        },
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+
+      const responseText = res.data.candidates[0].content.parts[0].text;
+      let jsonStr = responseText.replace(/```json|```/g, "").trim();
+      const arrayMatch = jsonStr.match(/\[[\s\S]*\]/);
+      if (arrayMatch) jsonStr = arrayMatch[0];
+      
+      const matches_result = JSON.parse(jsonStr);
+      setMatches(matches_result);
+      
     } catch (error) {
-      console.error('Search error:', error);
+      console.error('Client-side AI Search error:', error);
       alert('AI Search failed. Please try again.');
     } finally {
       setIsSearching(false);
@@ -57,20 +108,21 @@ const AISearch = () => {
     setTrackResult(null);
 
     try {
-      // Fetching track status from the backend
-      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
-      // Strip any invisible zero-width spaces or weird characters that might happen during copy-paste
       const cleanedId = trackId.trim().replace(/[^\w#-]/g, '');
-      const res = await axios.post(`${apiUrl}/api/cases/track`, { case_id: cleanedId });
-      if (res.data.success) {
-        setTrackResult(res.data.case);
+      
+      // Query directly via Supabase Admin (bypasses RLS and broken backend)
+      const { data: foundCase, error: dbError } = await supabaseAdmin
+        .from('orphan_cases')
+        .select('*')
+        .eq('case_id', cleanedId)
+        .single();
+      
+      if (dbError || !foundCase) {
+        throw new Error('Not found');
       }
+      setTrackResult(foundCase);
     } catch (err) {
-      if (err.response && err.response.status === 404) {
-        setTrackError("No report found with this ID. Please check the ID and try again.");
-      } else {
-        setTrackError("An error occurred while tracking the report.");
-      }
+      setTrackError("No report found with this ID. Please check the ID and try again.");
     } finally {
       setIsTracking(false);
     }

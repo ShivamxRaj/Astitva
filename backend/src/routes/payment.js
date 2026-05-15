@@ -6,7 +6,7 @@ const crypto = require('crypto');
 // Initialize Razorpay with provided test keys (fallback to env vars if available)
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_SoACRQ4kcZ0fM8',
-  key_secret: process.env.RAZORPAY_KEY_SECRET || 'JMQTaISpK3ecM9gOW0D8xwd1',
+  key_secret: process.env.RAZORPAY_KEY_SECRET || 'f1Hg9EmzY7Cx6hjZeADFLmfO',
 });
 
 // @route   POST /api/payment/create-order

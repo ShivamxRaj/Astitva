@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { supabase } from '../lib/supabaseClient';
 import {
   HeartIcon,
   UserGroupIcon,
@@ -69,20 +70,46 @@ const CosmicAnimation = () => (
   </div>
 );
 
-/* ── Recent Cases (mock data — replace with API) ── */
-const recentCases = [
-  { id: 'AV-2024-001', location: 'Ludhiana, Punjab', date: '2 days ago', status: 'Under Review', statusColor: '#F59E0B' },
-  { id: 'AV-2024-002', location: 'Amritsar, Punjab', date: '5 days ago', status: 'Resolved',     statusColor: '#27AE60' },
-  { id: 'AV-2024-003', location: 'Chandigarh',       date: '1 week ago', status: 'Matched',      statusColor: '#8B5CF6' },
-  { id: 'AV-2024-004', location: 'Jalandhar, Punjab', date: '2 weeks ago', status: 'Submitted',  statusColor: '#2E7D9C' },
-];
-
 const Home = () => {
   const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [recentCases, setRecentCases] = useState([]);
+  const [casesLoading, setCasesLoading] = useState(true);
 
   useEffect(() => { setIsVisible(true); }, []);
+
+  useEffect(() => {
+    const fetchRecentCases = async () => {
+      setCasesLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from('orphan_cases')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(4);
+        
+        if (!error && data) {
+          // Map Supabase fields to the UI format
+          const mapped = data.map(c => ({
+            id: c.case_id,
+            location: c.location,
+            date: new Date(c.created_at).toLocaleDateString(),
+            status: c.status.charAt(0).toUpperCase() + c.status.slice(1),
+            statusColor: c.status === 'identified' ? '#27AE60' : 
+                         c.status === 'investigating' ? '#8B5CF6' : 
+                         c.status === 'unidentified' ? '#F59E0B' : '#2E7D9C'
+          }));
+          setRecentCases(mapped);
+        }
+      } catch (err) {
+        console.error('Error fetching recent cases:', err);
+      } finally {
+        setCasesLoading(false);
+      }
+    };
+    fetchRecentCases();
+  }, []);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -189,24 +216,35 @@ const Home = () => {
               Our portal is actively maintained. Here are the latest cases:
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {recentCases.map((c) => (
-              <div key={c.id} className="inst-card">
-                <div className="flex justify-between items-start mb-3">
-                  <span className="text-xs font-bold px-2 py-1 rounded-full"
-                    style={{ background:`${c.statusColor}18`, color:c.statusColor, border:`1px solid ${c.statusColor}40` }}>
-                    {c.status}
-                  </span>
-                  <span className="text-xs" style={{ color:'#94A3B8' }}>{c.date}</span>
+          
+          {casesLoading ? (
+            <div className="flex justify-center py-12">
+              <div className="w-8 h-8 border-3 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
+            </div>
+          ) : recentCases.length === 0 ? (
+            <div className="text-center py-12 px-6 rounded-2xl bg-gray-50 border border-gray-100">
+              <p className="text-gray-500 italic">No recent cases reported yet. Your help can change this.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {recentCases.map((c) => (
+                <div key={c.id} className="inst-card">
+                  <div className="flex justify-between items-start mb-3">
+                    <span className="text-xs font-bold px-2 py-1 rounded-full"
+                      style={{ background:`${c.statusColor}18`, color:c.statusColor, border:`1px solid ${c.statusColor}40` }}>
+                      {c.status}
+                    </span>
+                    <span className="text-xs" style={{ color:'#94A3B8' }}>{c.date}</span>
+                  </div>
+                  <p className="font-bold text-sm mb-1" style={{ color:'#1B3A6B' }}>{c.id}</p>
+                  <p className="text-sm flex items-center gap-1" style={{ color:'#4A5568' }}>
+                    <MapPinIcon style={{ width:'0.85rem', height:'0.85rem', flexShrink:0 }} aria-hidden="true" />
+                    {c.location}
+                  </p>
                 </div>
-                <p className="font-bold text-sm mb-1" style={{ color:'#1B3A6B' }}>{c.id}</p>
-                <p className="text-sm flex items-center gap-1" style={{ color:'#4A5568' }}>
-                  <MapPinIcon style={{ width:'0.85rem', height:'0.85rem', flexShrink:0 }} aria-hidden="true" />
-                  {c.location}
-                </p>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
           <div className="text-center mt-6">
             <Link to="/search" className="btn-secondary" style={{ fontSize:'0.9rem', padding:'0.6rem 1.5rem' }}>
               View All Cases <ArrowRightIcon style={{ width:'1rem', height:'1rem' }} aria-hidden="true" />

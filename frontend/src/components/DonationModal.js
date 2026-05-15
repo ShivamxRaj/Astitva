@@ -55,12 +55,17 @@ const DonationModal = ({ isOpen, onClose }) => {
 
     try {
       // 1. Create order on the backend
-      const result = await fetch((process.env.REACT_APP_API_URL || 'http://localhost:5001') + '/api/payment/create-order', {
+      const result = await fetch((process.env.REACT_APP_API_URL || 'https://avyakta-backend.onrender.com') + '/api/payment/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount })
       });
 
+      if (!result.ok) {
+        const errorText = await result.text();
+        throw new Error(`Server returned ${result.status}: ${errorText.slice(0, 50)}`);
+      }
+      
       const data = await result.json();
 
       if (!data.success) {
@@ -80,7 +85,7 @@ const DonationModal = ({ isOpen, onClose }) => {
         handler: async function (response) {
           try {
             // 3. Verify Payment
-            const verifyUrl = (process.env.REACT_APP_API_URL || 'http://localhost:5001') + '/api/payment/verify';
+            const verifyUrl = (process.env.REACT_APP_API_URL || 'https://avyakta-backend.onrender.com') + '/api/payment/verify';
             const verifyData = {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
@@ -122,8 +127,8 @@ const DonationModal = ({ isOpen, onClose }) => {
       
       paymentObject.open();
     } catch (error) {
-      console.error(error);
-      alert('Something went wrong!');
+      console.error('Donation Error:', error);
+      alert(`Something went wrong! ${error.message || 'Please check your connection.'}`);
     }
     setIsProcessing(false);
   };

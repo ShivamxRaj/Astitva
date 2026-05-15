@@ -15,6 +15,10 @@ app.use(cors());
 app.get('/', (req, res) => {
   res.json({ message: 'Avyakta Backend API is Live!', status: 'Healthy' });
 });
+
+app.get('/health', (req, res) => {
+  res.json({ status: 'Healthy', timestamp: new Date().toISOString() });
+});
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
