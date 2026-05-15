@@ -55,7 +55,9 @@ const DonationModal = ({ isOpen, onClose }) => {
 
     try {
       // 1. Create order on the backend
-      const result = await fetch((process.env.REACT_APP_API_URL || 'https://avyakta-backend.onrender.com') + '/api/payment/create-order', {
+      // Hardcoded production URL to ensure it works regardless of environment variables
+      const apiUrl = 'https://avyakta-backend.onrender.com';
+      const result = await fetch(apiUrl + '/api/payment/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount })
@@ -85,7 +87,8 @@ const DonationModal = ({ isOpen, onClose }) => {
         handler: async function (response) {
           try {
             // 3. Verify Payment
-            const verifyUrl = (process.env.REACT_APP_API_URL || 'https://avyakta-backend.onrender.com') + '/api/payment/verify';
+            // Hardcoded production URL for verification
+            const verifyUrl = 'https://avyakta-backend.onrender.com/api/payment/verify';
             const verifyData = {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
