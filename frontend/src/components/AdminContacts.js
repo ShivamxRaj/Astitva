@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabaseClient';
+import { supabase, supabaseAdmin } from '../lib/supabaseClient';
 import {
   EnvelopeIcon,
   PhoneIcon,
@@ -48,7 +48,9 @@ const AdminContacts = () => {
       console.error('Supabase fetch error:', err);
       // Fallback fetch from live cloud backend server
       try {
-        const apiUrl = process.env.REACT_APP_API_URL || 'https://avyakta-backend.onrender.com';
+        const apiUrl = window.location.hostname === 'localhost'
+          ? 'http://localhost:5001'
+          : (process.env.REACT_APP_API_URL || 'https://avyakta-backend.onrender.com');
         const res = await fetch(`${apiUrl}/api/contact/all`);
         if (res.ok) {
           const data = await res.json();
@@ -74,7 +76,7 @@ const AdminContacts = () => {
   const deleteMessage = async (id) => {
     if (!window.confirm('Are you sure you want to delete this message?')) return;
     try {
-      const { error: err } = await supabase.from('contacts').delete().eq('id', id);
+      const { error: err } = await supabaseAdmin.from('contacts').delete().eq('id', id);
       if (err) throw err;
       
       setMessages(prev => prev.filter(m => m.id !== id));
@@ -85,7 +87,9 @@ const AdminContacts = () => {
       
       // Fallback delete
       try {
-        const apiUrl = process.env.REACT_APP_API_URL || 'https://avyakta-backend.onrender.com';
+        const apiUrl = window.location.hostname === 'localhost'
+          ? 'http://localhost:5001'
+          : (process.env.REACT_APP_API_URL || 'https://avyakta-backend.onrender.com');
         await fetch(`${apiUrl}/api/contact/${id}`, { method: 'DELETE' });
         setMessages(prev => prev.filter(m => m.id !== id));
       } catch (e) {}

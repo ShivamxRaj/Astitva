@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabaseClient';
+import { supabase, supabaseAdmin } from '../lib/supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import {
   CheckCircleIcon,
@@ -32,6 +32,11 @@ const getCategoryTag = (text) => {
 const AdminCases = () => {
   const [cases, setCases] = useState([]);
   const [filter, setFilter] = useState('unidentified'); // 'unidentified' | 'investigating' | 'identified' | 'all'
+  const [searchTerm, setSearchTerm] = useState('');
+  const [dateRange, setDateRange] = useState('all'); // 'all' | '24h' | 'week' | 'month' | 'custom'
+  const [customStartDate, setCustomStartDate] = useState('');
+  const [customEndDate, setCustomEndDate] = useState('');
+  const [locationSearch, setLocationSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [toast, setToast] = useState('');
@@ -45,9 +50,62 @@ const AdminCases = () => {
 
   const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 3000); };
 
+  const syncOfflineReports = async () => {
+    try {
+      const offlineReports = JSON.parse(localStorage.getItem('citizen_offline_reports') || '[]');
+      if (offlineReports.length === 0) return;
+
+      const apiUrl = window.location.hostname === 'localhost'
+        ? 'http://localhost:5001'
+        : (process.env.REACT_APP_API_URL || 'https://avyakta-backend.onrender.com');
+
+      const remainingReports = [];
+
+      for (const report of offlineReports) {
+        if (!report.id) {
+          try {
+            const response = await fetch(`${apiUrl}/api/cases/report`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                location: report.location,
+                date_of_sighting: report.date_of_sighting,
+                description: report.description,
+                contact_info: report.contact_info,
+                additional_info: report.additional_info,
+                photo_url: report.photo_url,
+                gender: report.gender,
+                approximate_age: report.approximate_age,
+                height_cm: report.height_cm,
+                clothing: report.clothing,
+                identifying_marks: report.identifying_marks
+              })
+            });
+
+            if (response.ok) {
+              const resData = await response.json();
+              if (resData.success) {
+                console.log(`Synced offline report: ${report.case_id}`);
+                continue;
+              }
+            }
+          } catch (uploadErr) {
+            console.warn(`Failed to sync offline report ${report.case_id}:`, uploadErr);
+          }
+        }
+        remainingReports.push(report);
+      }
+
+      localStorage.setItem('citizen_offline_reports', JSON.stringify(remainingReports));
+    } catch (e) {
+      console.error('Error syncing offline reports:', e);
+    }
+  };
+
   const fetchCases = async () => {
     setLoading(true);
     setError('');
+    await syncOfflineReports();
     try {
       let query = supabase.from('orphan_cases').select('*').order('created_at', { ascending: false });
       if (filter !== 'all') {
@@ -60,9 +118,11 @@ const AdminCases = () => {
       setCases(data || []);
     } catch (err) {
       console.error('Supabase fetch error:', err);
-      // Fallback attempt to live cloud backend server
+      // Fallback attempt to backend server
       try {
-        const apiUrl = process.env.REACT_APP_API_URL || 'https://avyakta-backend.onrender.com';
+        const apiUrl = window.location.hostname === 'localhost'
+          ? 'http://localhost:5001'
+          : (process.env.REACT_APP_API_URL || 'https://avyakta-backend.onrender.com');
         const res = await fetch(`${apiUrl}/api/cases/all`);
         if (res.ok) {
           const data = await res.json();
@@ -101,14 +161,29 @@ const AdminCases = () => {
   useEffect(() => { fetchCases(); }, [filter]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const updateStatus = async (id, status) => {
+    setError('');
+    const apiUrl = window.location.hostname === 'localhost'
+      ? 'http://localhost:5001'
+      : (process.env.REACT_APP_API_URL || 'https://avyakta-backend.onrender.com');
+
     try {
-      const { error: err } = await supabase
-        .from('orphan_cases')
-        .update({ status })
-        .eq('id', id);
+      // 1. Try to update via the Backend API (Secure & handles RLS bypass on server)
+      const res = await fetch(`${apiUrl}/api/cases/update-status/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+      });
 
-      if (err) throw err;
+      if (!res.ok) {
+        throw new Error(`Server returned status ${res.status}`);
+      }
 
+      const resData = await res.json();
+      if (!resData.success) {
+        throw new Error(resData.message || 'Failed to update case status via backend');
+      }
+
+      // Successful update
       if (filter !== 'all') {
         setCases(prev => prev.filter(c => c.id !== id));
       } else {
@@ -117,19 +192,93 @@ const AdminCases = () => {
       
       showToast(status === 'identified' ? '✅ Case marked as identified!' : status === 'investigating' ? '🔍 Case under investigation' : '❌ Case rejected');
     } catch (err) {
-      console.error('Update error:', err);
-      setError('Error updating status. Please disable RLS on orphan_cases table in Supabase.');
+      console.warn('Backend API update failed, falling back to direct Supabase client:', err);
       
-      // Fallback update
+      // 2. Fallback to direct client-side update
       try {
-        const apiUrl = process.env.REACT_APP_API_URL || 'https://avyakta-backend.onrender.com';
-        await fetch(`${apiUrl}/api/cases/update-status/${id}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ status })
-        });
-      } catch (e) {}
+        const { error: sbErr } = await supabaseAdmin
+          .from('orphan_cases')
+          .update({ status })
+          .eq('id', id);
+
+        if (sbErr) throw sbErr;
+
+        if (filter !== 'all') {
+          setCases(prev => prev.filter(c => c.id !== id));
+        } else {
+          setCases(prev => prev.map(c => c.id === id ? { ...c, status } : c));
+        }
+        
+        showToast(status === 'identified' ? '✅ Case marked as identified!' : status === 'investigating' ? '🔍 Case under investigation' : '❌ Case rejected');
+      } catch (fallbackErr) {
+        console.error('All update routes failed:', fallbackErr);
+        setError('Error updating status. Please verify your backend server connection or disable RLS in Supabase.');
+      }
     }
+  };
+
+  const getFilteredCases = () => {
+    return cases.filter(c => {
+      // 1. Text Search (Case ID, Contact Info, Description)
+      if (searchTerm.trim()) {
+        const query = searchTerm.toLowerCase();
+        const caseIdMatch = c.case_id && c.case_id.toLowerCase().includes(query);
+        const contactMatch = c.contact_info && c.contact_info.toLowerCase().includes(query);
+        const descriptionMatch = c.description && c.description.toLowerCase().includes(query);
+        const nameMatch = c.name && c.name.toLowerCase().includes(query);
+        
+        if (!caseIdMatch && !contactMatch && !descriptionMatch && !nameMatch) {
+          return false;
+        }
+      }
+
+      // 2. Location Search
+      if (locationSearch.trim()) {
+        const locQuery = locationSearch.toLowerCase();
+        const locationMatch = c.location && c.location.toLowerCase().includes(locQuery);
+        if (!locationMatch) return false;
+      }
+
+      // 3. Date Range Filter
+      if (dateRange !== 'all') {
+        const createdAt = new Date(c.created_at || c.date_of_sighting);
+        const now = new Date();
+        
+        if (dateRange === '24h') {
+          const limit = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+          if (createdAt < limit) return false;
+        } else if (dateRange === 'week') {
+          const limit = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+          if (createdAt < limit) return false;
+        } else if (dateRange === 'month') {
+          const limit = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+          if (createdAt < limit) return false;
+        } else if (dateRange === 'custom') {
+          if (customStartDate) {
+            const start = new Date(customStartDate);
+            start.setHours(0, 0, 0, 0);
+            if (createdAt < start) return false;
+          }
+          if (customEndDate) {
+            const end = new Date(customEndDate);
+            end.setHours(23, 59, 59, 999);
+            if (createdAt > end) return false;
+          }
+        }
+      }
+
+      return true;
+    });
+  };
+
+  const hasActiveFilters = searchTerm || locationSearch || dateRange !== 'all';
+
+  const handleResetFilters = () => {
+    setSearchTerm('');
+    setLocationSearch('');
+    setDateRange('all');
+    setCustomStartDate('');
+    setCustomEndDate('');
   };
 
   const stats = {
@@ -222,6 +371,88 @@ const AdminCases = () => {
           ))}
         </div>
 
+        {/* Advanced Filters */}
+        <div className="bg-white/5 border border-white/10 rounded-2xl p-5 mb-6 backdrop-blur-md">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-sm font-bold text-white uppercase tracking-wider">⚡ Advanced Search & Filters</h3>
+            {hasActiveFilters && (
+              <button 
+                onClick={handleResetFilters}
+                className="text-xs font-bold text-indigo-300 hover:text-white transition-colors flex items-center gap-1"
+              >
+                ✕ Clear All Filters
+              </button>
+            )}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            
+            {/* Search Input */}
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold text-indigo-200">🔍 Search</label>
+              <input
+                type="text"
+                placeholder="Search by Case ID, Contact, Description..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full bg-white/10 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-indigo-300/50 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:bg-white/20 transition-all"
+              />
+            </div>
+
+            {/* Location Filter */}
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold text-indigo-200">📍 Location</label>
+              <input
+                type="text"
+                placeholder="Filter by city, state, landmark..."
+                value={locationSearch}
+                onChange={(e) => setLocationSearch(e.target.value)}
+                className="w-full bg-white/10 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-indigo-300/50 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:bg-white/20 transition-all"
+              />
+            </div>
+
+            {/* Date Range Selector */}
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold text-indigo-200">📅 Date Range</label>
+              <select
+                value={dateRange}
+                onChange={(e) => setDateRange(e.target.value)}
+                className="w-full bg-indigo-900 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:bg-indigo-800 transition-all"
+              >
+                <option value="all">All Time</option>
+                <option value="24h">Last 24 Hours</option>
+                <option value="week">This Week</option>
+                <option value="month">Last 30 Days</option>
+                <option value="custom">Custom Date Range</option>
+              </select>
+            </div>
+            
+          </div>
+
+          {/* Custom Date Range Inputs */}
+          {dateRange === 'custom' && (
+            <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-white/5 animate-fade-in">
+              <div className="space-y-1.5">
+                <label className="block text-xs font-semibold text-indigo-200">From Date</label>
+                <input
+                  type="date"
+                  value={customStartDate}
+                  onChange={(e) => setCustomStartDate(e.target.value)}
+                  className="w-full bg-white/10 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="block text-xs font-semibold text-indigo-200">To Date</label>
+                <input
+                  type="date"
+                  value={customEndDate}
+                  onChange={(e) => setCustomEndDate(e.target.value)}
+                  className="w-full bg-white/10 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                />
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* Filter Tabs */}
         <div className="flex gap-2 mb-6 flex-wrap">
           {FILTERS.map(f => (
@@ -257,9 +488,17 @@ const AdminCases = () => {
               <span className="text-indigo-200 text-sm">No {filter} cases found</span>
             </div>
           </div>
+        ) : getFilteredCases().length === 0 ? (
+          <div className="text-center py-16">
+            <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full"
+              style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)' }}>
+              <ClockIcon style={{ width: '1rem', height: '1rem', color: '#A5B4FC' }} aria-hidden="true" />
+              <span className="text-indigo-200 text-sm">No matching cases found for the selected filters</span>
+            </div>
+          </div>
         ) : (
           <div className="space-y-4">
-            {cases.map(c => (
+            {getFilteredCases().map(c => (
               <div key={c.id} className="rounded-2xl p-6 transition-all hover:scale-[1.005]"
                 style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }}>
                 <div className="flex flex-col lg:flex-row lg:items-center gap-6">

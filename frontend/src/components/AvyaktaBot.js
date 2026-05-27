@@ -5,6 +5,7 @@ import {
   XMarkIcon,
   PaperAirplaneIcon,
   SparklesIcon,
+  TrashIcon,
 } from '@heroicons/react/24/solid';
 
 /* ═══════════════════════════════════════
@@ -83,8 +84,11 @@ function matchIntent(input) {
 
 /* ── Timestamp formatter ── */
 function formatTime(date) {
-  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const d = date instanceof Date ? date : new Date(date);
+  return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
+
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 /* ═══════════════════════════════════════
    AvyaktaBot Component
@@ -104,46 +108,112 @@ const AvyaktaBot = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  /* Fetch current conversation from MongoDB or set default greeting */
+  useEffect(() => {
+    if (isOpen) {
+      fetch(`${API_BASE_URL}/chat/conversation`)
+        .then((res) => {
+          if (!res.ok) throw new Error('API request failed');
+          return res.json();
+        })
+        .then((data) => {
+          if (data.success && data.messages && data.messages.length > 0) {
+            const loadedMessages = data.messages.map((msg) => ({
+              from: msg.sender,
+              text: msg.text,
+              time: msg.timestamp ? new Date(msg.timestamp) : new Date(),
+            }));
+            setMessages(loadedMessages);
+          } else {
+            setMessages([
+              { from: 'bot', text: RESPONSES.greeting.text, chips: RESPONSES.greeting.chips, time: new Date() },
+            ]);
+          }
+        })
+        .catch((err) => {
+          console.warn('Backend chat API offline/failed. Using in-memory storage.', err);
+          if (messages.length === 0) {
+            setMessages([
+              { from: 'bot', text: RESPONSES.greeting.text, chips: RESPONSES.greeting.chips, time: new Date() },
+            ]);
+          }
+        });
+    }
+  }, [isOpen]);
+
   /* Global event listener to open chat */
   useEffect(() => {
     const handleOpenChat = () => {
       setIsOpen(true);
       setHasOpened(true);
-      if (messages.length === 0) {
-        setMessages([
-          { from: 'bot', text: RESPONSES.greeting.text, chips: RESPONSES.greeting.chips, time: new Date() },
-        ]);
-      }
     };
     window.addEventListener('open-chat', handleOpenChat);
     return () => window.removeEventListener('open-chat', handleOpenChat);
-  }, [messages.length]);
+  }, []);
 
   /* Focus input when chat opens */
   useEffect(() => {
     if (isOpen) inputRef.current?.focus();
   }, [isOpen]);
 
-  /* Open chat → send greeting */
+  /* Open chat */
   const openChat = () => {
     setIsOpen(true);
     setHasOpened(true);
-    if (messages.length === 0) {
-      setMessages([
-        { from: 'bot', text: RESPONSES.greeting.text, chips: RESPONSES.greeting.chips, time: new Date() },
-      ]);
-    }
   };
 
-  /* Send user message + get bot reply */
-  const sendMessage = (text) => {
+  /* Clear conversation on backend and local state */
+  const clearConversation = async () => {
+    try {
+      await fetch(`${API_BASE_URL}/chat/conversation`, { method: 'DELETE' });
+    } catch (err) {
+      console.warn('Failed to clear conversation on backend:', err);
+    }
+    setMessages([
+      { from: 'bot', text: RESPONSES.greeting.text, chips: RESPONSES.greeting.chips, time: new Date() },
+    ]);
+  };
+
+  /* Send user message + get bot reply, saving both to MongoDB */
+  const sendMessage = async (text) => {
     if (!text.trim()) return;
     const userMsg = { from: 'user', text: text.trim(), time: new Date() };
     const response = matchIntent(text);
     const botMsg = { from: 'bot', text: response.text, chips: response.chips, time: new Date() };
 
-    setMessages((prev) => [...prev, userMsg, botMsg]);
+    const newMessages = [...messages, userMsg, botMsg];
+    setMessages(newMessages);
     setInput('');
+
+    // Save to MongoDB
+    try {
+      const formattedMessages = newMessages.map((msg, idx) => ({
+        id: idx,
+        text: msg.text,
+        sender: msg.from,
+        timestamp: msg.time,
+      }));
+
+      const userInteractions = newMessages.filter(m => m.from === 'user').length;
+
+      await fetch(`${API_BASE_URL}/chat/conversation`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: formattedMessages,
+          conversationCount: userInteractions,
+        }),
+      });
+
+      // Auto-cleanup after 4 user interactions
+      if (userInteractions >= 4) {
+        setTimeout(async () => {
+          await clearConversation();
+        }, 15000); // 15 seconds delay before auto-cleanup to let the user finish reading the reply
+      }
+    } catch (err) {
+      console.warn('Failed to persist message to backend database:', err);
+    }
   };
 
   /* Handle chip click actions */
@@ -286,6 +356,14 @@ const AvyaktaBot = () => {
                 <span style={{ color: '#4CAF50' }}>●</span> Online · Replies instantly
               </div>
             </div>
+            <button
+              onClick={clearConversation}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', marginRight: '4px' }}
+              title="Clear conversation"
+              aria-label="Clear conversation"
+            >
+              <TrashIcon style={{ width: '18px', height: '18px', color: '#B0C4DE' }} />
+            </button>
             <button
               onClick={() => setIsOpen(false)}
               style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}

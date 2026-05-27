@@ -138,13 +138,13 @@ const DonationModal = ({ isOpen, onClose }) => {
 
   const handleWhatsAppShare = () => {
     const text = encodeURIComponent(
-      "I just donated to Avyakta — a portal that helps identify unclaimed bodies and bring dignity to forgotten souls in India. Join me: https://avyakta.org"
+      "I just donated to Avyakta — a portal that helps identify unclaimed bodies and bring dignity to forgotten souls in India. Join me: https://www.avaykta.app"
     );
     window.open(`https://wa.me/?text=${text}`, '_blank');
   };
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText("https://avyakta.org");
+    navigator.clipboard.writeText("https://www.avaykta.app");
     alert("Link copied to clipboard!");
   };
 

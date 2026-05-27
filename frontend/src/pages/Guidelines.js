@@ -43,7 +43,7 @@ const TermsOfService = () => (
           Platform Guidelines &amp; Terms
         </h1>
         <p className="text-base sm:text-lg opacity-90 font-light" style={{ color: '#E2E8F0' }}>
-          Effective From: {getFormattedDate()} · Website: <span className="font-semibold text-white">Avyakta.org</span>
+          Effective From: {getFormattedDate()} · Website: <span className="font-semibold text-white">avaykta.app</span>
         </p>
       </div>
     </section>

@@ -171,7 +171,7 @@ Always prioritize safety and emergency situations. Be compassionate, helpful, an
     // Contact Information
     if (lowerMessage.includes('contact') || lowerMessage.includes('phone') || lowerMessage.includes('email') || lowerMessage.includes('reach') || lowerMessage.includes('call')) {
       return {
-        text: "📞 CONTACT INFORMATION\n\n24/7 Emergency Helpline:\n📞 +91 62994 46452\n\nGeneral Support:\n📧 Email: support@avyakta.org\n🌐 Website: www.avyakta.org\n📍 Location: New Delhi, India\n\nSpecialized Helplines:\n👩 Women: 1091\n👶 Children: 1098\n🚨 Police: 100\n🚑 Ambulance: 102\n🔥 Fire: 101\n\nResponse Times:\n• Emergency: Immediate\n• General queries: Within 24 hours\n• Reports: Within 48 hours\n\nWe're here 24/7 to help you!",
+        text: "📞 CONTACT INFORMATION\n\n24/7 Emergency Helpline:\n📞 +91 62994 46452\n\nGeneral Support:\n📧 Email: support@avyakta.org\n🌐 Website: www.avaykta.app\n📍 Location: New Delhi, India\n\nSpecialized Helplines:\n👩 Women: 1091\n👶 Children: 1098\n🚨 Police: 100\n🚑 Ambulance: 102\n🔥 Fire: 101\n\nResponse Times:\n• Emergency: Immediate\n• General queries: Within 24 hours\n• Reports: Within 48 hours\n\nWe're here 24/7 to help you!",
         quickActions: [
           { text: "📞 Call Helpline", action: "call_helpline" },
           { text: "📧 Send Email", action: "send_email" },
@@ -237,7 +237,7 @@ We are dedicated to giving dignity to the forgotten, reuniting families, and sup
 📞 *Contact & Support*
 • Helpline: +91 62994 46452
 • Email: support@avyakta.org
-• Website: www.avyakta.org
+• Website: www.avaykta.app
 • Location: New Delhi, India
 
 We offer legal aid, counseling, financial help, and a listening ear. Whatever your need, we will walk with you.
@@ -306,7 +306,7 @@ Your pain is seen, your voice is heard, and your story matters. Together, we can
         response = { text: "📧 Opening email client. Please send us your message and we'll respond within 24 hours. Include your contact details for faster response." };
         break;
       case 'visit_website':
-        window.open('https://www.avyakta.org', '_blank');
+        window.open('https://www.avaykta.app', '_blank');
         response = { text: "🌐 Opening our website in a new tab. You'll find comprehensive information about our services, contact details, and emergency resources." };
         break;
       case 'find_location':
@@ -389,7 +389,7 @@ Your pain is seen, your voice is heard, and your story matters. Together, we can
         response = { text: "🚨 For emergency reporting:\n\n1️⃣ Call 100 immediately\n2️⃣ Stay at location if safe\n3️⃣ Provide clear details\n4️⃣ Don't touch anything\n5️⃣ Wait for authorities\n6️⃣ Contact us for support\n\nEmergency reports get immediate attention. We'll coordinate with authorities and keep you updated." };
         break;
       case 'online_report':
-        response = { text: "💻 Online reporting process:\n\n1️⃣ Visit www.avyakta.org\n2️⃣ Click 'Report Case'\n3️⃣ Choose case type\n4️⃣ Fill all details\n5️⃣ Upload evidence\n6️⃣ Submit and track\n\nYou'll receive a tracking number and regular updates on your case progress." };
+        response = { text: "💻 Online reporting process:\n\n1️⃣ Visit www.avaykta.app\n2️⃣ Click 'Report Case'\n3️⃣ Choose case type\n4️⃣ Fill all details\n5️⃣ Upload evidence\n6️⃣ Submit and track\n\nYou'll receive a tracking number and regular updates on your case progress." };
         break;
       case 'call_help':
         response = { text: "📞 For immediate help:\n\n🚨 Emergency: 100\n🚑 Ambulance: 102\n🔥 Fire: 101\n👩 Women: 1091\n👶 Children: 1098\n💙 Mental Health: 9152987821\n\nOur helpline: +91 62994 46452\n\nCall the appropriate number based on your situation. Help is available 24/7." };
@@ -434,7 +434,7 @@ Your pain is seen, your voice is heard, and your story matters. Together, we can
         response = { text: "🤝 How we help:\n\nEmergency Response:\n• Immediate assistance\n• Coordination with authorities\n• Crisis intervention\n• Safety guidance\n\nCase Management:\n• Report processing\n• Status tracking\n• Follow-up support\n• Resource coordination\n\nSupport Services:\n• Legal assistance\n• Medical referrals\n• Counseling\n• Financial aid\n• Family support\n\nWe work with police, hospitals, NGOs, and legal authorities to provide comprehensive support." };
         break;
       case 'website_info':
-        response = { text: "🌐 Website information:\n\nPages Available:\n🏠 Home: Mission and overview\n📞 Contact: Get in touch with us\n🚨 Emergency: Quick access to help\n👤 Admin Login: For authorities\n📋 Reports: View and manage cases\n\nFeatures:\n• Multi-language support\n• Mobile responsive\n• Emergency numbers\n• Online reporting\n• Status tracking\n\nVisit www.avyakta.org for complete information and services." };
+        response = { text: "🌐 Website information:\n\nPages Available:\n🏠 Home: Mission and overview\n📞 Contact: Get in touch with us\n🚨 Emergency: Quick access to help\n👤 Admin Login: For authorities\n📋 Reports: View and manage cases\n\nFeatures:\n• Multi-language support\n• Mobile responsive\n• Emergency numbers\n• Online reporting\n• Status tracking\n\nVisit www.avaykta.app for complete information and services." };
         break;
       case 'mission':
         response = { text: "🎯 Our mission:\n\nTo ensure no life goes unnoticed or unclaimed. We believe:\n\n• Every person deserves dignity\n• Families deserve closure\n• Victims deserve justice\n• Communities deserve peace\n\nWhat We Do:\n• Identify unclaimed bodies\n• Support families in crisis\n• Provide emergency assistance\n• Coordinate with authorities\n• Offer comprehensive support\n\nOur Values:\n• Compassion\n• Justice\n• Dignity\n• Integrity\n• Service" };

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabaseClient';
-import { supabase as sb } from '../lib/supabaseClient';
+import { supabase, supabaseAdmin } from '../lib/supabaseClient';
 import {
   CheckCircleIcon,
   XCircleIcon,
@@ -50,7 +49,7 @@ const AdminRatings = () => {
   const fetchRatings = async () => {
     setLoading(true);
     setError('');
-    let query = sb.from('ratings').select('*').order('created_at', { ascending: false });
+    let query = supabase.from('ratings').select('*').order('created_at', { ascending: false });
     if (filter !== 'all') query = query.eq('status', filter);
 
     const { data, error: err } = await query;
@@ -62,7 +61,7 @@ const AdminRatings = () => {
   useEffect(() => { fetchRatings(); }, [filter]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const updateStatus = async (id, status) => {
-    const { error: err } = await supabase
+    const { error: err } = await supabaseAdmin
       .from('ratings')
       .update({ status, reviewed_at: new Date().toISOString() })
       .eq('id', id);
