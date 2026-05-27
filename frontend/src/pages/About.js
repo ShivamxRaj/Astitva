@@ -1,20 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  HeartIcon, 
-  UserGroupIcon, 
-  ShieldCheckIcon, 
-  GlobeAltIcon, 
-  PlayIcon, 
-  PauseIcon,
   CalendarIcon,
   LightBulbIcon,
   RocketLaunchIcon,
   TrophyIcon,
-  StarIcon,
-  UserIcon,
-  AcademicCapIcon,
-  BriefcaseIcon
+  StarIcon
 } from '@heroicons/react/24/outline';
 
 export const PrivacyPolicy = () => (
@@ -67,21 +58,12 @@ export const PrivacyPolicy = () => (
 );
 
 const About = () => {
-  const [isPlaying, setIsPlaying] = useState(false);
   const [counters, setCounters] = useState({
     reports: 0,
     lives: 0,
     volunteers: 0,
     stations: 0
   });
-
-  const handleVideoPlay = () => {
-    setIsPlaying(true);
-  };
-
-  const handleVideoPause = () => {
-    setIsPlaying(false);
-  };
 
   useEffect(() => {
     const targetValues = {
@@ -226,24 +208,22 @@ const About = () => {
   return (
     <div className="min-h-screen section-light">
       {/* Hero Section */}
-      <section className="relative h-screen overflow-hidden section-dark">
-        <video
-          autoPlay
-          muted
-          loop
-          className="absolute inset-0 w-full h-full object-cover"
-        >
-          <source src="/videos/about-hero.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0" style={{ background: 'var(--navy)', opacity: 0.8 }}></div>
-        <div className="relative h-full flex flex-col justify-center items-center container-responsive text-center z-10">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-merriweather font-bold mb-4 sm:mb-6" style={{ color: '#fff' }}>
+      <section className="relative h-screen overflow-hidden section-dark flex items-center justify-center">
+        {/* Background Gradient & Animated Blobs */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0F1E36] to-[#1B3A6B]"></div>
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl animate-blob"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl animate-blob animation-delay-2000"></div>
+        </div>
+        
+        <div className="relative w-full flex flex-col justify-center items-center container-responsive text-center z-10">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-merriweather font-bold mb-4 sm:mb-6 animate-fade-in-up" style={{ color: '#fff' }}>
             About Avyakta
           </h1>
-          <p className="text-lg sm:text-xl lg:text-2xl max-w-3xl sm:max-w-4xl mx-auto mb-6 sm:mb-8" style={{ color: '#CBD5E0' }}>
+          <p className="text-lg sm:text-xl lg:text-2xl max-w-3xl sm:max-w-4xl mx-auto mb-6 sm:mb-8 animate-fade-in-up animation-delay-200" style={{ color: '#CBD5E0' }}>
             Bringing dignity to the unclaimed, one soul at a time
           </p>
-          <p className="text-base sm:text-lg lg:text-xl max-w-2xl sm:max-w-3xl mx-auto leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)' }}>
+          <p className="text-base sm:text-lg lg:text-xl max-w-2xl sm:max-w-3xl mx-auto leading-relaxed animate-fade-in-up animation-delay-300" style={{ color: 'rgba(255,255,255,0.8)' }}>
             We are a compassionate platform dedicated to helping identify and honor unclaimed bodies with dignity, compassion, and purpose.
           </p>
         </div>
