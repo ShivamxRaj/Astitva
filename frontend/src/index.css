@@ -672,4 +672,42 @@
   .animation-delay-500  { animation-delay: 500ms; }
   .animation-delay-2000 { animation-delay: 2s; }
   .animation-delay-4000 { animation-delay: 4s; }
+
+  /* ── Responsive Mobile Overrides ── */
+  @media (max-width: 640px) {
+    .case-status-tracker {
+      padding: 0.75rem !important;
+    }
+    .status-step {
+      min-width: 58px !important;
+      gap: 0.2rem !important;
+    }
+    .status-icon {
+      width: 1.8rem !important;
+      height: 1.8rem !important;
+    }
+    .status-icon svg {
+      width: 0.9rem !important;
+      height: 0.9rem !important;
+    }
+    .status-label {
+      font-size: 0.6rem !important;
+    }
+    .status-connector {
+      min-width: 8px !important;
+      margin-bottom: 1.1rem !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .utility-bar {
+      padding: 0.35rem 0.5rem !important;
+      gap: 0.5rem !important;
+    }
+    .helpline-badge {
+      padding: 0.2rem 0.5rem !important;
+      font-size: 0.7rem !important;
+      gap: 0.25rem !important;
+    }
+  }
 }

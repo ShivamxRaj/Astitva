@@ -150,15 +150,13 @@ const Home = () => {
 
           {/* Trust Badge */}
           <div className={`flex justify-center mb-6 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 text-xs font-semibold"
+            <span className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 text-[10px] sm:text-xs font-semibold text-center whitespace-normal sm:whitespace-nowrap max-w-[90vw]"
               style={{
                 background: 'rgba(255,255,255,0.08)',
                 color: '#A8C8FF',
                 border: '1px solid rgba(255,255,255,0.2)',
                 borderRadius: '999px',
                 backdropFilter: 'blur(8px)',
-                fontSize: '0.8rem',
-                padding: '6px 16px',
               }}>
               ✦ Officially registered humanitarian portal — Est. 2020
             </span>
@@ -182,7 +180,7 @@ const Home = () => {
 
           {/* ── Case Status Tracker Preview ── */}
           <div className={`flex justify-center transition-all duration-1000 delay-600 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <div style={{ width:'100%', maxWidth:'560px' }}>
+            <div style={{ width:'100%', maxWidth:'560px' }} className="px-2 sm:px-0">
               <p className="text-xs mb-3" style={{ color:'#718096' }}>How a case progresses through our system:</p>
               <CaseStatusTracker currentStep={1} lang={['hi','pa'].includes(navigator.language?.slice(0,2)) ? navigator.language.slice(0,2) : 'en'} />
             </div>
