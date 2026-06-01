@@ -7,7 +7,6 @@ import {
   XMarkIcon,
   PhoneIcon,
   ShieldCheckIcon,
-  HeartIcon,
   ChevronDownIcon,
   GlobeAltIcon,
 } from '@heroicons/react/24/outline';

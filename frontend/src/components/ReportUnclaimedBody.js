@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase, supabaseAdmin } from '../lib/supabaseClient';
+import { supabaseAdmin } from '../lib/supabaseClient';
 import axios from 'axios';
 
 const loadLeaflet = () => {
@@ -105,7 +105,6 @@ const MapPickerModal = ({ isOpen, onClose, onConfirm, initialLat, initialLon }) 
       const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`);
       const data = await res.json();
       if (data && data.length > 0) {
-        const L = window.L;
         const { lat, lon } = data[0];
         const newLat = parseFloat(lat);
         const newLon = parseFloat(lon);

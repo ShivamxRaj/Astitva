@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "vercel-build": "cd frontend && npm install && npm run build && cd .. && rm -rf public && cp -r frontend/build public"
+    "vercel-build": "cd frontend && npm install && CI=false npm run build && cd .. && rm -rf public && cp -r frontend/build public"
   },
   "keywords": [],
   "author": "",

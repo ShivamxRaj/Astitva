@@ -11,7 +11,6 @@ import {
   StarIcon,
   ClockIcon,
   MapPinIcon,
-  MagnifyingGlassIcon,
   ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline';
 import Testimonials from './Testimonials';
@@ -22,7 +21,6 @@ import CaseStatusTracker from './CaseStatusTracker';
 const Home = () => {
   const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const [recentCases, setRecentCases] = useState([]);
   const [casesLoading, setCasesLoading] = useState(true);
 
@@ -59,13 +57,6 @@ const Home = () => {
     };
     fetchRecentCases();
   }, []);
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
-    }
-  };
 
   const features = [
     { icon: ShieldCheckIcon, title: 'Secure & Confidential',  description: 'All information is handled with utmost privacy and security under IT Act 2000.' },
