@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 import axios from 'axios';
 
@@ -102,9 +103,14 @@ const SearchMissingPerson = () => {
 
       if (fetchError) throw fetchError;
       allCases = data || [];
+      // Cache fetched cases for offline querying
+      localStorage.setItem('avyakta_offline_cases_cache', JSON.stringify(allCases));
     } catch (dbErr) {
       console.warn('Failed to fetch from Supabase directly. Checking offline cache fallback:', dbErr);
-      allCases = JSON.parse(localStorage.getItem('citizen_offline_reports') || '[]');
+      allCases = JSON.parse(localStorage.getItem('avyakta_offline_cases_cache') || '[]');
+      if (!allCases || allCases.length === 0) {
+        allCases = JSON.parse(localStorage.getItem('citizen_offline_reports') || '[]');
+      }
     }
 
     try {
@@ -505,7 +511,9 @@ Return ONLY a valid JSON array of matched cases with two extra fields added to e
                     <div className="flex-1">
                       <div className="flex flex-wrap justify-between items-start gap-2">
                         <div className="flex flex-wrap items-center gap-2">
-                          <span className="font-bold text-lg" style={{ color: 'var(--navy)' }}>{match.location}</span>
+                          <Link to={`/case/${match.case_id}`} className="font-bold text-lg hover:underline" style={{ color: 'var(--navy)' }}>
+                            📍 {match.location}
+                          </Link>
                           {(match.status === 'identified' || match.status === 'investigating' || match.status === 'approved') && (
                             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm" title="Officially verified by Avyakta Foundation">
                               <svg className="w-3.5 h-3.5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
@@ -550,9 +558,14 @@ Return ONLY a valid JSON array of matched cases with two extra fields added to e
                   </span>
                 </div>
                 <div className="p-6 space-y-4">
-                  <div>
-                    <span className="block text-xs font-bold uppercase" style={{ color: 'var(--text-light)' }}>Report ID</span>
-                    <span className="font-mono" style={{ color: 'var(--text-dark)' }}>{trackResult.case_id}</span>
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <span className="block text-xs font-bold uppercase" style={{ color: 'var(--text-light)' }}>Report ID</span>
+                      <span className="font-mono" style={{ color: 'var(--text-dark)' }}>{trackResult.case_id}</span>
+                    </div>
+                    <Link to={`/case/${trackResult.case_id}`} className="text-xs py-1.5 px-3 bg-[#F0F7FF] hover:bg-blue-100 text-[#1B3A6B] font-bold rounded-xl transition-all border border-blue-100">
+                      🔗 View Dedicated Page
+                    </Link>
                   </div>
                   <div>
                     <span className="block text-xs font-bold uppercase" style={{ color: 'var(--text-light)' }}>Location Found</span>

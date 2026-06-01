@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /reset-password
+Disallow: /admin/*
+
+Sitemap: https://www.avaykta.app/sitemap.xml

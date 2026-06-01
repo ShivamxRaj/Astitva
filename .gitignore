@@ -7,7 +7,7 @@ build/
 dist/
 **/build/
 **/dist/
-public/
+/public/
 
 # Environment variables
 .env

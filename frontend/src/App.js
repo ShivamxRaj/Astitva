@@ -20,6 +20,7 @@ import CookiePolicy from './pages/CookiePolicy';
 import SplashLoader from './components/SplashLoader';
 import ReportUnclaimedBody from './components/ReportUnclaimedBody';
 import SearchMissingPerson from './pages/SearchMissingPerson';
+import CaseDetails from './components/CaseDetails';
 import ProtectedRoute from './components/ProtectedRoute';
 import ResetPassword from './components/ResetPassword';
 import SEOMetadata from './components/SEOMetadata';
@@ -174,6 +175,7 @@ function App() {
             <Route exact path="/cookies" element={<CookiePolicy />} />
             <Route exact path="/report" element={<ReportUnclaimedBody />} />
             <Route exact path="/search" element={<SearchMissingPerson />} />
+            <Route exact path="/case/:caseId" element={<CaseDetails />} />
           </Routes>
         </main>
         <Footer />
