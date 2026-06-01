@@ -15,6 +15,7 @@ const CaseSchema = new mongoose.Schema({
   contact_info: String,
   additional_info: String,
   photo_url: String,
+  persisted_face_id: String,
   status: { type: String, default: 'unidentified' },
   created_at: { type: Date, default: Date.now }
 });

@@ -7,6 +7,7 @@ const { createClient } = require('@supabase/supabase-js');
 const { v4: uuidv4 } = require('uuid');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const Case = require('../models/Case');
+const { detectFace, addFaceToFaceList, findSimilarFaces, getFaceListMapping } = require('../utils/azureFace');
 
 // Initialize Nodemailer SMTP Transporter
 const transporter = nodemailer.createTransport({
@@ -85,7 +86,20 @@ router.post('/report', upload.single('photo'), async (req, res) => {
     const { error: dbError } = await supabase.from('orphan_cases').insert([caseData]);
     if (dbError) throw dbError;
 
-    const newCase = new Case(caseData);
+    // Register face with Azure Face API if a photo is available
+    let persistedFaceId = null;
+    if (photo_url) {
+      try {
+        persistedFaceId = await addFaceToFaceList(photo_url, case_id);
+      } catch (faceErr) {
+        console.warn('[Azure Face] Failed to register face in list during report:', faceErr.message);
+      }
+    }
+
+    const newCase = new Case({
+      ...caseData,
+      persisted_face_id: persistedFaceId
+    });
     await newCase.save();
 
     // Send automated email alert if contact info contains an email address
@@ -193,7 +207,7 @@ router.patch('/update-status/:id', async (req, res) => {
   }
 });
 
-// --- SEARCH CASES ROUTE (Gemini AI Powered) ---
+// --- SEARCH CASES ROUTE (Gemini AI Powered + Azure Face Biometric Matching) ---
 router.post('/search', upload.single('photo'), async (req, res) => {
   try {
     const { name, gender, age, location, date, marks, description } = req.body;
@@ -204,9 +218,53 @@ router.post('/search', upload.single('photo'), async (req, res) => {
 
     if (fetchError) throw fetchError;
 
+    // Biometric facial matching using Azure Face API
+    const biometricScores = {};
+    let isFaceMatchingTriggered = false;
+
+    if (req.file) {
+      try {
+        console.log('[Biometric Search] Uploaded photo detected. Running Azure Face detection...');
+        const searchFaceId = await detectFace(req.file.buffer, req.file.mimetype);
+        
+        if (searchFaceId) {
+          console.log(`[Biometric Search] Face detected. ID: ${searchFaceId}. Finding similar faces...`);
+          const similarFaces = await findSimilarFaces(searchFaceId);
+          
+          if (similarFaces && similarFaces.length > 0) {
+            isFaceMatchingTriggered = true;
+            console.log(`[Biometric Search] Found ${similarFaces.length} biometric matches in FaceList.`);
+            const faceMapping = await getFaceListMapping();
+            
+            for (const match of similarFaces) {
+              const matchedCaseId = faceMapping.get(match.persistedFaceId);
+              if (matchedCaseId) {
+                biometricScores[matchedCaseId] = match.confidence;
+                console.log(`  -> Match: Case ID ${matchedCaseId} with ${Math.round(match.confidence * 100)}% confidence`);
+              }
+            }
+          } else {
+            console.log('[Biometric Search] No similar faces found in the FaceList.');
+          }
+        } else {
+          console.log('[Biometric Search] No human face detected in the search image.');
+        }
+      } catch (faceErr) {
+        console.error('[Biometric Search] Error during Azure Face matching:', faceErr.message);
+      }
+    }
+
+    // Inject biometric match scores into the database cases sent to Gemini
+    const enrichedCases = allCases.map(c => {
+      const bioConfidence = biometricScores[c.case_id];
+      return {
+        ...c,
+        biometricMatchConfidence: bioConfidence || null
+      };
+    });
+
     let prompt = `You are an AI matching system for Avyakta, a missing persons platform in India.
-Given a family's search details and a list of reported unidentified cases from the database,
-find the best matches. 
+Given a family's search details and a list of reported unidentified cases from the database (some of which contain "biometricMatchConfidence" scores from our Azure Face AI recognition system), find the best matches. 
 
 Family is searching for:
 Name: ${name || 'N/A'}
@@ -218,14 +276,20 @@ Identifying marks: ${marks || 'N/A'}
 Description: ${description || 'N/A'}
 
 Database cases (JSON):
-${JSON.stringify(allCases || [])}
+${JSON.stringify(enrichedCases || [])}
 
 Return ONLY a valid JSON array of matched cases with two extra fields added to each matching case object:
 1. "matchScore" (0-100)
-2. "matchReason" (A short sentence explaining why it matches)`;
+2. "matchReason" (A short sentence explaining why it matches)
+
+CRITICAL INSTRUCTIONS FOR AI FACE MATCHING:
+- If a case has a non-null "biometricMatchConfidence" (e.g. 0.50 or higher), it means our Biometric Face Recognition API has detected a facial match with the uploaded search photo.
+- For any case with "biometricMatchConfidence" >= 0.70, boost its "matchScore" to 95-100 and clearly state "AI Face Recognition Match (Confidence: XX%)" in the matchReason!
+- For any case with "biometricMatchConfidence" between 0.50 and 0.69, boost its "matchScore" to 80-94 and state "Possible AI Face Match" in the matchReason.
+- If no "biometricMatchConfidence" is present, rely purely on text matching (gender, age, location, markings, clothing, etc.).`;
 
     if (req.file) {
-      prompt += `\n\nCRITICAL MULTIMODAL INSTRUCTION: The family has also uploaded a photo of the missing person (provided as an inline image attachment). Compare the facial features, age build, hair, and clothing in the uploaded photo against the database case records (which have descriptive marks, clothing details, and photo_url links). Boost the matchScore significantly if visual characteristics in the uploaded image correspond to the physical characteristics recorded in the database cases!`;
+      prompt += `\n\nCRITICAL MULTIMODAL INSTRUCTION: The family has also uploaded a photo of the missing person (provided as an inline image attachment). In addition to the biometric confidence score, analyze the image visually to corroborate hair style, expressions, and overall facial structure against the descriptions.`;
     }
 
     prompt += `\n\nRules:
