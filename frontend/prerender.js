@@ -35,7 +35,8 @@ async function prerender() {
 
   // 2. Generate static HTML files for each case
   for (const item of cases) {
-    const caseId = item.case_id;
+    const rawCaseId = item.case_id;
+    const caseId = rawCaseId.replace('#', '');
     const location = item.location || 'Unknown Location';
     const dateStr = item.date_of_sighting ? new Date(item.date_of_sighting).toLocaleDateString() : 'Unknown Date';
     const desc = item.description || '';
@@ -45,8 +46,8 @@ async function prerender() {
     const cleanDesc = desc.replace(/[\r\n\t]+/g, ' ').trim();
     const shortDesc = cleanDesc.length > 150 ? cleanDesc.slice(0, 147) + '...' : cleanDesc;
 
-    const pageTitle = `Unidentified Sighting in ${location} Sighted ${dateStr} | ID: ${caseId} - Avyakta`;
-    const pageMetaDesc = `Case sighting details for ID ${caseId}. Sighted on ${dateStr} at ${location}. Physical characteristics: ${shortDesc} Help identify.`;
+    const pageTitle = `Unidentified Sighting in ${location} Sighted ${dateStr} | ID: ${rawCaseId} - Avyakta`;
+    const pageMetaDesc = `Case sighting details for ID ${rawCaseId}. Sighted on ${dateStr} at ${location}. Physical characteristics: ${shortDesc} Help identify.`;
 
     // Replace SEO head tags dynamically
     let prerenderedHtml = baseHtml;
@@ -78,7 +79,7 @@ async function prerender() {
         <h1 style="color: #1b3a6b; font-family: Merriweather, serif; font-size: 24px; border-bottom: 2px solid #edf2f7; padding-bottom: 12px; margin-bottom: 20px;">
           Unidentified Sighting Sighting Record
         </h1>
-        <p><strong>Case Report ID:</strong> <code style="background: #edf2f7; padding: 2px 6px; border-radius: 4px;">${caseId}</code></p>
+        <p><strong>Case Report ID:</strong> <code style="background: #edf2f7; padding: 2px 6px; border-radius: 4px;">${rawCaseId}</code></p>
         <p><strong>📍 Sighting Location:</strong> ${location}</p>
         <p><strong>📅 Sighting Date & Time:</strong> ${dateStr}</p>
         
@@ -127,7 +128,7 @@ async function prerender() {
   // Parse existing sitemap URLs and append case URLs
   const today = new Date().toISOString().split('T')[0];
   const urlNodes = cases.map(c => `  <url>
-    <loc>https://www.avaykta.app/case/${c.case_id}</loc>
+    <loc>https://www.avaykta.app/case/${c.case_id.replace('#', '')}</loc>
     <lastmod>${today}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>

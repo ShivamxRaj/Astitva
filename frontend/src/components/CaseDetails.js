@@ -17,24 +17,24 @@ const CaseDetails = () => {
       try {
         const cleanedId = caseId.trim().replace(/[^\w#-]/g, '');
 
-        // 1. Fetch from Supabase directly
+        // 1. Fetch from Supabase directly (check both with and without leading hash)
         const { data, error: dbError } = await supabase
           .from('orphan_cases')
           .select('*')
-          .eq('case_id', cleanedId)
-          .single();
+          .or(`case_id.eq.${cleanedId},case_id.eq.#${cleanedId}`)
+          .maybeSingle();
 
         if (dbError || !data) {
           // 2. Fallback to local offline cache
           const cachedCases = JSON.parse(localStorage.getItem('avyakta_offline_cases_cache') || '[]');
-          const matchedCache = cachedCases.find(c => c.case_id === cleanedId);
+          const matchedCache = cachedCases.find(c => c.case_id.replace('#', '') === cleanedId.replace('#', ''));
           
           if (matchedCache) {
             setCaseData(matchedCache);
           } else {
             // 3. Fallback to citizen's own offline reports
             const offlineReports = JSON.parse(localStorage.getItem('citizen_offline_reports') || '[]');
-            const matchedOffline = offlineReports.find(c => c.case_id === cleanedId);
+            const matchedOffline = offlineReports.find(c => c.case_id.replace('#', '') === cleanedId.replace('#', ''));
             if (matchedOffline) {
               setCaseData(matchedOffline);
             } else {
