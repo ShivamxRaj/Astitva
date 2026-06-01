@@ -13,8 +13,16 @@ const DonationModal = ({ isOpen, onClose }) => {
   // Reset state when modal opens/closes
   useEffect(() => {
     if (isOpen) {
-      setStep(1);
-      setAmount('');
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('donation') === 'success') {
+        setStep(3);
+        setAmount(params.get('amount') || '1000');
+        // Clear params cleanly without full refresh
+        window.history.replaceState({}, document.title, window.location.pathname);
+      } else {
+        setStep(1);
+        setAmount('');
+      }
       setIsProcessing(false);
     }
   }, [isOpen]);
@@ -134,6 +142,39 @@ const DonationModal = ({ isOpen, onClose }) => {
       alert(`Something went wrong! ${error.message || 'Please check your connection.'}`);
     }
     setIsProcessing(false);
+  };
+
+  const handleStripe = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+
+    try {
+      const apiUrl = 'https://avyakta-backend.onrender.com';
+      const fallbackUrl = window.location.hostname === 'localhost' ? 'http://localhost:5001' : apiUrl;
+      
+      const response = await fetch(`${fallbackUrl}/api/payment/create-stripe-session`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount })
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Server returned ${response.status}: ${errorText.slice(0, 50)}`);
+      }
+
+      const data = await response.json();
+      if (data.success && data.url) {
+        window.location.href = data.url;
+      } else {
+        alert('Failed to initiate Stripe checkout session.');
+      }
+    } catch (error) {
+      console.error('Stripe Donation Error:', error);
+      alert(`Stripe error: ${error.message || 'Please check your connection.'}`);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleWhatsAppShare = () => {
@@ -436,48 +477,95 @@ const DonationModal = ({ isOpen, onClose }) => {
                   </div>
                 </div>
 
-                {/* Main Razorpay Option */}
-                <div
-                  style={{
-                    border: '1.5px solid #E0D5C5',
-                    borderRadius: '10px',
-                    padding: '20px',
-                    background: 'white',
-                  }}
-                >
+                {/* Payment Options container */}
+                <div className="space-y-4">
+                  {/* Stripe Payment Option */}
                   <div
-                    className="flex items-center gap-2 mb-1"
-                    style={{ fontWeight: 600, color: '#1B3A6B' }}
+                    style={{
+                      border: '1.5px solid #E0D5C5',
+                      borderRadius: '10px',
+                      padding: '18px',
+                      background: 'white',
+                    }}
                   >
-                    <CreditCardIcon className="w-5 h-5 text-blue-600" />
-                    Credit / Debit Card / Netbanking
-                  </div>
-                  <div style={{ color: '#5A7184', fontSize: '0.8rem', marginBottom: '16px' }}>
-                    Secure payment via Razorpay
+                    <div
+                      className="flex items-center gap-2 mb-1"
+                      style={{ fontWeight: 600, color: '#1B3A6B' }}
+                    >
+                      <CreditCardIcon className="w-5 h-5 text-indigo-600" />
+                      Global Debit / Credit Card (Stripe)
+                    </div>
+                    <div style={{ color: '#5A7184', fontSize: '0.8rem', marginBottom: '12px' }}>
+                      Fast & secure international card processing
+                    </div>
+
+                    <button
+                      onClick={handleStripe}
+                      disabled={isProcessing}
+                      className="w-full transition-all"
+                      style={{
+                        background: isProcessing ? '#93AABF' : '#635BFF',
+                        color: 'white',
+                        borderRadius: '8px',
+                        padding: '12px',
+                        fontWeight: 700,
+                        border: 'none',
+                        cursor: isProcessing ? 'not-allowed' : 'pointer',
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isProcessing) e.currentTarget.style.background = '#4F46E5';
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isProcessing) e.currentTarget.style.background = '#635BFF';
+                      }}
+                    >
+                      {isProcessing ? 'Processing...' : `Pay ₹${amount} with Stripe`}
+                    </button>
                   </div>
 
-                  <button
-                    onClick={handleRazorpay}
-                    disabled={isProcessing}
-                    className="w-full transition-all"
+                  {/* Razorpay Payment Option */}
+                  <div
                     style={{
-                      background: isProcessing ? '#93AABF' : '#2E7D9C',
-                      color: 'white',
-                      borderRadius: '8px',
-                      padding: '12px',
-                      fontWeight: 700,
-                      border: 'none',
-                      cursor: isProcessing ? 'not-allowed' : 'pointer',
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isProcessing) e.currentTarget.style.background = '#1A5F78';
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isProcessing) e.currentTarget.style.background = '#2E7D9C';
+                      border: '1.5px solid #E0D5C5',
+                      borderRadius: '10px',
+                      padding: '18px',
+                      background: 'white',
                     }}
                   >
-                    {isProcessing ? 'Processing...' : `Pay ₹${amount} with Razorpay`}
-                  </button>
+                    <div
+                      className="flex items-center gap-2 mb-1"
+                      style={{ fontWeight: 600, color: '#1B3A6B' }}
+                    >
+                      <span className="text-xl">💳</span>
+                      UPI / Netbanking / Wallets (Razorpay)
+                    </div>
+                    <div style={{ color: '#5A7184', fontSize: '0.8rem', marginBottom: '12px' }}>
+                      Indian local payments (UPI, GPay, PhonePe, Cards)
+                    </div>
+
+                    <button
+                      onClick={handleRazorpay}
+                      disabled={isProcessing}
+                      className="w-full transition-all"
+                      style={{
+                        background: isProcessing ? '#93AABF' : '#2E7D9C',
+                        color: 'white',
+                        borderRadius: '8px',
+                        padding: '12px',
+                        fontWeight: 700,
+                        border: 'none',
+                        cursor: isProcessing ? 'not-allowed' : 'pointer',
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isProcessing) e.currentTarget.style.background = '#1A5F78';
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isProcessing) e.currentTarget.style.background = '#2E7D9C';
+                      }}
+                    >
+                      {isProcessing ? 'Processing...' : `Pay ₹${amount} with Razorpay`}
+                    </button>
+                  </div>
 
                   <div
                     style={{

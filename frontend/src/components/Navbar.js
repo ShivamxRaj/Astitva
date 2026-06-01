@@ -66,10 +66,17 @@ const Navbar = () => {
     return () => clearInterval(interval);
   }, []);
 
-  /* Listen for 'open-donation-modal' event from AvyaktaBot */
+  /* Listen for 'open-donation-modal' event from AvyaktaBot & check URL query params */
   useEffect(() => {
     const handler = () => setDonationOpen(true);
     window.addEventListener('open-donation-modal', handler);
+    
+    // Auto-open modal if donation success redirect is detected in URL
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('donation') === 'success') {
+      setDonationOpen(true);
+    }
+    
     return () => window.removeEventListener('open-donation-modal', handler);
   }, []);
 
