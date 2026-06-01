@@ -222,15 +222,86 @@ const initialForm = {
   location: '',
   manualLocation: false,
   dateTime: '',
-  image: null,
+  gender: 'Unknown',
+  age: '',
+  height: '',
+  clothesColor: '',
+  identifyingMarks: '',
   description: '',
+  image: null,
   contact: '',
   message: '',
   terms: false,
 };
 
+// Client-side image compression helper to support slow connections
+const compressImage = (file) => {
+  return new Promise((resolve) => {
+    if (!file) {
+      resolve(null);
+      return;
+    }
+    if (!file.type.startsWith('image/')) {
+      resolve(file);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        const MAX_WIDTH = 1024;
+        const MAX_HEIGHT = 1024;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) {
+              resolve(file);
+              return;
+            }
+            const compressedFile = new File([blob], file.name, {
+              type: 'image/jpeg',
+              lastModified: Date.now(),
+            });
+            resolve(compressedFile);
+          },
+          'image/jpeg',
+          0.7 // Compress quality to 70%
+        );
+      };
+      img.onerror = () => resolve(file);
+    };
+    reader.onerror = () => resolve(file);
+  });
+};
+
 const ReportUnclaimedBody = () => {
   const [form, setForm] = useState(initialForm);
+  const [step, setStep] = useState(1);
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -238,6 +309,29 @@ const ReportUnclaimedBody = () => {
   const [reportId, setReportId] = useState(null);
   const navigate = useNavigate();
   const [isMapOpen, setIsMapOpen] = useState(false);
+
+  // Load draft from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('avyakta_report_draft');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setForm(prev => ({
+          ...prev,
+          ...parsed,
+          image: null // files cannot be stored directly in localStorage
+        }));
+      } catch (e) {
+        console.error('Failed to parse draft from localStorage', e);
+      }
+    }
+  }, []);
+
+  // Save draft to localStorage on form changes
+  useEffect(() => {
+    const { image, ...serializableForm } = form;
+    localStorage.setItem('avyakta_report_draft', JSON.stringify(serializableForm));
+  }, [form]);
 
   const handleMapConfirm = (address, lat, lon) => {
     setForm(prev => ({
@@ -247,7 +341,7 @@ const ReportUnclaimedBody = () => {
     setIsMapOpen(false);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!form.manualLocation && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
@@ -262,29 +356,56 @@ const ReportUnclaimedBody = () => {
     }
   }, [form.manualLocation]);
 
-  const validate = () => {
+  const validateStep = (stepNum) => {
     const e = {};
-    if (!form.location) e.location = 'Location is required.';
-    if (!form.dateTime) e.dateTime = 'Date & Time is required.';
-    if (!form.description?.trim()) e.description = 'Description is required.';
-    if (form.image && form.image.size > 5 * 1024 * 1024) e.image = 'Max file size is 5MB.';
-    if (form.image && !['image/jpeg', 'image/png'].includes(form.image.type)) e.image = 'Only JPEG/PNG allowed.';
-    if (!form.contact) e.contact = 'Contact information is required for follow-up.';
-    if (!form.terms) e.terms = 'You must confirm the report is genuine.';
-    return e;
+    if (stepNum === 1) {
+      if (!form.location) e.location = 'Location is required.';
+      if (!form.dateTime) e.dateTime = 'Date & Time is required.';
+    } else if (stepNum === 2) {
+      if (!form.description?.trim()) e.description = 'General description or details are required.';
+    } else if (stepNum === 3) {
+      if (form.image && form.image.size > 5 * 1024 * 1024) e.image = 'Max file size is 5MB.';
+      if (!form.contact) e.contact = 'Contact information is required for follow-up.';
+      if (!form.terms) e.terms = 'You must confirm the report is genuine.';
+    }
+    setErrors(e);
+    return Object.keys(e).length === 0;
   };
 
-  const handleChange = (e) => {
+  const handleNext = () => {
+    if (validateStep(step)) {
+      setStep(prev => prev + 1);
+      setErrors({});
+    }
+  };
+
+  const handleBack = () => {
+    setStep(prev => prev - 1);
+    setErrors({});
+  };
+
+  const handleChange = async (e) => {
     const { name, value, type, checked, files } = e.target;
     if (type === 'checkbox') {
       setForm((f) => ({ ...f, [name]: checked }));
     } else if (type === 'file') {
-      setForm((f) => ({ ...f, image: files[0] }));
-      if (files[0]) {
-        const reader = new FileReader();
-        reader.onload = (ev) => setImagePreview(ev.target.result);
-        reader.readAsDataURL(files[0]);
+      const originalFile = files[0];
+      if (originalFile) {
+        setSubmitting(true);
+        try {
+          const compressed = await compressImage(originalFile);
+          setForm((f) => ({ ...f, image: compressed }));
+          const reader = new FileReader();
+          reader.onload = (ev) => setImagePreview(ev.target.result);
+          reader.readAsDataURL(compressed);
+        } catch (err) {
+          console.error("Compression error:", err);
+          setForm((f) => ({ ...f, image: originalFile }));
+        } finally {
+          setSubmitting(false);
+        }
       } else {
+        setForm((f) => ({ ...f, image: null }));
         setImagePreview(null);
       }
     } else {
@@ -294,9 +415,7 @@ const ReportUnclaimedBody = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const eObj = validate();
-    setErrors(eObj);
-    if (Object.keys(eObj).length > 0) return;
+    if (!validateStep(3)) return;
     setSubmitting(true);
     
     try {
@@ -338,11 +457,21 @@ const ReportUnclaimedBody = () => {
         }
       }
 
+      // Combine physical details into description for database compatibility
+      const descCombined = `Gender: ${form.gender || 'Unknown'}
+Approx Age: ${form.age || 'Not Specified'}
+Height: ${form.height || 'Not Specified'}
+Clothing: ${form.clothesColor || 'Not Specified'}
+Special Marks: ${form.identifyingMarks || 'None'}
+
+General Description:
+${form.description}`;
+
       const caseData = {
         case_id,
         location: form.location || 'Location Not Specified',
         date_of_sighting: form.dateTime ? new Date(form.dateTime).toISOString() : new Date().toISOString(),
-        description: form.description || 'No Description Provided',
+        description: descCombined,
         contact_info: form.contact,
         additional_info: form.message,
         photo_url,
@@ -371,7 +500,7 @@ const ReportUnclaimedBody = () => {
         const formData = new FormData();
         formData.append('location', form.location);
         formData.append('date_of_sighting', form.dateTime);
-        formData.append('description', form.description);
+        formData.append('description', descCombined);
         formData.append('contact_info', form.contact);
         formData.append('additional_info', form.message);
         if (photo_url) {
@@ -424,11 +553,11 @@ const ReportUnclaimedBody = () => {
       setSubmitted(true);
       setForm(initialForm);
       setImagePreview(null);
+      localStorage.removeItem('avyakta_report_draft');
+      setStep(1);
     } catch (err) {
       console.error('Failed to submit report workflow:', err);
-      // Suppress unhandled crash loops to guarantee fallback view rendering
       setSubmitted(true);
-      // Preserve generated citizen case identifier to ensure persistent rendering on success fallback layouts
       setReportId(prev => prev || generateReportId());
     } finally {
       setSubmitting(false);
@@ -527,109 +656,256 @@ const ReportUnclaimedBody = () => {
 
           {/* Form Section */}
           <div className="form-card p-5 sm:p-8">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="text-xl sm:text-2xl font-bold mb-2 pb-4 border-b border-gray-200" style={{ color: 'var(--navy)' }}>Report Details</div>
-              
-              {/* Location */}
-              <div className="space-y-1">
-                <label className="block text-sm sm:text-base font-semibold" style={{ color: 'var(--navy)' }}>📍 Location of body found *</label>
-                <input
-                  type="text"
-                  name="location"
-                  value={form.location}
-                  onChange={handleChange}
-                  style={inputStyle}
-                  placeholder="Enter location or use options below"
-                  required
+            {/* Step Wizard Header / Progress Bar */}
+            <div className="mb-8">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                  Step {step} of 3
+                </span>
+                <span className="text-sm font-semibold" style={{ color: 'var(--navy)' }}>
+                  {step === 1 && 'Basic Sighting Info'}
+                  {step === 2 && 'Physical Details'}
+                  {step === 3 && 'Media & Contact'}
+                </span>
+              </div>
+              <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden mb-4">
+                <div 
+                  className="h-full transition-all duration-300 rounded-full" 
+                  style={{ width: `${(step / 3) * 100}%`, backgroundColor: 'var(--teal)' }}
                 />
-                {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location}</p>}
-                <div className="flex gap-2 mt-2">
+              </div>
+              
+              {/* Stepper Bubbles */}
+              <div className="flex justify-between mt-4 relative px-2">
+                <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-slate-100 -translate-y-1/2 z-0" />
+                <div className="absolute top-1/2 left-0 h-0.5 -translate-y-1/2 z-0 transition-all duration-300" style={{ width: `${((step - 1) / 2) * 100}%`, backgroundColor: 'var(--teal)' }} />
+                {[1, 2, 3].map((num) => (
                   <button
+                    key={num}
                     type="button"
                     onClick={() => {
-                      if (navigator.geolocation) {
-                        navigator.geolocation.getCurrentPosition(
-                          (pos) => {
-                            setForm((f) => ({ ...f, location: `${pos.coords.latitude}, ${pos.coords.longitude}` }));
-                          },
-                          () => alert("Unable to retrieve location.")
-                        );
+                      if (num < step) {
+                        setStep(num);
+                      } else if (num > step) {
+                        let canGo = true;
+                        for (let s = step; s < num; s++) {
+                          if (!validateStep(s)) {
+                            canGo = false;
+                            break;
+                          }
+                        }
+                        if (canGo) setStep(num);
                       }
                     }}
-                    className="flex-1 py-2.5 px-4 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-xl text-xs font-bold transition-all border border-emerald-100 flex items-center justify-center gap-1.5 shadow-sm"
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold z-10 transition-all`}
+                    style={{
+                      backgroundColor: num <= step ? 'var(--teal)' : '#fff',
+                      color: num <= step ? '#fff' : '#94A3B8',
+                      border: num <= step ? 'none' : '2px solid #E2E8F0',
+                    }}
                   >
-                    📍 Use Current GPS
+                    {num < step ? '✓' : num}
                   </button>
+                ))}
+              </div>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              
+              {/* STEP 1: Basic Sighting Info */}
+              {step === 1 && (
+                <div className="space-y-6">
+                  <div className="text-xl font-bold pb-2 border-b border-gray-100" style={{ color: 'var(--navy)' }}>1. Sighting Location & Time</div>
+                  
+                  {/* Location */}
+                  <div className="space-y-1">
+                    <label className="block text-sm sm:text-base font-semibold" style={{ color: 'var(--navy)' }}>📍 Location of body found *</label>
+                    <input
+                      type="text"
+                      name="location"
+                      value={form.location}
+                      onChange={handleChange}
+                      style={inputStyle}
+                      placeholder="Enter location or use GPS / Map below"
+                      required
+                    />
+                    {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location}</p>}
+                    <div className="flex gap-2 mt-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (navigator.geolocation) {
+                            navigator.geolocation.getCurrentPosition(
+                              (pos) => {
+                                setForm((f) => ({ ...f, location: `${pos.coords.latitude}, ${pos.coords.longitude}` }));
+                              },
+                              () => alert("Unable to retrieve location.")
+                            );
+                          }
+                        }}
+                        className="flex-grow py-2.5 px-4 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-xl text-xs font-bold transition-all border border-emerald-100 flex items-center justify-center gap-1.5 shadow-sm"
+                      >
+                        📍 Use Current GPS
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIsMapOpen(true)}
+                        className="flex-grow py-2.5 px-4 bg-[#F0F7FF] hover:bg-blue-100 text-[#1B3A6B] rounded-xl text-xs font-bold transition-all border border-blue-100 flex items-center justify-center gap-1.5 shadow-sm"
+                      >
+                        🗺️ Pick on Map
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Date & Time */}
+                  <div className="space-y-1">
+                    <label className="block text-sm sm:text-base font-semibold" style={{ color: 'var(--navy)' }}>📅 Date & Time of sighting *</label>
+                    <input type="datetime-local" name="dateTime" value={form.dateTime} onChange={handleChange} style={inputStyle} required />
+                    {errors.dateTime && <p className="text-red-500 text-sm mt-1">{errors.dateTime}</p>}
+                  </div>
+                </div>
+              )}
+
+              {/* STEP 2: Physical Details */}
+              {step === 2 && (
+                <div className="space-y-6">
+                  <div className="text-xl font-bold pb-2 border-b border-gray-100" style={{ color: 'var(--navy)' }}>2. Physical Description</div>
+                  
+                  {/* Gender dropdown */}
+                  <div className="space-y-1">
+                    <label className="block text-sm sm:text-base font-semibold" style={{ color: 'var(--navy)' }}>🧍 Gender</label>
+                    <select name="gender" value={form.gender} onChange={handleChange} style={inputStyle}>
+                      <option value="Unknown">Unknown / Specify in description</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    {/* Age */}
+                    <div className="space-y-1">
+                      <label className="block text-sm sm:text-base font-semibold" style={{ color: 'var(--navy)' }}>⏳ Approx Age (Years)</label>
+                      <input type="text" name="age" value={form.age} onChange={handleChange} style={inputStyle} placeholder="e.g. 30-40" />
+                    </div>
+
+                    {/* Height */}
+                    <div className="space-y-1">
+                      <label className="block text-sm sm:text-base font-semibold" style={{ color: 'var(--navy)' }}>📏 Height (Approx)</label>
+                      <input type="text" name="height" value={form.height} onChange={handleChange} style={inputStyle} placeholder="e.g. 5ft 6in or 170cm" />
+                    </div>
+                  </div>
+
+                  {/* Clothes Color */}
+                  <div className="space-y-1">
+                    <label className="block text-sm sm:text-base font-semibold" style={{ color: 'var(--navy)' }}>👕 Clothing Color & Style</label>
+                    <input type="text" name="clothesColor" value={form.clothesColor} onChange={handleChange} style={inputStyle} placeholder="e.g. Red shirt, blue jeans" />
+                  </div>
+
+                  {/* Identifying marks */}
+                  <div className="space-y-1">
+                    <label className="block text-sm sm:text-base font-semibold" style={{ color: 'var(--navy)' }}>⚡ Tattoos / Scars / Special Marks</label>
+                    <input type="text" name="identifyingMarks" value={form.identifyingMarks} onChange={handleChange} style={inputStyle} placeholder="e.g. Tattoo on right wrist, scar on face" />
+                  </div>
+
+                  {/* General Description */}
+                  <div className="space-y-1">
+                    <label className="block text-sm sm:text-base font-semibold" style={{ color: 'var(--navy)' }}>📝 General Description of Deceased *</label>
+                    <textarea 
+                      name="description" 
+                      value={form.description} 
+                      onChange={handleChange} 
+                      style={{ ...inputStyle, minHeight: '100px' }} 
+                      placeholder="Please add any other visible physical features or key details that could help identify the body." 
+                      required 
+                    />
+                    {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
+                  </div>
+                </div>
+              )}
+
+              {/* STEP 3: Media & Contact */}
+              {step === 3 && (
+                <div className="space-y-6">
+                  <div className="text-xl font-bold pb-2 border-b border-gray-100" style={{ color: 'var(--navy)' }}>3. Photos & Contact Info</div>
+                  
+                  {/* Image Upload */}
+                  <div className="space-y-1">
+                    <label className="block text-sm sm:text-base font-semibold" style={{ color: 'var(--navy)' }}>📸 Upload Photo or ID Document (if any)</label>
+                    <input type="file" name="image" accept="image/jpeg,image/png" onChange={handleChange} style={{ ...inputStyle, padding: '0.5rem' }} />
+                    <p className="text-xs text-slate-400">Photos will automatically compress to upload quickly, even on slow connections.</p>
+                    {imagePreview && <img src={imagePreview} alt="Preview" className="mt-3 rounded-lg shadow-sm w-full max-w-[200px] h-auto object-cover" />}
+                    {errors.image && <p className="text-red-500 text-sm mt-1">{errors.image}</p>}
+                  </div>
+
+                  {/* Contact */}
+                  <div className="space-y-1">
+                    <label className="block text-sm sm:text-base font-semibold" style={{ color: 'var(--navy)' }}>📞 Your Contact Information *</label>
+                    <input type="text" name="contact" value={form.contact} onChange={handleChange} style={inputStyle} placeholder="Phone number or email address" required />
+                    {errors.contact && <p className="text-red-500 text-sm mt-1">{errors.contact}</p>}
+                  </div>
+
+                  {/* Message */}
+                  <div className="space-y-1">
+                    <label className="block text-sm sm:text-base font-semibold" style={{ color: 'var(--navy)' }}>📄 Any other details or message?</label>
+                    <textarea name="message" value={form.message} onChange={handleChange} style={{ ...inputStyle, minHeight: '80px' }} placeholder="Free form notes, circumstances, or anything else that might help (optional)" />
+                  </div>
+
+                  {/* Terms checkbox */}
+                  <div className="flex items-start gap-3 pt-4">
+                    <input type="checkbox" name="terms" checked={form.terms} onChange={handleChange} id="terms" required className="mt-1 w-5 h-5 rounded border-gray-300 text-teal-600 focus:ring-teal-500" />
+                    <label htmlFor="terms" className="text-sm sm:text-base leading-snug cursor-pointer" style={{ color: 'var(--text-dark)' }}>
+                      I confirm this report is genuine. I understand that submitting false reports delays justice for someone in need.
+                    </label>
+                  </div>
+                  {errors.terms && <p className="text-red-500 text-sm mt-1">{errors.terms}</p>}
+                </div>
+              )}
+
+              {/* Navigation buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 pt-4 border-t border-gray-100">
+                {step > 1 && (
                   <button
                     type="button"
-                    onClick={() => setIsMapOpen(true)}
-                    className="flex-1 py-2.5 px-4 bg-[#F0F7FF] hover:bg-blue-100 text-[#1B3A6B] rounded-xl text-xs font-bold transition-all border border-blue-100 flex items-center justify-center gap-1.5 shadow-sm"
+                    onClick={handleBack}
+                    className="flex-grow py-3 px-6 border-2 border-slate-200 text-slate-600 hover:bg-slate-50 font-bold rounded-xl text-base transition-all"
                   >
-                    🗺️ Pick on Map
+                    Back
                   </button>
-                </div>
+                )}
+                
+                {step < 3 ? (
+                  <button
+                    type="button"
+                    onClick={handleNext}
+                    className="flex-grow py-3 px-6 text-white font-bold rounded-xl text-base transition-all"
+                    style={{ backgroundColor: 'var(--teal)' }}
+                  >
+                    Next Step
+                  </button>
+                ) : (
+                  <div className="flex-grow flex flex-col gap-3">
+                    {/* Anonymity & Trust Reassurance message */}
+                    <div className="p-3 bg-emerald-50/50 rounded-xl border border-emerald-100/50 flex items-center justify-center gap-2">
+                      <span className="text-sm font-semibold" style={{ color: '#047857' }}>
+                        🔒 Your identity is 100% confidential. We never share reporter's details with anyone.
+                      </span>
+                    </div>
+
+                    <button 
+                      type="submit" 
+                      className="w-full py-3 px-6 text-white font-bold rounded-xl text-base transition-all btn-primary"
+                      disabled={submitting} 
+                      style={{ 
+                        opacity: submitting ? 0.7 : 1,
+                        backgroundColor: 'var(--teal)'
+                      }}
+                    >
+                      {submitting ? 'Submitting Report...' : 'Submit Report'}
+                    </button>
+                  </div>
+                )}
               </div>
-              
-              {/* Date & Time */}
-              <div className="space-y-1">
-                <label className="block text-sm sm:text-base font-semibold" style={{ color: 'var(--navy)' }}>📅 Date & Time of sighting *</label>
-                <input type="datetime-local" name="dateTime" value={form.dateTime} onChange={handleChange} style={inputStyle} required />
-                {errors.dateTime && <p className="text-red-500 text-sm mt-1">{errors.dateTime}</p>}
-              </div>
-              
-              {/* Image Upload */}
-              <div className="space-y-1">
-                <label className="block text-sm sm:text-base font-semibold" style={{ color: 'var(--navy)' }}>📸 Upload Photo (if any)</label>
-                <input type="file" name="image" accept="image/jpeg,image/png" onChange={handleChange} style={{ ...inputStyle, padding: '0.5rem' }} />
-                {imagePreview && <img src={imagePreview} alt="Preview" className="mt-3 rounded-lg shadow-sm w-full max-w-[200px] h-auto object-cover" />}
-                {errors.image && <p className="text-red-500 text-sm mt-1">{errors.image}</p>}
-              </div>
-              
-              {/* Description */}
-              <div className="space-y-1">
-                <label className="block text-sm sm:text-base font-semibold" style={{ color: 'var(--navy)' }}>🧍 Description of the deceased *</label>
-                <textarea name="description" value={form.description} onChange={handleChange} style={{ ...inputStyle, minHeight: '100px' }} placeholder="Please describe visible features, clothing, tattoos, approximate age, gender, etc." required />
-                {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
-              </div>
-              
-              {/* Contact */}
-              <div className="space-y-1">
-                <label className="block text-sm sm:text-base font-semibold" style={{ color: 'var(--navy)' }}>📞 Your Contact Information *</label>
-                <input type="text" name="contact" value={form.contact} onChange={handleChange} style={inputStyle} placeholder="Phone number or email address (required for follow-up)" required />
-                <p className="text-xs mt-1" style={{ color: 'var(--text-light)' }}>We will only contact you if authorities need more information about this report. Your identity is secure.</p>
-                {errors.contact && <p className="text-red-500 text-sm mt-1">{errors.contact}</p>}
-              </div>
-              
-              {/* Any other message */}
-              <div className="space-y-1">
-                <label className="block text-sm sm:text-base font-semibold" style={{ color: 'var(--navy)' }}>📄 Any additional information?</label>
-                <textarea name="message" value={form.message} onChange={handleChange} style={{ ...inputStyle, minHeight: '80px' }} placeholder="Free form notes, circumstances, or anything else that might help (optional)" />
-              </div>
-              
-              {/* Terms disclaimer */}
-              <div className="flex items-start gap-3 mt-8 pt-6 border-t border-gray-200">
-                <input type="checkbox" name="terms" checked={form.terms} onChange={handleChange} id="terms" required className="mt-1 w-5 h-5 rounded border-gray-300 text-teal-600 focus:ring-teal-500" />
-                <label htmlFor="terms" className="text-sm sm:text-base leading-snug cursor-pointer" style={{ color: 'var(--text-dark)' }}>
-                  I confirm this report is genuine. I understand that submitting false reports delays justice for someone in need. I submit this with honesty and compassion for the unknown.
-                </label>
-              </div>
-              {errors.terms && <p className="text-red-500 text-sm mt-1">{errors.terms}</p>}
-              
-              {/* Submit Button */}
-              <button 
-                type="submit" 
-                className="btn-primary w-full mt-6" 
-                disabled={submitting} 
-                style={{ 
-                  borderRadius: '12px', 
-                  padding: '1rem', 
-                  fontSize: '1.1rem', 
-                  opacity: submitting ? 0.7 : 1,
-                  background: 'var(--teal)'
-                }}
-              >
-                {submitting ? 'Submitting Report...' : 'Submit Report'}
-              </button>
             </form>
             <MapPickerModal
               isOpen={isMapOpen}
