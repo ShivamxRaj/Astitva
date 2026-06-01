@@ -22,6 +22,7 @@ import ReportUnclaimedBody from './components/ReportUnclaimedBody';
 import SearchMissingPerson from './pages/SearchMissingPerson';
 import ProtectedRoute from './components/ProtectedRoute';
 import ResetPassword from './components/ResetPassword';
+import SEOMetadata from './components/SEOMetadata';
 import './i18n';
 
 // API base URL (kept for future backend calls)
@@ -33,6 +34,13 @@ function App() {
   const [isServerDown, setIsServerDown] = useState(false);
 
   useEffect(() => {
+    // Check if the user agent is a search bot/crawler to bypass loading delay for SEO
+    const isBot = /bot|google|baidu|bing|msn|duckduckbot|teoma|slurp|yandex/i.test(navigator.userAgent);
+    if (isBot) {
+      setIsLoading(false);
+      return;
+    }
+
     // Simulate initial loading
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -145,6 +153,7 @@ function App() {
 
   return (
     <Router>
+      <SEOMetadata />
       <div className="min-h-screen flex flex-col">
         {isLoading && <SplashLoader />}
         {!isLoading && <Navbar />}

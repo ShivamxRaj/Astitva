@@ -42,4 +42,25 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
+  <!-- Testimonials Page -->
+  <url>
+    <loc>https://www.avaykta.app/testimonials</loc>
+    <lastmod>2026-05-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <!-- Guidelines Page -->
+  <url>
+    <loc>https://www.avaykta.app/guidelines</loc>
+    <lastmod>2026-05-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <!-- Cookie Policy Page -->
+  <url>
+    <loc>https://www.avaykta.app/cookies</loc>
+    <lastmod>2026-05-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
 </urlset>
