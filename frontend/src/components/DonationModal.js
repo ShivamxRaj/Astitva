@@ -523,50 +523,6 @@ const DonationModal = ({ isOpen, onClose }) => {
                     </button>
                   </div>
 
-                  {/* Razorpay Payment Option */}
-                  <div
-                    style={{
-                      border: '1.5px solid #E0D5C5',
-                      borderRadius: '10px',
-                      padding: '18px',
-                      background: 'white',
-                    }}
-                  >
-                    <div
-                      className="flex items-center gap-2 mb-1"
-                      style={{ fontWeight: 600, color: '#1B3A6B' }}
-                    >
-                      <span className="text-xl">💳</span>
-                      UPI / Netbanking / Wallets (Razorpay)
-                    </div>
-                    <div style={{ color: '#5A7184', fontSize: '0.8rem', marginBottom: '12px' }}>
-                      Indian local payments (UPI, GPay, PhonePe, Cards)
-                    </div>
-
-                    <button
-                      onClick={handleRazorpay}
-                      disabled={isProcessing}
-                      className="w-full transition-all"
-                      style={{
-                        background: isProcessing ? '#93AABF' : '#2E7D9C',
-                        color: 'white',
-                        borderRadius: '8px',
-                        padding: '12px',
-                        fontWeight: 700,
-                        border: 'none',
-                        cursor: isProcessing ? 'not-allowed' : 'pointer',
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isProcessing) e.currentTarget.style.background = '#1A5F78';
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isProcessing) e.currentTarget.style.background = '#2E7D9C';
-                      }}
-                    >
-                      {isProcessing ? 'Processing...' : `Pay ₹${amount} with Razorpay`}
-                    </button>
-                  </div>
-
                   <div
                     style={{
                       fontSize: '0.72rem',
