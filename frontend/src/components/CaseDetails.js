@@ -111,6 +111,14 @@ const CaseDetails = () => {
 
   const stepIndex = getStatusStepIndex(caseData.status);
 
+  const formatDateTime = (dateStr) => {
+    if (!dateStr) return 'Date Not Specified';
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return 'Date Not Specified';
+    return d.toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' }) + ' - ' + 
+           d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+  };
+
   return (
     <div className="min-h-screen pt-16 sm:pt-20 lg:pt-24 section-light pb-12">
       {/* Header Banner */}
@@ -185,13 +193,13 @@ const CaseDetails = () => {
                 <div>
                   <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1.5">Date & Time of Sighting</h3>
                   <p className="text-sm sm:text-base font-semibold text-slate-700">
-                    📅 {caseData.date_of_sighting ? new Date(caseData.date_of_sighting).toLocaleString() : 'Date Not Specified'}
+                    📅 {formatDateTime(caseData.date_of_sighting)}
                   </p>
                 </div>
                 <div>
                   <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1.5">Record Created At</h3>
                   <p className="text-sm sm:text-base font-semibold text-slate-700">
-                    ⏳ {caseData.created_at ? new Date(caseData.created_at).toLocaleString() : 'Date Not Specified'}
+                    ⏳ {formatDateTime(caseData.created_at)}
                   </p>
                 </div>
               </div>
@@ -227,10 +235,10 @@ const CaseDetails = () => {
                 </div>
                 
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <a href="tel:+916299446452" className="flex-1 py-3 bg-[#1B3A6B] hover:bg-[#152d52] text-white rounded-xl text-center text-sm font-bold transition-all shadow-sm">
-                    📞 Call Helpline (+91 62994 46452)
+                  <a href="tel:+916299446452" className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-[#1B3A6B] hover:bg-[#152d52] text-white rounded-xl text-center text-sm font-bold transition-all shadow-sm whitespace-nowrap">
+                    📞 Call +91 62994 46452
                   </a>
-                  <a href={`https://wa.me/916299446452?text=Inquiry%20regarding%20Case%20ID%20${caseData.case_id}`} target="_blank" rel="noopener noreferrer" className="flex-1 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-center text-sm font-bold transition-all shadow-sm">
+                  <a href={`https://wa.me/916299446452?text=Inquiry%20regarding%20Case%20ID%20${caseData.case_id}`} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-center text-sm font-bold transition-all shadow-sm whitespace-nowrap">
                     💬 WhatsApp Support
                   </a>
                 </div>
