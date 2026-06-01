@@ -862,13 +862,22 @@ ${form.description}`;
                 </div>
               )}
 
+              {/* Anonymity & Trust Reassurance message (Step 3 only) */}
+              {step === 3 && (
+                <div className="p-3 mb-4 bg-emerald-50/50 rounded-xl border border-emerald-100/50 flex items-center justify-center gap-2">
+                  <span className="text-sm font-semibold text-center" style={{ color: '#047857', lineHeight: '1.4' }}>
+                    🔒 Your identity is 100% confidential. We never share reporter's details with anyone.
+                  </span>
+                </div>
+              )}
+
               {/* Navigation buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 pt-4 border-t border-gray-100">
+              <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
                 {step > 1 && (
                   <button
                     type="button"
                     onClick={handleBack}
-                    className="flex-grow py-3 px-6 border-2 border-slate-200 text-slate-600 hover:bg-slate-50 font-bold rounded-xl text-base transition-all"
+                    className="w-1/3 py-3 px-4 sm:px-6 border-2 border-slate-200 text-slate-600 hover:bg-slate-50 font-bold rounded-xl text-sm sm:text-base transition-all"
                   >
                     Back
                   </button>
@@ -878,32 +887,23 @@ ${form.description}`;
                   <button
                     type="button"
                     onClick={handleNext}
-                    className="flex-grow py-3 px-6 text-white font-bold rounded-xl text-base transition-all"
+                    className="flex-grow py-3 px-4 sm:px-6 text-white font-bold rounded-xl text-sm sm:text-base transition-all"
                     style={{ backgroundColor: 'var(--teal)' }}
                   >
                     Next Step
                   </button>
                 ) : (
-                  <div className="flex-grow flex flex-col gap-3">
-                    {/* Anonymity & Trust Reassurance message */}
-                    <div className="p-3 bg-emerald-50/50 rounded-xl border border-emerald-100/50 flex items-center justify-center gap-2">
-                      <span className="text-sm font-semibold" style={{ color: '#047857' }}>
-                        🔒 Your identity is 100% confidential. We never share reporter's details with anyone.
-                      </span>
-                    </div>
-
-                    <button 
-                      type="submit" 
-                      className="w-full py-3 px-6 text-white font-bold rounded-xl text-base transition-all btn-primary"
-                      disabled={submitting} 
-                      style={{ 
-                        opacity: submitting ? 0.7 : 1,
-                        backgroundColor: 'var(--teal)'
-                      }}
-                    >
-                      {submitting ? 'Submitting Report...' : 'Submit Report'}
-                    </button>
-                  </div>
+                  <button 
+                    type="submit" 
+                    className="flex-grow py-3 px-4 sm:px-6 text-white font-bold rounded-xl text-sm sm:text-base transition-all btn-primary"
+                    disabled={submitting} 
+                    style={{ 
+                      opacity: submitting ? 0.7 : 1,
+                      backgroundColor: 'var(--teal)'
+                    }}
+                  >
+                    {submitting ? 'Submitting Report...' : 'Submit Report'}
+                  </button>
                 )}
               </div>
             </form>
