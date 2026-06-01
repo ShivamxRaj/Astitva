@@ -150,7 +150,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    background: linear-gradient(135deg, #C0392B, #962D22);
+    background: #B83227;
     color: #fff;
     font-weight: 700;
     font-size: 1rem;
@@ -159,14 +159,11 @@
     border: none;
     cursor: pointer;
     text-decoration: none;
-    transition: all 0.25s ease;
+    transition: background 0.2s ease;
     min-height: 44px;
-    box-shadow: 0 4px 14px rgba(192,57,43,0.3);
   }
   .btn-danger:hover {
-    background: linear-gradient(135deg, #962D22, #7A2219);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(192,57,43,0.45);
+    background: #962D22;
   }
 
   /* ── Form Card (institutional wrapper for forms) ── */
@@ -226,7 +223,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    background: linear-gradient(135deg, #2E7D9C, #1B5E7A);
+    background: #2E7D9C;
     color: #fff;
     font-weight: 700;
     font-size: 1rem;
@@ -235,14 +232,11 @@
     border: none;
     cursor: pointer;
     text-decoration: none;
-    transition: all 0.25s ease;
+    transition: background 0.2s ease;
     min-height: 44px;
-    box-shadow: 0 4px 14px rgba(46,125,156,0.3);
   }
   .btn-primary:hover {
-    background: linear-gradient(135deg, #1B5E7A, #144866);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(46,125,156,0.4);
+    background: #1B5E7A;
   }
 
   .btn-urgent {
@@ -250,7 +244,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    background: linear-gradient(135deg, #C0392B, #962D22);
+    background: #B83227;
     color: #fff;
     font-weight: 700;
     font-size: 1rem;
@@ -259,14 +253,11 @@
     border: none;
     cursor: pointer;
     text-decoration: none;
-    transition: all 0.25s ease;
+    transition: background 0.2s ease;
     min-height: 44px;
-    box-shadow: 0 4px 14px rgba(192,57,43,0.3);
   }
   .btn-urgent:hover {
-    background: linear-gradient(135deg, #962D22, #7A2219);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(192,57,43,0.45);
+    background: #962D22;
   }
 
   .btn-secondary {
@@ -283,13 +274,12 @@
     border: 2px solid var(--teal);
     cursor: pointer;
     text-decoration: none;
-    transition: all 0.25s ease;
+    transition: all 0.2s ease;
     min-height: 44px;
   }
   .btn-secondary:hover {
     background: var(--teal);
     color: #fff;
-    transform: translateY(-2px);
   }
 
   /* ── Quick Search Bar ── */

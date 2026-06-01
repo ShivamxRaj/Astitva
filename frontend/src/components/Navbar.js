@@ -236,7 +236,7 @@ const Navbar = () => {
                       onClick={() => setDonationOpen(true)}
                       className="font-bold text-white transition-all duration-200"
                       style={{
-                        background: 'linear-gradient(135deg, #D4870A, #E8991A)',
+                        background: '#2E7D9C',
                         borderRadius: '999px',
                         padding: '8px 18px',
                         fontSize: '0.85rem',
@@ -245,14 +245,10 @@ const Navbar = () => {
                         cursor: 'pointer',
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.background = 'linear-gradient(135deg, #B8720A, #D4870A)';
-                        e.currentTarget.style.boxShadow = '0 4px 16px rgba(212,135,10,0.4)';
-                        e.currentTarget.style.transform = 'translateY(-1px)';
+                        e.currentTarget.style.background = '#1B5E7A';
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.background = 'linear-gradient(135deg, #D4870A, #E8991A)';
-                        e.currentTarget.style.boxShadow = 'none';
-                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.background = '#2E7D9C';
                       }}
                       aria-label="Support Us"
                     >
@@ -293,7 +289,7 @@ const Navbar = () => {
                   as="button"
                   onClick={() => setDonationOpen(true)}
                   className="w-full text-left px-4 py-3 rounded-md text-base font-bold text-white"
-                  style={{ background: 'linear-gradient(135deg, #D4870A, #E8991A)' }}
+                  style={{ background: '#2E7D9C' }}
                 >
                   💛 Donate to Avyakta
                 </Disclosure.Button>

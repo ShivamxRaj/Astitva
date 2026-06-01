@@ -17,58 +17,7 @@ import {
 import Testimonials from './Testimonials';
 import CaseStatusTracker from './CaseStatusTracker';
 
-/* ── Cosmic Animation (hero-only, reduced to peaceful/gentle counts) ── */
-const CosmicAnimation = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none">
-    {/* Falling stars: 80 → 20 */}
-    {[...Array(20)].map((_, i) => (
-      <div key={`fs-${i}`} className="absolute animate-falling-star"
-        style={{ left: `${Math.random()*100}%`, animationDelay: `${Math.random()*15}s`, animationDuration: `${15+Math.random()*30}s`, animationIterationCount:'infinite' }}>
-        <div className="w-1 h-1 bg-gradient-to-r from-yellow-200 to-orange-300 rounded-full opacity-70 animate-twinkle"
-          style={{ animationDelay:`${Math.random()*3}s`, animationDuration:`${2.5+Math.random()*3}s` }} />
-      </div>
-    ))}
-    {/* Ascending souls: 25 → 8 */}
-    {[...Array(8)].map((_, i) => (
-      <div key={`as-${i}`} className="absolute animate-ascending-soul"
-        style={{ left:`${Math.random()*100}%`, bottom:'-20px', animationDelay:`${Math.random()*20}s`, animationDuration:`${38+Math.random()*52}s`, animationIterationCount:'infinite' }}>
-        <div className="relative">
-          <div className="w-3 h-3 bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-500 rounded-full opacity-70 animate-soul-glow"
-            style={{ animationDuration:`${4.5+Math.random()*6}s` }} />
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-gradient-to-r from-transparent via-cyan-200 to-transparent rounded-full opacity-30 animate-soul-trail" />
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-gradient-to-r from-transparent via-blue-300 to-transparent rounded-full opacity-15 animate-soul-outer-glow" />
-        </div>
-      </div>
-    ))}
-    {/* Shooting stars: 12 → 4 */}
-    {[...Array(4)].map((_, i) => (
-      <div key={`ss-${i}`} className="absolute animate-shooting-star"
-        style={{ top:`${Math.random()*60}%`, left:`${Math.random()*100}%`, animationDelay:`${Math.random()*25}s`, animationDuration:`${30+Math.random()*45}s`, animationIterationCount:'infinite' }}>
-        <div className="relative">
-          <div className="w-1 h-1 bg-white rounded-full opacity-80" />
-          <div className="w-32 h-0.5 bg-gradient-to-r from-transparent via-white to-transparent transform rotate-45 origin-right opacity-50" />
-        </div>
-      </div>
-    ))}
-    {/* Constellation dots: 40 → 15 */}
-    {[...Array(15)].map((_, i) => (
-      <div key={`c-${i}`} className="absolute animate-constellation"
-        style={{ top:`${Math.random()*100}%`, left:`${Math.random()*100}%`, animationDelay:`${Math.random()*10}s`, animationDuration:`${12+Math.random()*18}s`, animationIterationCount:'infinite' }}>
-        <div className="w-0.5 h-0.5 bg-blue-200 rounded-full opacity-50 animate-constellation-glow"
-          style={{ animationDuration:`${3+Math.random()*4.5}s` }} />
-      </div>
-    ))}
-    {/* Floating particles: 60 → 15 */}
-    {[...Array(15)].map((_, i) => (
-      <div key={`p-${i}`} className="absolute animate-floating-particle"
-        style={{ top:`${Math.random()*100}%`, left:`${Math.random()*100}%`, animationDelay:`${Math.random()*18}s`, animationDuration:`${22+Math.random()*38}s`, animationIterationCount:'infinite' }}>
-        <div className="w-0.5 h-0.5 bg-gradient-to-r from-white to-cyan-200 rounded-full opacity-40 animate-particle-glow"
-          style={{ animationDuration:`${3+Math.random()*6}s` }} />
-      </div>
-    ))}
-    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-radial from-transparent via-cyan-500/10 to-transparent rounded-full animate-universe-glow" />
-  </div>
-);
+// ── Calmer Institutional Theme ──
 
 const Home = () => {
   const { t } = useTranslation();
@@ -138,12 +87,12 @@ const Home = () => {
       {/* ══════════════════════════════════════════════════
           HERO — Cosmic dark (preserved), improved CTAs
       ══════════════════════════════════════════════════ */}
-      <section className="relative min-h-screen overflow-hidden flex flex-col justify-center" style={{ backgroundColor: 'rgb(16, 8, 50)' }}>
-        <CosmicAnimation />
-
-        {/* Radial gradient overlay — darkens edges, keeps centre readable */}
+      {/* ── Hero section: soft light blue-gray background with a calm, dignified institutional look ── */}
+      <section className="relative min-h-screen overflow-hidden flex flex-col justify-center" style={{ backgroundColor: '#F0F4F8', backgroundImage: 'radial-gradient(circle at 10% 20%, #F5F7FA 0%, #E4ECF5 100%)' }}>
+        
+        {/* Soft Dignified Overlay */}
         <div className="absolute inset-0 pointer-events-none" style={{
-          background: 'radial-gradient(ellipse 80% 60% at 50% 50%, rgba(16,8,50,0.0) 0%, rgba(16,8,50,0.4) 50%, rgba(16,8,50,0.85) 100%)'
+          background: 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%)'
         }} />
 
         <div className="relative z-10 container-responsive text-center py-16">
@@ -152,9 +101,9 @@ const Home = () => {
           <div className={`flex justify-center mb-6 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
             <span className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 text-[10px] sm:text-xs font-semibold text-center whitespace-normal sm:whitespace-nowrap max-w-[90vw]"
               style={{
-                background: 'rgba(255,255,255,0.08)',
-                color: '#A8C8FF',
-                border: '1px solid rgba(255,255,255,0.2)',
+                background: 'rgba(27,58,107,0.06)',
+                color: '#1B3A6B',
+                border: '1px solid rgba(27,58,107,0.15)',
                 borderRadius: '999px',
                 backdropFilter: 'blur(8px)',
               }}>
@@ -164,16 +113,16 @@ const Home = () => {
 
           {/* Main Heading */}
           <h1 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-merriweather font-bold mb-4 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-            style={{ backgroundImage:'linear-gradient(91deg, #fff, #7e55ff)', backgroundClip:'text', WebkitBackgroundClip:'text', color:'transparent' }}>
+            style={{ color: '#1B3A6B' }}>
             {t('home.hero.title')}
           </h1>
 
           <p className={`text-lg sm:text-xl lg:text-2xl max-w-3xl mx-auto mb-3 transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-            style={{ color:'#E2E8F0' }}>
+            style={{ color:'#2D3748' }}>
             {t('home.hero.description')}
           </p>
           <p className={`text-sm sm:text-base max-w-2xl mx-auto mb-10 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-            style={{ color:'#8BAFD4', marginTop:'8px' }}>
+            style={{ color:'#4A5568', marginTop:'8px' }}>
             Connecting families with unclaimed bodies since 2020 · Punjab, India
           </p>
 
@@ -189,15 +138,15 @@ const Home = () => {
 
         {/* Scroll indicator — mouse icon with gentle bounce */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce z-10" aria-hidden="true">
-          <div className="w-6 h-10 rounded-full border-2 flex justify-center pt-2" style={{ borderColor:'rgba(255,255,255,0.4)' }}>
-            <div className="w-1 h-3 rounded-full animate-pulse" style={{ background:'rgba(255,255,255,0.4)' }} />
+          <div className="w-6 h-10 rounded-full border-2 flex justify-center pt-2" style={{ borderColor:'rgba(27,58,107,0.3)' }}>
+            <div className="w-1 h-3 rounded-full animate-pulse" style={{ background:'rgba(27,58,107,0.3)' }} />
           </div>
         </div>
 
         {/* Bottom fade — hero bleeds smoothly into next section */}
         <div className="absolute bottom-0 left-0 right-0 pointer-events-none" style={{
           height: '120px',
-          background: 'linear-gradient(to bottom, transparent, rgb(16,8,50))'
+          background: 'linear-gradient(to bottom, transparent, var(--off-white))'
         }} />
       </section>
 
@@ -268,7 +217,7 @@ const Home = () => {
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {stats.map((stat, i) => (
-              <div key={i} className="p-5 sm:p-6 text-center rounded-xl border border-white/15 hover:scale-105 transition-all duration-300"
+              <div key={i} className="p-5 sm:p-6 text-center rounded-xl border border-white/15"
                 style={{ background:'rgba(255,255,255,0.08)', backdropFilter:'blur(10px)' }}>
                 <stat.icon className="w-8 h-8 mx-auto mb-3" style={{ color:'#63B3ED' }} aria-hidden="true" />
                 <h3 className="text-2xl sm:text-3xl font-bold mb-1 text-white">{stat.number}</h3>
