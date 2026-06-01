@@ -135,34 +135,9 @@ const About = () => {
 
   const teamData = [
     {
-      name: 'Dr. Rajesh Kumar',
-      role: 'Founder & CEO',
-      bio: '20+ years of experience in humanitarian work and technology innovation. Former medical officer who witnessed the plight of unclaimed bodies firsthand.',
-    },
-    {
-      name: 'Priya Sharma',
-      role: 'Head of Operations',
-      bio: 'Expert in NGO management and community development. Passionate about creating systemic change through technology.',
-    },
-    {
-      name: 'Amit Patel',
-      role: 'Technical Lead',
-      bio: 'Passionate about using technology for social impact. Leads the development of our AI-powered identification system.',
-    },
-    {
-      name: 'Dr. Meera Singh',
-      role: 'Medical Director',
-      bio: 'Forensic expert who ensures medical accuracy in our identification processes. Works closely with police and hospitals.',
-    },
-    {
-      name: 'Kavita Reddy',
-      role: 'Community Outreach',
-      bio: 'Builds partnerships with communities, NGOs, and government agencies. Ensures our platform reaches those who need it most.',
-    },
-    {
-      name: 'Rahul Gupta',
-      role: 'Data Analyst',
-      bio: 'Analyzes patterns and trends to improve our identification algorithms. Creates reports that help policymakers understand the crisis.',
+      name: 'Shivam Raj',
+      role: 'Founder & Lead Developer',
+      bio: 'Driven by empathy and technology, Shivam Raj built Avyakta to bridge the gap between missing persons and unidentified sightings, bringing closure and dignity to families across India.',
     }
   ];
 
@@ -369,9 +344,9 @@ const About = () => {
               Meet the dedicated individuals working tirelessly to make a difference and bring dignity to the unclaimed.
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="flex justify-center w-full">
             {teamData.map((member, index) => (
-              <div key={index} className="inst-card overflow-hidden" style={{ padding: 0 }}>
+              <div key={index} className="inst-card overflow-hidden max-w-md w-full" style={{ padding: 0 }}>
                 <div className="h-32 sm:h-40 w-full flex items-center justify-center" style={{ background: 'var(--navy)' }}>
                   <span className="text-white text-4xl font-bold">
                     {member.name.charAt(0)}
