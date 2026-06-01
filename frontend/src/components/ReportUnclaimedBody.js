@@ -844,12 +844,6 @@ ${form.description}`;
                     {errors.contact && <p className="text-red-500 text-sm mt-1">{errors.contact}</p>}
                   </div>
 
-                  {/* Message */}
-                  <div className="space-y-1">
-                    <label className="block text-sm sm:text-base font-semibold" style={{ color: 'var(--navy)' }}>📄 Any other details or message?</label>
-                    <textarea name="message" value={form.message} onChange={handleChange} style={{ ...inputStyle, minHeight: '80px' }} placeholder="Free form notes, circumstances, or anything else that might help (optional)" />
-                  </div>
-
                   {/* Terms checkbox */}
                   <div className="flex items-start gap-3 pt-4">
                     <input type="checkbox" name="terms" checked={form.terms} onChange={handleChange} id="terms" required className="mt-1 w-5 h-5 rounded border-gray-300 text-teal-600 focus:ring-teal-500" />
