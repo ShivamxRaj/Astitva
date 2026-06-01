@@ -62,7 +62,7 @@ const SearchMissingPerson = () => {
 
     const apiUrl = window.location.hostname === 'localhost'
       ? 'http://localhost:5001'
-      : (process.env.REACT_APP_API_URL || 'https://avyakta-backend.onrender.com');
+      : (process.env.REACT_APP_API_URL || 'https://astitva-17kt.onrender.com');
 
     // 1. Try backend API first (Secure, offloads key usage from browser)
     try {

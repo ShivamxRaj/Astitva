@@ -495,7 +495,7 @@ ${form.description}`;
         console.warn('Admin insert blocked, seamlessly falling back to local backend server API...', dbError);
         const apiUrl = window.location.hostname === 'localhost'
           ? 'http://localhost:5001'
-          : (process.env.REACT_APP_API_URL || 'https://avyakta-backend.onrender.com');
+          : (process.env.REACT_APP_API_URL || 'https://astitva-17kt.onrender.com');
         const formData = new FormData();
         formData.append('location', form.location);
         formData.append('date_of_sighting', form.dateTime);

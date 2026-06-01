@@ -64,7 +64,7 @@ const DonationModal = ({ isOpen, onClose }) => {
     try {
       // 1. Create order on the backend
       // Hardcoded production URL to ensure it works regardless of environment variables
-      const apiUrl = 'https://avyakta-backend.onrender.com';
+      const apiUrl = process.env.REACT_APP_API_URL || 'https://astitva-17kt.onrender.com';
       const result = await fetch(apiUrl + '/api/payment/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -96,7 +96,7 @@ const DonationModal = ({ isOpen, onClose }) => {
           try {
             // 3. Verify Payment
             // Hardcoded production URL for verification
-            const verifyUrl = 'https://avyakta-backend.onrender.com/api/payment/verify';
+            const verifyUrl = `${process.env.REACT_APP_API_URL || 'https://astitva-17kt.onrender.com'}/api/payment/verify`;
             const verifyData = {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
@@ -149,7 +149,7 @@ const DonationModal = ({ isOpen, onClose }) => {
     setIsProcessing(true);
 
     try {
-      const apiUrl = 'https://avyakta-backend.onrender.com';
+      const apiUrl = process.env.REACT_APP_API_URL || 'https://astitva-17kt.onrender.com';
       const fallbackUrl = window.location.hostname === 'localhost' ? 'http://localhost:5001' : apiUrl;
       
       const response = await fetch(`${fallbackUrl}/api/payment/create-stripe-session`, {
