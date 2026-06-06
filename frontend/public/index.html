@@ -25,6 +25,7 @@
     <meta name="robots" content="index, follow" />
 
     <!-- Favicon & Icons -->
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <link rel="icon" type="image/svg+xml" href="%PUBLIC_URL%/logo.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/images/logo.png" />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/images/logo.png" />
@@ -55,8 +56,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-    <!-- Google Fonts (with display=swap to prevent render-blocking) -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <!-- Google Fonts (non-render-blocking with preload) -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     <noscript>
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     </noscript>
