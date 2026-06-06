@@ -2,21 +2,100 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
+    <meta name="theme-color" content="#1B3A6B" />
+
+    <!-- Google Analytics (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3G0J7SYC0E"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-3G0J7SYC0E');
+    </script>
+
+    <!-- Primary SEO Meta Tags -->
+    <title>Avyakta - Unidentified Deceased & Missing Persons Portal</title>
     <meta
       name="description"
-      content="Avyakta Portal - Connecting families with unclaimed and unidentified deceased persons since 2020. Report a case anonymously or search the missing person database."
+      content="Avyakta Portal - India's humanitarian platform connecting families with unclaimed and unidentified deceased persons since 2020. Report unclaimed bodies, search missing persons, and support dignified identification with officer coordination."
     />
-    <meta name="keywords" content="avyakta, missing persons database, report unclaimed body, report unidentified body, NGO India, Punjab, find lost family member" />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <meta name="keywords" content="avyakta, missing persons India, unclaimed body report, unidentified deceased, NGO Punjab, humanitarian portal, officer coordination, dignity identification, family support" />
+    <meta name="author" content="Avyakta Foundation" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Favicon & Icons -->
+    <link rel="icon" type="image/svg+xml" href="%PUBLIC_URL%/logo.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/images/logo.png" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/images/logo.png" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.avaykta.app/" />
+    <meta property="og:title" content="Avyakta - Unidentified Deceased & Missing Persons Portal" />
+    <meta property="og:description" content="India's humanitarian platform connecting families with unclaimed and unidentified deceased persons since 2020. Report unclaimed bodies, search missing persons, and support dignified identification." />
+    <meta property="og:image" content="https://www.avaykta.app/images/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Avyakta - Unidentified Deceased & Missing Persons Portal" />
+    <meta property="og:site_name" content="Avyakta" />
+    <meta property="og:locale" content="en_IN" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Avyakta - Unidentified Deceased & Missing Persons Portal" />
+    <meta name="twitter:description" content="India's humanitarian platform connecting families with unclaimed and unidentified deceased persons since 2020. Report a case anonymously or search the missing person database." />
+    <meta name="twitter:image" content="https://www.avaykta.app/images/og-image.png" />
+    <meta name="twitter:image:alt" content="Avyakta - Unidentified Deceased & Missing Persons Portal" />
+
+    <!-- Manifest & PWA -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <title>Avyakta - Unidentified Deceased & Missing Persons Portal</title>
+
+    <!-- Preconnect for Performance (render-blocking optimization) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Google Fonts (with display=swap to prevent render-blocking) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    </noscript>
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Avyakta",
+      "url": "https://www.avaykta.app",
+      "logo": "https://www.avaykta.app/images/logo.png",
+      "description": "Avyakta is India's humanitarian portal for reporting, tracking, and resolving unclaimed and unidentified deceased cases, connecting families and officers for dignified identification.",
+      "foundingDate": "2020",
+      "areaServed": "India",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer support",
+        "url": "https://www.avaykta.app/contact"
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Avyakta",
+      "url": "https://www.avaykta.app",
+      "description": "India's humanitarian platform connecting families with unclaimed and unidentified deceased persons since 2020.",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://www.avaykta.app/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
   </body>
-</html> 
+</html>

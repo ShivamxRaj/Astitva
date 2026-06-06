@@ -24,6 +24,7 @@ import CaseDetails from './components/CaseDetails';
 import ProtectedRoute from './components/ProtectedRoute';
 import ResetPassword from './components/ResetPassword';
 import SEOMetadata from './components/SEOMetadata';
+import NotFound from './pages/NotFound';
 import './i18n';
 
 // API base URL (kept for future backend calls)
@@ -176,6 +177,7 @@ function App() {
             <Route exact path="/report" element={<ReportUnclaimedBody />} />
             <Route exact path="/search" element={<SearchMissingPerson />} />
             <Route exact path="/case/:caseId" element={<CaseDetails />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
         <Footer />
