@@ -26,7 +26,7 @@ const supabase = createClient(
 
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "AIzaSyAw7bUUfo4EWW-gDOFJ3DYr6TqDiwGqbXQ");
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
 // Multer setup for memory storage
 const upload = multer({ storage: multer.memoryStorage() });
@@ -211,12 +211,14 @@ router.patch('/update-status/:id', async (req, res) => {
 router.post('/search', upload.single('photo'), async (req, res) => {
   try {
     const { name, gender, age, location, date, marks, description } = req.body;
+    console.log('[Search API] Received request with payload:', { name, gender, age, location, date, marks, description });
 
     const { data: allCases, error: fetchError } = await supabase
       .from('orphan_cases')
       .select('*');
 
     if (fetchError) throw fetchError;
+    console.log(`[Search API] Fetched ${allCases.length} cases from Supabase.`);
 
     // Biometric facial matching using Azure Face API
     const biometricScores = {};
@@ -257,8 +259,12 @@ router.post('/search', upload.single('photo'), async (req, res) => {
     // Inject biometric match scores into the database cases sent to Gemini
     const enrichedCases = allCases.map(c => {
       const bioConfidence = biometricScores[c.case_id];
+      const cleanCase = { ...c };
+      if (cleanCase.photo_url && cleanCase.photo_url.startsWith('data:')) {
+        cleanCase.photo_url = '[Base64 Image Data - Removed for Prompt Efficiency]';
+      }
       return {
-        ...c,
+        ...cleanCase,
         biometricMatchConfidence: bioConfidence || null
       };
     });
@@ -305,12 +311,14 @@ CRITICAL INSTRUCTIONS FOR AI FACE MATCHING:
           mimeType: req.file.mimetype
         }
       };
-      contents = [{ text: prompt }, imagePart];
+      contents = [prompt, imagePart];
     } else {
-      contents = [{ text: prompt }];
+      contents = prompt;
     }
 
+    console.log('[Search API] Calling Gemini generateContent...');
     const result = await model.generateContent(contents);
+    console.log('[Search API] Gemini generateContent responded successfully.');
     const responseText = result.response.text();
     
     // Clean JSON response (remove markdown if any and isolate array)
