@@ -52,5 +52,6 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
+  // Restarted for Translator and Face API configuration
   console.log(`Server is running on port ${PORT}`);
 }); 

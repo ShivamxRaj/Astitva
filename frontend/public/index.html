@@ -93,7 +93,39 @@
         "query-input": "required name=search_term_string"
       }
     }
+    <script>
+      // Automatically clean up stale service workers & caches during local development (localhost)
+      if ('serviceWorker' in navigator && window.location.hostname === 'localhost') {
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+          let hasServiceWorker = false;
+          for (let reg of registrations) {
+            reg.unregister();
+            hasServiceWorker = true;
+          }
+          if (hasServiceWorker) {
+            console.log('[Service Worker] Unregistered stale service worker on localhost');
+            if (window.caches) {
+              caches.keys().then(keys => {
+                Promise.all(keys.map(key => caches.delete(key))).then(() => {
+                  window.location.reload(true);
+                });
+              });
+            } else {
+              window.location.reload(true);
+            }
+          }
+        });
+      }
     </script>
+    <style>
+      #root {
+        background-color: #1B3A6B;
+        min-height: 100vh;
+      }
+      #root > header, #root > main, #root > footer {
+        display: none;
+      }
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

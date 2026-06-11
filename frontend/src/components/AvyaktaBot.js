@@ -88,7 +88,29 @@ function formatTime(date) {
   return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const getApiBaseUrl = () => {
+  const envUrl = process.env.REACT_APP_API_URL;
+  let baseUrl = '';
+
+  if (window.location.hostname === 'localhost') {
+    baseUrl = 'http://localhost:5001';
+  } else if (envUrl) {
+    baseUrl = envUrl;
+  } else {
+    baseUrl = 'https://astitva-17kt.onrender.com';
+  }
+
+  // Ensure it has the /api suffix
+  if (!baseUrl.endsWith('/api')) {
+    baseUrl = `${baseUrl}/api`;
+  }
+  return baseUrl;
+};
+
+const API_BASE_URL = getApiBaseUrl();
+
+// Generate a unique session ID for this page load session (resets on refresh)
+const SESSION_ID = 'session_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 
 /* ═══════════════════════════════════════
    AvyaktaBot Component
@@ -108,10 +130,14 @@ const AvyaktaBot = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  const getSessionId = () => {
+    return SESSION_ID;
+  };
+
   /* Fetch current conversation from MongoDB or set default greeting */
   useEffect(() => {
     if (isOpen) {
-      fetch(`${API_BASE_URL}/chat/conversation`)
+      fetch(`${API_BASE_URL}/chat/conversation?sessionId=${getSessionId()}`)
         .then((res) => {
           if (!res.ok) throw new Error('API request failed');
           return res.json();
@@ -165,7 +191,7 @@ const AvyaktaBot = () => {
   /* Clear conversation on backend and local state */
   const clearConversation = async () => {
     try {
-      await fetch(`${API_BASE_URL}/chat/conversation`, { method: 'DELETE' });
+      await fetch(`${API_BASE_URL}/chat/conversation?sessionId=${getSessionId()}`, { method: 'DELETE' });
     } catch (err) {
       console.warn('Failed to clear conversation on backend:', err);
     }
@@ -174,27 +200,47 @@ const AvyaktaBot = () => {
     ]);
   };
 
-  /* Send user message + get bot reply, saving both to MongoDB */
-  const sendMessage = async (text) => {
-    if (!text.trim()) return;
-    const userMsg = { from: 'user', text: text.trim(), time: new Date() };
-    const response = matchIntent(text);
-    const botMsg = { from: 'bot', text: response.text, chips: response.chips, time: new Date() };
-
-    const newMessages = [...messages, userMsg, botMsg];
-    setMessages(newMessages);
-    setInput('');
-
-    // Save to MongoDB
+  // Translate helper using backend endpoint
+  const translateText = async (textOrArray, toLanguage) => {
     try {
-      const formattedMessages = newMessages.map((msg, idx) => ({
+      const res = await fetch(`${API_BASE_URL}/chat/translate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text: textOrArray,
+          to: toLanguage
+        })
+      });
+      if (!res.ok) throw new Error('API failed');
+      const data = await res.json();
+      if (data.success) {
+        return {
+          translations: data.translations.map(t => t.text),
+          detectedLanguage: data.detectedLanguage,
+          isFallback: data.isFallback
+        };
+      }
+    } catch (e) {
+      console.error('Translation error:', e);
+    }
+    return {
+      translations: Array.isArray(textOrArray) ? textOrArray : [textOrArray],
+      detectedLanguage: 'en',
+      isFallback: true
+    };
+  };
+
+  // Helper to save conversation to DB
+  const saveConversationToDB = async (allMessages) => {
+    try {
+      const formattedMessages = allMessages.map((msg, idx) => ({
         id: idx,
         text: msg.text,
         sender: msg.from,
         timestamp: msg.time,
       }));
 
-      const userInteractions = newMessages.filter(m => m.from === 'user').length;
+      const userInteractions = allMessages.filter(m => m.from === 'user').length;
 
       await fetch(`${API_BASE_URL}/chat/conversation`, {
         method: 'POST',
@@ -202,17 +248,79 @@ const AvyaktaBot = () => {
         body: JSON.stringify({
           messages: formattedMessages,
           conversationCount: userInteractions,
+          sessionId: getSessionId()
         }),
       });
 
-      // Auto-cleanup after 4 user interactions
       if (userInteractions >= 4) {
         setTimeout(async () => {
           await clearConversation();
-        }, 15000); // 15 seconds delay before auto-cleanup to let the user finish reading the reply
+        }, 15000);
       }
     } catch (err) {
       console.warn('Failed to persist message to backend database:', err);
+    }
+  };
+
+  /* Send user message + get bot reply, saving both to MongoDB */
+  const sendMessage = async (text) => {
+    if (!text.trim()) return;
+
+    // Show user message instantly
+    const userMsg = { from: 'user', text: text.trim(), time: new Date() };
+    setMessages(prev => [...prev, userMsg]);
+    setInput('');
+
+    // Add typing indicator
+    const typingMsg = { from: 'bot', text: '...', isTyping: true, time: new Date() };
+    setMessages(prev => [...prev, typingMsg]);
+
+    try {
+      // 1. Translate user message to English
+      const userTranslationResult = await translateText(text.trim(), 'en');
+      const englishInput = userTranslationResult.translations[0];
+      const detectedLang = userTranslationResult.detectedLanguage;
+
+      // 2. Match intent in English
+      const matchedResponse = matchIntent(englishInput);
+      
+      let finalBotText = matchedResponse.text;
+      let finalChips = matchedResponse.chips;
+
+      // 3. If user's language is not English, translate bot's response back
+      if (detectedLang && detectedLang !== 'en' && !userTranslationResult.isFallback) {
+        const textsToTranslate = [matchedResponse.text, ...(matchedResponse.chips || [])];
+        const botTranslationResult = await translateText(textsToTranslate, detectedLang);
+        
+        if (botTranslationResult && !botTranslationResult.isFallback) {
+          finalBotText = botTranslationResult.translations[0];
+          if (matchedResponse.chips && matchedResponse.chips.length > 0) {
+            finalChips = botTranslationResult.translations.slice(1);
+          }
+        }
+      }
+
+      const botMsg = { from: 'bot', text: finalBotText, chips: finalChips, time: new Date() };
+
+      // Replace typing indicator with actual bot response
+      setMessages(prev => {
+        const filtered = prev.filter(m => !m.isTyping);
+        const updated = [...filtered, botMsg];
+        saveConversationToDB(updated);
+        return updated;
+      });
+
+    } catch (err) {
+      console.error('Error in chatbot workflow:', err);
+      // Fallback
+      const matchedResponse = matchIntent(text);
+      const botMsg = { from: 'bot', text: matchedResponse.text, chips: matchedResponse.chips, time: new Date() };
+      setMessages(prev => {
+        const filtered = prev.filter(m => !m.isTyping);
+        const updated = [...filtered, botMsg];
+        saveConversationToDB(updated);
+        return updated;
+      });
     }
   };
 
@@ -408,7 +516,15 @@ const AvyaktaBot = () => {
                             }),
                       }}
                     >
-                      {msg.text}
+                      {msg.isTyping ? (
+                        <div className="flex items-center gap-1 py-1">
+                          <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                          <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                          <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                        </div>
+                      ) : (
+                        msg.text
+                      )}
                     </div>
                   </div>
                   {/* Timestamp */}

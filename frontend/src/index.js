@@ -11,11 +11,28 @@ root.render(
   </React.StrictMode>
 );
 
-// Register service worker for offline support
+// Register service worker for offline support (disabled on localhost to prevent caching issues)
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js')
-      .then(reg => console.log('ServiceWorker registered: ', reg))
-      .catch(err => console.error('ServiceWorker registration failed: ', err));
-  });
+  if (window.location.hostname === 'localhost') {
+    navigator.serviceWorker.getRegistrations().then(registrations => {
+      for (let registration of registrations) {
+        registration.unregister().then(() => {
+          console.log('[Service Worker] Unregistered on localhost');
+        });
+      }
+    });
+    if (window.caches) {
+      caches.keys().then(names => {
+        for (let name of names) {
+          caches.delete(name);
+        }
+      });
+    }
+  } else {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(reg => console.log('ServiceWorker registered: ', reg))
+        .catch(err => console.error('ServiceWorker registration failed: ', err));
+    });
+  }
 } 
