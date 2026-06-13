@@ -426,6 +426,7 @@ const Testimonials = () => {
               e.currentTarget.style.background = "transparent";
               e.currentTarget.style.borderColor = "rgba(46,125,156,0.5)";
             }}
+            title="View recent user feedback and ratings"
           >
             💬 {showRecentFeedback ? "Hide Recent Feedback" : "View Recent Feedback"}
           </button>

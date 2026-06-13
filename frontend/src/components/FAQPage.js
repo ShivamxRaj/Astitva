@@ -259,10 +259,10 @@ const FAQPage = () => {
           <h3 className="text-2xl font-bold mb-3" style={{ color: 'var(--navy)' }}>Still need help?</h3>
           <p className="mb-6" style={{ color: 'var(--text-mid)' }}>Our support team is here to help you. Get in touch with us for personalized assistance.</p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <button onClick={() => window.dispatchEvent(new Event('open-chat'))} className="btn-primary">
+            <button onClick={() => window.dispatchEvent(new Event('open-chat'))} className="btn-primary" title="Open live chat with Avyakta support assistant">
               <ChatBubbleLeftRightIcon className="w-5 h-5 mr-2" /> Chat with us
             </button>
-            <a href="/contact" className="btn-secondary">
+            <a href="/contact" className="btn-secondary" title="Contact Avyakta support team via email or phone">
               <PhoneIcon className="w-5 h-5 mr-2" /> Contact Support
             </a>
           </div>

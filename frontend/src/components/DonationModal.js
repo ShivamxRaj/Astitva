@@ -639,6 +639,7 @@ const DonationModal = ({ isOpen, onClose }) => {
                       }}
                       onMouseEnter={(e) => (e.currentTarget.style.background = '#EBE3D5')}
                       onMouseLeave={(e) => (e.currentTarget.style.background = '#F5F0E8')}
+                      title="Copy Avyakta website link to clipboard"
                     >
                       Copy Link
                     </button>

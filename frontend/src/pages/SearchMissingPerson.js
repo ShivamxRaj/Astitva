@@ -511,7 +511,7 @@ Return ONLY a valid JSON array of matched cases with two extra fields added to e
                     <div className="flex-1">
                       <div className="flex flex-wrap justify-between items-start gap-2">
                         <div className="flex flex-wrap items-center gap-2">
-                          <Link to={`/case/${match.case_id.replace('#', '')}`} className="font-bold text-lg hover:underline" style={{ color: 'var(--navy)' }}>
+                          <Link to={`/case/${match.case_id.replace('#', '')}`} className="font-bold text-lg hover:underline" style={{ color: 'var(--navy)' }} title={`View case details for ${match.case_id}`}>
                             📍 {match.location}
                           </Link>
                           {(match.status === 'identified' || match.status === 'investigating' || match.status === 'approved') && (
@@ -563,7 +563,7 @@ Return ONLY a valid JSON array of matched cases with two extra fields added to e
                       <span className="block text-xs font-bold uppercase" style={{ color: 'var(--text-light)' }}>Report ID</span>
                       <span className="font-mono" style={{ color: 'var(--text-dark)' }}>{trackResult.case_id}</span>
                     </div>
-                    <Link to={`/case/${trackResult.case_id.replace('#', '')}`} className="text-xs py-1.5 px-3 bg-[#F0F7FF] hover:bg-blue-100 text-[#1B3A6B] font-bold rounded-xl transition-all border border-blue-100">
+                    <Link to={`/case/${trackResult.case_id.replace('#', '')}`} className="text-xs py-1.5 px-3 bg-[#F0F7FF] hover:bg-blue-100 text-[#1B3A6B] font-bold rounded-xl transition-all border border-blue-100" title="View full case details page">
                       🔗 View Dedicated Page
                     </Link>
                   </div>

@@ -425,10 +425,10 @@ const About = () => {
               Together, we can bring dignity to the forgotten and make a lasting impact in our communities.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/how-it-works" className="btn-primary" style={{ background: '#fff', color: 'var(--navy)', border: '1px solid #fff' }}>
+              <Link to="/how-it-works" className="btn-primary" style={{ background: '#fff', color: 'var(--navy)', border: '1px solid #fff' }} title="Learn how Avyakta works to identify unclaimed bodies">
                 Know How it Works
               </Link>
-              <Link to="/contact" className="btn-secondary" style={{ color: '#fff', borderColor: '#fff' }}>
+              <Link to="/contact" className="btn-secondary" style={{ color: '#fff', borderColor: '#fff' }} title="Contact Avyakta support team">
                 Contact Us
               </Link>
             </div>

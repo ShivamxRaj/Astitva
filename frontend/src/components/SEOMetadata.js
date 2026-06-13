@@ -104,35 +104,101 @@ const SEOMetadata = () => {
         title = "Report a Case - Avyakta Portal | Report Unclaimed Body";
         description = "Report details about an unclaimed or unidentified deceased person. Submit anonymously to help officers identify bodies and support families seeking closure and dignity.";
         keywords = "report unclaimed body, report unidentified deceased, anonymous report, avyakta report, officer assistance";
+        structuredData = [{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "Report an Unclaimed Body",
+          "url": canonicalUrl,
+          "description": description,
+          "isPartOf": { "@type": "WebSite", "name": "Avyakta", "url": SITE_URL },
+          "potentialAction": {
+            "@type": "ReportAction",
+            "name": "Report Unclaimed Body",
+            "target": canonicalUrl
+          }
+        }];
         break;
       case '/search':
         title = "Search Missing Persons - Avyakta Portal | Find Lost Family";
         description = "Search the Avyakta database of missing persons and unidentified deceased cases. Help find lost family members with officer-coordinated support for dignified identification.";
-        keywords = "search missing persons, find lost family, unidentified bodies database, avyakta search, officer coordination";
+        keywords = "search missing persons, find lost family, unidentified bodies database, avyakta search, officer coordination, missing person FIR online India, missing person helpline number India";
+        structuredData = [{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "Search Missing Persons Database",
+          "url": canonicalUrl,
+          "description": description,
+          "isPartOf": { "@type": "WebSite", "name": "Avyakta", "url": SITE_URL },
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": `${canonicalUrl}?q={search_term_string}`,
+            "query-input": "required name=search_term_string"
+          }
+        }];
         break;
       case '/testimonials':
         title = "Testimonials - Avyakta Portal | Stories of Hope & Reunion";
         description = "Read real stories of hope, reunification, and closure from families helped by the Avyakta portal. Officers and citizens share their experiences of dignity in identification.";
         keywords = "avyakta testimonials, success stories, family reunion, hope, closure, officer testimonials";
+        structuredData = [{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "Testimonials - Stories of Hope",
+          "url": canonicalUrl,
+          "description": description,
+          "isPartOf": { "@type": "WebSite", "name": "Avyakta", "url": SITE_URL }
+        }];
         break;
       case '/guidelines':
         title = "Guidelines - Avyakta Portal | Reporting & Search Procedures";
         description = "Official guidelines and procedures for reporting unclaimed bodies, searching for missing persons, and officer coordination on the Avyakta humanitarian portal.";
         keywords = "avyakta guidelines, reporting procedures, search procedures, officer guidelines";
+        structuredData = [{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "Platform Guidelines & Terms",
+          "url": canonicalUrl,
+          "description": description,
+          "isPartOf": { "@type": "WebSite", "name": "Avyakta", "url": SITE_URL }
+        }];
         break;
       case '/cookies':
         title = "Cookie Policy - Avyakta Portal";
         description = "Avyakta Portal's cookie policy. Learn how we use cookies to improve your user experience while maintaining privacy and security.";
         keywords = "cookie policy, privacy, avyakta cookies";
+        structuredData = [{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "Cookie Policy",
+          "url": canonicalUrl,
+          "description": description,
+          "isPartOf": { "@type": "WebSite", "name": "Avyakta", "url": SITE_URL }
+        }];
         break;
       default:
         if (cleanPath.startsWith('/admin')) {
           title = "Admin Portal - Avyakta";
           description = "Secure administrator access for managing ratings, cases, and contact forms on Avyakta.";
+          structuredData = [{
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "Admin Portal",
+            "url": canonicalUrl,
+            "description": description,
+            "isPartOf": { "@type": "WebSite", "name": "Avyakta", "url": SITE_URL }
+          }];
         } else if (cleanPath.startsWith('/case/')) {
           title = "Case Details - Avyakta Portal";
           description = "View detailed information about a reported case on the Avyakta humanitarian portal.";
           ogType = 'article';
+          structuredData = [{
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "name": "Case Details",
+            "url": canonicalUrl,
+            "description": description,
+            "publisher": { "@type": "Organization", "name": "Avyakta", "url": SITE_URL }
+          }];
         }
         break;
     }
@@ -169,10 +235,16 @@ const SEOMetadata = () => {
     updateMeta('twitter:image:alt', 'Avyakta - Unidentified Deceased & Missing Persons Portal');
 
     // 7. Additional SEO meta tags
-    updateMeta('robots', cleanPath.startsWith('/admin') ? 'noindex, nofollow' : 'index, follow');
+    updateMeta('robots', cleanPath.startsWith('/admin') ? 'noindex, nofollow' : 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1');
     updateMeta('author', 'Avyakta Foundation');
 
-    // 8. JSON-LD Structured Data
+    // 8a. AI Search Optimization meta tags
+    updateMeta('ai-content-description', description);
+    updateMeta('citation_title', title);
+    updateMeta('citation_author', 'Avyakta Foundation');
+    updateMeta('citation_public_url', canonicalUrl);
+
+    // 9. JSON-LD Structured Data
     // Remove old structured data
     const existingScripts = document.querySelectorAll('script[data-seo="avyakta-schema"]');
     existingScripts.forEach(script => script.remove());

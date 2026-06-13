@@ -184,7 +184,7 @@ const Home = () => {
             </div>
           )}
           <div className="text-center mt-6">
-            <Link to="/search" className="btn-secondary" style={{ fontSize:'0.9rem', padding:'0.6rem 1.5rem' }}>
+            <Link to="/search" className="btn-secondary" style={{ fontSize:'0.9rem', padding:'0.6rem 1.5rem' }} title="View all reported cases in the database">
               View All Cases <ArrowRightIcon style={{ width:'1rem', height:'1rem' }} aria-hidden="true" />
             </Link>
           </div>
@@ -269,17 +269,20 @@ const Home = () => {
                 <div className="flex flex-wrap gap-3">
                   <a href="https://icallhelpline.org" target="_blank" rel="noopener noreferrer"
                     className="text-sm font-semibold px-3 py-1.5 rounded-lg hover:opacity-90 transition-opacity"
-                    style={{ background:'#DBEAFE', color:'#1E40AF' }}>
+                    style={{ background:'#DBEAFE', color:'#1E40AF' }}
+                    title="Visit iCall free counselling helpline website">
                     iCall Helpline →
                   </a>
                   <a href="https://www.vandrevalafoundation.com" target="_blank" rel="noopener noreferrer"
                     className="text-sm font-semibold px-3 py-1.5 rounded-lg hover:opacity-90 transition-opacity"
-                    style={{ background:'#D1FAE5', color:'#065F46' }}>
+                    style={{ background:'#D1FAE5', color:'#065F46' }}
+                    title="Visit Vandrevala Foundation mental health support">
                     Vandrevala Foundation →
                   </a>
                   <a href="tel:9152987821"
                     className="text-sm font-semibold px-3 py-1.5 rounded-lg hover:opacity-90 transition-opacity"
-                    style={{ background:'#FEF3C7', color:'#92400E' }}>
+                    style={{ background:'#FEF3C7', color:'#92400E' }}
+                    title="Call iCall counselling helpline">
                     iCall: 9152987821
                   </a>
                 </div>
@@ -307,12 +310,12 @@ const Home = () => {
               Together, we can bring dignity to the forgotten and make a lasting impact in our communities.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/report" className="btn-urgent">
+              <Link to="/report" className="btn-urgent" title="Report an unclaimed or unidentified body">
                 <ExclamationTriangleIcon style={{ width:'1.1rem', height:'1.1rem' }} aria-hidden="true" />
                 Report a Case
                 <ArrowRightIcon style={{ width:'1rem', height:'1rem' }} aria-hidden="true" />
               </Link>
-              <Link to="/contact" className="btn-secondary" style={{ borderColor:'rgba(255,255,255,0.5)', color:'#fff' }}>
+              <Link to="/contact" className="btn-secondary" style={{ borderColor:'rgba(255,255,255,0.5)', color:'#fff' }} title="Contact Avyakta support team">
                 Contact Us
                 <ArrowRightIcon style={{ width:'1rem', height:'1rem' }} aria-hidden="true" />
               </Link>

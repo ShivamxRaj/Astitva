@@ -68,10 +68,7 @@ Rules:
 - Return ONLY the JSON array. No markdown, no "here is the json", no other text.`;
 
       // Call Gemini AI REST API directly
-      const k1 = 'AIzaSy';
-      const k2 = 'Aw7bUUfo4EWW-g';
-      const k3 = 'DOFJ3DYr6TqDiwGqbXQ';
-      const apiKey = process.env.REACT_APP_GEMINI_API_KEY || (k1 + k2 + k3);
+      const apiKey = process.env.REACT_APP_GEMINI_API_KEY;
       
       const res = await axios.post(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,

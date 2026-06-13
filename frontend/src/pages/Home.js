@@ -67,13 +67,13 @@ export default function Home() {
             We help families find closure, justice, and peace by reporting and identifying unclaimed lives.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <Link to="/report" className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-full shadow-lg hover:bg-blue-700 transition-all duration-200">
+            <Link to="/report" className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-full shadow-lg hover:bg-blue-700 transition-all duration-200" title="Report an unclaimed or unidentified body">
               Report Unclaimed Body
             </Link>
-            <Link to="/search" className="px-8 py-3 bg-yellow-400 text-gray-900 font-semibold rounded-full shadow-lg hover:bg-yellow-500 transition-all duration-200 animate-pulse">
+            <Link to="/search" className="px-8 py-3 bg-yellow-400 text-gray-900 font-semibold rounded-full shadow-lg hover:bg-yellow-500 transition-all duration-200 animate-pulse" title="Search missing persons database">
               Search Missing Person
             </Link>
-            <Link to="/contact" className="px-8 py-3 bg-red-500 text-white font-semibold rounded-full shadow-lg hover:bg-red-600 transition-all duration-200">
+            <Link to="/contact" className="px-8 py-3 bg-red-500 text-white font-semibold rounded-full shadow-lg hover:bg-red-600 transition-all duration-200" title="Get urgent support or assistance">
               🔔 Need Urgent Assistance?
             </Link>
           </div>
@@ -145,18 +145,21 @@ export default function Home() {
             <Link
               to="/contact"
               className="group inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+              title="Get involved with Avyakta Foundation"
             >
               Get Involved
             </Link>
             <Link
               to="/admin/login?tab=register"
               className="group inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-bold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+              title="Register to become an Avyakta volunteer"
             >
               Become a Volunteer
             </Link>
             <Link
               to="/about"
               className="group inline-flex items-center justify-center px-8 py-4 border-2 border-blue-600 text-blue-600 font-bold rounded-full hover:bg-blue-600 hover:text-white transition-all duration-300 hover:scale-105"
+              title="Learn more about Avyakta's mission and team"
             >
               Learn More
             </Link>

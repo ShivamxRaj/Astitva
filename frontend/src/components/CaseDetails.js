@@ -100,7 +100,7 @@ const CaseDetails = () => {
             <button onClick={() => navigate('/search')} className="btn-primary w-full py-2.5 rounded-xl font-bold text-sm">
               Search Missing Persons Directory
             </button>
-            <Link to="/" className="text-sm font-semibold text-slate-500 hover:text-slate-800 mt-2 block">
+            <Link to="/" className="text-sm font-semibold text-slate-500 hover:text-slate-800 mt-2 block" title="Go back to Avyakta homepage">
               Back to Homepage
             </Link>
           </div>
@@ -235,10 +235,10 @@ const CaseDetails = () => {
                 </div>
                 
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <a href="tel:+916299446452" className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-[#1B3A6B] hover:bg-[#152d52] text-white rounded-xl text-center text-sm font-bold transition-all shadow-sm whitespace-nowrap">
+                  <a href="tel:+916299446452" className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-[#1B3A6B] hover:bg-[#152d52] text-white rounded-xl text-center text-sm font-bold transition-all shadow-sm whitespace-nowrap" title="Call Avyakta emergency helpline">
                     📞 Call +91 62994 46452
                   </a>
-                  <a href={`https://wa.me/916299446452?text=Inquiry%20regarding%20Case%20ID%20${caseData.case_id}`} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-center text-sm font-bold transition-all shadow-sm whitespace-nowrap">
+                  <a href={`https://wa.me/916299446452?text=Inquiry%20regarding%20Case%20ID%20${caseData.case_id}`} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-center text-sm font-bold transition-all shadow-sm whitespace-nowrap" title="Inquire about this case on WhatsApp">
                     💬 WhatsApp Support
                   </a>
                 </div>

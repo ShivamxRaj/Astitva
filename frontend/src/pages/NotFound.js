@@ -21,22 +21,22 @@ const NotFound = () => {
 
         {/* Helpful Links */}
         <div style={styles.linksGrid}>
-          <Link to="/" style={styles.linkCard}>
+          <Link to="/" style={styles.linkCard} title="Go back to the homepage">
             <span style={styles.linkIcon}>🏠</span>
             <span style={styles.linkText}>Home</span>
             <span style={styles.linkDescription}>Go back to the homepage</span>
           </Link>
-          <Link to="/search" style={styles.linkCard}>
+          <Link to="/search" style={styles.linkCard} title="Search for missing persons">
             <span style={styles.linkIcon}>🔍</span>
             <span style={styles.linkText}>Search</span>
             <span style={styles.linkDescription}>Search for missing persons</span>
           </Link>
-          <Link to="/report" style={styles.linkCard}>
+          <Link to="/report" style={styles.linkCard} title="Report an unclaimed body">
             <span style={styles.linkIcon}>📝</span>
             <span style={styles.linkText}>Report</span>
             <span style={styles.linkDescription}>Report an unclaimed body</span>
           </Link>
-          <Link to="/contact" style={styles.linkCard}>
+          <Link to="/contact" style={styles.linkCard} title="Get in touch with us">
             <span style={styles.linkIcon}>📧</span>
             <span style={styles.linkText}>Contact</span>
             <span style={styles.linkDescription}>Get in touch with us</span>

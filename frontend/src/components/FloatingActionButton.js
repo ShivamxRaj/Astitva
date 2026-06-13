@@ -28,7 +28,7 @@ const FloatingActionButton = ({ isChatOpen: externalIsChatOpen, onChatToggle }) 
   const setChatOpen = externalIsChatOpen !== undefined ? onChatToggle : setIsChatOpen;
 
   // API Configuration
-  const API_KEY = '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';
+  const API_KEY = process.env.REACT_APP_PERPLEXITY_API_KEY;
   const API_URL = 'https://api.perplexity.ai/chat/completions';
 
   const scrollToBottom = () => {
@@ -476,6 +476,7 @@ Your pain is seen, your voice is heard, and your story matters. Together, we can
           className={`w-16 h-16 rounded-full bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:shadow-xl ${
             isFabExpanded ? 'rotate-45' : ''
           }`}
+          title={isFabExpanded ? "Close emergency menu" : "Open emergency action menu"}
         >
           {isFabExpanded ? (
             <XMarkIcon className="w-7 h-7 transition-transform duration-300" />
@@ -494,6 +495,7 @@ Your pain is seen, your voice is heard, and your story matters. Together, we can
           <button
             onClick={() => setChatOpen(!chatOpen)}
             className="w-14 h-14 rounded-full bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg flex items-center justify-center transform hover:scale-110 transition-all duration-300 hover:shadow-xl"
+            title="Chat with Avyakta AI assistant"
           >
             <ChatBubbleLeftRightIcon className="w-6 h-6" />
           </button>
@@ -504,6 +506,7 @@ Your pain is seen, your voice is heard, and your story matters. Together, we can
               window.location.href = 'tel:100';
             }}
             className="w-14 h-14 rounded-full bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg flex items-center justify-center transform hover:scale-110 transition-all duration-300 hover:shadow-xl animate-pulse"
+            title="Call police emergency helpline (100)"
           >
             <span className="text-sm font-bold">SOS</span>
           </button>
@@ -532,6 +535,7 @@ Your pain is seen, your voice is heard, and your story matters. Together, we can
             <button
               onClick={() => setChatOpen(false)}
               className="text-white hover:text-blue-100 p-2 hover:bg-blue-600 rounded-full transition-colors duration-200"
+              title="Close chat support window"
             >
               <XMarkIcon className="w-5 h-5" />
             </button>

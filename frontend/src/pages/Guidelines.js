@@ -113,7 +113,7 @@ const TermsOfService = () => (
       <SectionCard icon={EnvelopeIcon} title="6. Need Support or Have Doubts?" highlight>
         <p>
           Reach out to us at:<br />
-          <a href="mailto:support@avyakta.org" className="inline-block mt-2 font-semibold hover:underline" style={{ color: 'var(--teal)' }}>
+          <a href="mailto:support@avyakta.org" className="inline-block mt-2 font-semibold hover:underline" style={{ color: 'var(--teal)' }} title="Email Avyakta support team for assistance">
             📧 support@avyakta.org
           </a>
         </p>

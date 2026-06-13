@@ -41,7 +41,7 @@ const Footer = () => {
           <PhoneIcon style={{ width: '1.1rem', height: '1.1rem', color: '#FEE2E2', flexShrink: 0 }} aria-hidden="true" />
           <span className="font-bold text-white text-sm">
             24/7 Emergency Helpline:&nbsp;
-            <a href={`tel:${HELPLINE}`} className="underline underline-offset-2 hover:text-red-100 transition-colors" aria-label={`Call ${HELPLINE}`}>
+            <a href={`tel:${HELPLINE}`} className="underline underline-offset-2 hover:text-red-100 transition-colors" aria-label={`Call ${HELPLINE}`} title="Call Avyakta 24/7 Emergency Helpline">
               {HELPLINE}
             </a>
           </span>
@@ -52,6 +52,7 @@ const Footer = () => {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 font-bold text-white text-sm hover:text-red-100 transition-colors"
             aria-label="Chat on WhatsApp"
+            title="Chat with Avyakta support on WhatsApp"
           >
             <ChatBubbleLeftRightIcon style={{ width: '1rem', height: '1rem' }} aria-hidden="true" />
             WhatsApp Support
@@ -82,15 +83,15 @@ const Footer = () => {
           <h3 className="font-bold text-white text-sm mb-4 tracking-wide uppercase" style={{ fontSize: '0.78rem', letterSpacing: '0.08em' }}>Navigate</h3>
           <ul className="space-y-2.5">
             {[
-              { label: 'Home',           path: '/' },
-              { label: 'About Us',       path: '/about' },
-              { label: 'Report a Case',  path: '/report' },
-              { label: 'Search Records', path: '/search' },
-              { label: 'FAQ',            path: '/faq' },
-              { label: 'Contact Us',     path: '/contact' },
+              { label: 'Home',           path: '/',        title: 'Go to Avyakta homepage' },
+              { label: 'About Us',       path: '/about',   title: 'Learn about Avyakta mission and team' },
+              { label: 'Report a Case',  path: '/report',  title: 'Report an unclaimed or unidentified body' },
+              { label: 'Search Records', path: '/search',  title: 'Search missing persons database' },
+              { label: 'FAQ',            path: '/faq',     title: 'Frequently asked questions about Avyakta' },
+              { label: 'Contact Us',     path: '/contact', title: 'Get in touch with Avyakta support team' },
             ].map((item) => (
               <li key={item.path}>
-                <Link to={item.path} className="footer-link text-sm">{item.label}</Link>
+                <Link to={item.path} className="footer-link text-sm" title={item.title}>{item.label}</Link>
               </li>
             ))}
           </ul>
@@ -101,22 +102,22 @@ const Footer = () => {
           <h3 className="font-bold text-white text-sm mb-4 tracking-wide uppercase" style={{ fontSize: '0.78rem', letterSpacing: '0.08em' }}>Support & Legal</h3>
           <ul className="space-y-2.5">
             <li>
-              <button type="button" className="footer-link bg-transparent border-none p-0 text-sm" onClick={() => openModal('privacy')}>
+              <button type="button" className="footer-link bg-transparent border-none p-0 text-sm" onClick={() => openModal('privacy')} title="Read Avyakta privacy policy">
                 Privacy Policy
               </button>
             </li>
             <li>
-              <button type="button" className="footer-link bg-transparent border-none p-0 text-sm" onClick={() => openModal('cookies')}>
+              <button type="button" className="footer-link bg-transparent border-none p-0 text-sm" onClick={() => openModal('cookies')} title="Read Avyakta cookie policy">
                 Cookie Policy
               </button>
             </li>
             <li>
-              <button type="button" className="footer-link bg-transparent border-none p-0 text-sm" onClick={() => openModal('terms')}>
+              <button type="button" className="footer-link bg-transparent border-none p-0 text-sm" onClick={() => openModal('terms')} title="Read Avyakta terms of service">
                 Terms of Service
               </button>
             </li>
             <li>
-              <Link to="/guidelines" className="footer-link text-sm">Guidelines</Link>
+              <Link to="/guidelines" className="footer-link text-sm" title="View Avyakta platform guidelines and reporting procedures">Guidelines</Link>
             </li>
           </ul>
         </div>
@@ -131,22 +132,22 @@ const Footer = () => {
           </p>
           <ul className="space-y-2.5">
             <li>
-              <a href="https://icallhelpline.org" target="_blank" rel="noopener noreferrer" className="footer-link text-sm">
+              <a href="https://icallhelpline.org" target="_blank" rel="noopener noreferrer" className="footer-link text-sm" title="Visit iCall free counselling helpline website">
                 iCall (Free counselling)
               </a>
             </li>
             <li>
-              <a href="tel:9152987821" className="footer-link text-sm">
+              <a href="tel:9152987821" className="footer-link text-sm" title="Call iCall counselling helpline">
                 iCall: 9152987821
               </a>
             </li>
             <li>
-              <a href="https://www.vandrevalafoundation.com" target="_blank" rel="noopener noreferrer" className="footer-link text-sm">
+              <a href="https://www.vandrevalafoundation.com" target="_blank" rel="noopener noreferrer" className="footer-link text-sm" title="Visit Vandrevala Foundation mental health support website">
                 Vandrevala Foundation
               </a>
             </li>
             <li>
-              <a href="tel:18602662345" className="footer-link text-sm">
+              <a href="tel:18602662345" className="footer-link text-sm" title="Call Vandrevala Foundation helpline">
                 Vandrevala: 1860-2662-345
               </a>
             </li>

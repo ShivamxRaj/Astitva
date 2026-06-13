@@ -100,12 +100,12 @@ const Navbar = () => {
           <span className="whitespace-nowrap">🏛️ Official Humanitarian Portal &nbsp;|&nbsp; Punjab, India &nbsp;|&nbsp; Est. 2020</span>
         </div>
         <div className="flex items-center justify-center sm:justify-end gap-3 w-full sm:w-auto">
-          <a href={`tel:${HELPLINE}`} className="helpline-badge" aria-label={`Call helpline ${HELPLINE}`}>
+          <a href={`tel:${HELPLINE}`} className="helpline-badge" aria-label={`Call helpline ${HELPLINE}`} title="Call Avyakta 24/7 emergency helpline">
             <span className="helpline-dot" aria-hidden="true" />
             <PhoneIcon style={{ width: '0.75rem', height: '0.75rem' }} aria-hidden="true" />
             {HELPLINE}
           </a>
-          <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="helpline-badge" aria-label="Chat on WhatsApp">
+          <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="helpline-badge" aria-label="Chat on WhatsApp" title="Chat with Avyakta support on WhatsApp">
             💬 WhatsApp
           </a>
         </div>
@@ -124,7 +124,7 @@ const Navbar = () => {
               <div className="flex h-16 sm:h-18 items-center justify-between gap-4">
 
                 {/* Logo + Brand */}
-                <Link to="/" className="flex items-center gap-3 flex-shrink-0" aria-label="Avyakta Home">
+                <Link to="/" className="flex items-center gap-3 flex-shrink-0" aria-label="Avyakta Home" title="Go to Avyakta homepage">
                   <img
                     className="h-10 w-10 object-contain filter brightness-0 invert drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]"
                     src={logo}
@@ -146,6 +146,7 @@ const Navbar = () => {
                       key={item.key}
                       to={item.path}
                       className="px-3 py-2 text-sm font-medium text-blue-100 rounded-md hover:bg-white/10 hover:text-white transition-all duration-200"
+                      title={`Navigate to ${item.label} page`}
                     >
                       {item.label}
                     </Link>
@@ -201,6 +202,7 @@ const Navbar = () => {
                     className="px-4 py-2 rounded-lg text-sm font-bold text-white transition-all duration-200"
                     style={{ background: 'linear-gradient(135deg, #2E7D9C, #1B5E7A)' }}
                     aria-label="Search for missing person"
+                    title="Search the missing persons database"
                   >
                     🔍 {searchLabel}
                   </Link>
@@ -211,6 +213,7 @@ const Navbar = () => {
                     className="px-4 py-2 rounded-lg text-sm font-bold text-white transition-all duration-200"
                     style={{ background: 'linear-gradient(135deg, #C0392B, #962D22)' }}
                     aria-label="Report an unclaimed body"
+                    title="Report an unclaimed or unidentified body"
                   >
                     🚨 {reportLabel}
                   </Link>
@@ -221,6 +224,7 @@ const Navbar = () => {
                       to="/admin/login"
                       className="px-2 py-1.5 rounded text-[11px] font-medium text-blue-300/70 hover:text-blue-200 hover:bg-white/5 transition-all duration-200 flex items-center gap-1"
                       aria-label="Admin Login"
+                      title="Login to Avyakta admin portal"
                     >
                       <span className="opacity-60">🛡️</span> {adminLabel}
                       {isAdmin && pendingCount > 0 && (
@@ -270,6 +274,7 @@ const Navbar = () => {
                     className="px-3 py-1.5 rounded-lg text-xs font-bold text-white whitespace-nowrap"
                     style={{ background: '#2E7D9C' }}
                     aria-label="Report a case"
+                    title="Report an unclaimed body"
                   >
                     🚨 Report
                   </Link>
@@ -346,6 +351,7 @@ const Navbar = () => {
                   <Link
                     to="/admin/login"
                     className="py-3 rounded-md text-sm font-semibold text-blue-200 hover:text-white flex items-center gap-2"
+                    title="Login to Avyakta admin portal"
                   >
                     🔐 Admin Login
                     {isAdmin && pendingCount > 0 && (
