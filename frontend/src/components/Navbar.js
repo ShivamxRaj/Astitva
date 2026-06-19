@@ -91,8 +91,8 @@ const Navbar = () => {
   return (
     <>
       {/* ── Sleek Announcement / Utility Bar ── */}
-      <div className="bg-slate-950 text-slate-400 py-2.5 px-4 sm:px-6 lg:px-8 text-[11px] font-semibold tracking-wider uppercase border-b border-white/5 flex flex-col sm:flex-row items-center justify-between gap-2.5" role="banner">
-        <div className="flex items-center gap-2 text-center sm:text-left">
+      <div className="hidden sm:flex bg-slate-950 text-slate-400 py-2.5 px-4 sm:px-6 lg:px-8 text-[11px] font-semibold tracking-wider uppercase border-b border-white/5 items-center justify-between gap-2.5" role="banner">
+        <div className="flex items-center gap-2">
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true" />
           <span>🏛️ Official Humanitarian Portal &nbsp;|&nbsp; Punjab, India &nbsp;|&nbsp; Est. 2020</span>
         </div>
@@ -254,7 +254,7 @@ const Navbar = () => {
               </div>
 
               {/* Mobile Nav Panel */}
-              <Disclosure.Panel className="md:hidden border-t border-white/5 px-4 py-4 space-y-3 bg-slate-950/95 rounded-b-2xl">
+              <Disclosure.Panel className="md:hidden border-t border-white/5 px-4 py-4 space-y-3 bg-slate-950/95 rounded-b-2xl max-h-[calc(100vh-100px)] overflow-y-auto">
                 {/* Navigation Items */}
                 <div className="space-y-1">
                   {navItems.map((item) => (
@@ -309,6 +309,28 @@ const Navbar = () => {
                     ))}
                   </div>
                 </div>
+
+                {/* Mobile Help & Support */}
+                <div className="pt-3 border-t border-white/5">
+                  <p className="px-3 text-[10px] font-semibold uppercase tracking-wider text-slate-500 mb-2">Help & Support</p>
+                  <div className="grid grid-cols-2 gap-2 px-1">
+                    <a
+                      href={`tel:${HELPLINE}`}
+                      className="flex items-center justify-center gap-1.5 py-2 px-3 border border-white/10 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition-all"
+                    >
+                      📞 Call Helpline
+                    </a>
+                    <a
+                      href={WHATSAPP_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-1.5 py-2 px-3 border border-white/10 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition-all"
+                    >
+                      💬 WhatsApp
+                    </a>
+                  </div>
+                </div>
+
 
                 {/* Admin login Link */}
                 <div className="pt-3 border-t border-white/5">
