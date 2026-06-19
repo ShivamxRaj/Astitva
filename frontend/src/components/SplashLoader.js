@@ -4,10 +4,10 @@ const SplashLoader = () => {
   const [isFading, setIsFading] = useState(false);
 
   useEffect(() => {
-    // Start fading out after 400ms to smoothly complete by 800ms
+    // Start fading out after 1200ms to smoothly complete by 1600ms (1.6s total display)
     const fadeTimer = setTimeout(() => {
       setIsFading(true);
-    }, 400);
+    }, 1200);
 
     return () => clearTimeout(fadeTimer);
   }, []);
