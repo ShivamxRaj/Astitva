@@ -38,7 +38,7 @@ const Footer = () => {
       {/* ── Emergency Banner ── */}
       <div style={{ background: '#C0392B', padding: '0.75rem 1rem' }}>
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-3 text-center sm:text-left">
-          <PhoneIcon style={{ width: '1.1rem', height: '1.1rem', color: '#FEE2E2', flexShrink: 0 }} aria-hidden="true" />
+          <PhoneIcon style={{ width: '1.1rem', height: '1.1rem', color: '#FFFFFF', flexShrink: 0 }} aria-hidden="true" />
           <span className="font-bold text-white text-sm">
             24/7 Emergency Helpline:&nbsp;
             <a href={`tel:${HELPLINE}`} className="underline underline-offset-2 hover:text-red-100 transition-colors" aria-label={`Call ${HELPLINE}`} title="Call Avyakta 24/7 Emergency Helpline">
@@ -175,7 +175,7 @@ const Footer = () => {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
           {/* Language Toggle */}
           <div className="flex items-center gap-1">
-            <span className="text-xs mr-2" style={{ color: '#718096' }}>Language:</span>
+            <span className="text-xs mr-2" style={{ color: '#A0C4E8' }}>Language:</span>
             {LANG_OPTIONS.map((lang, i) => (
               <React.Fragment key={lang.code}>
                 <button
@@ -186,13 +186,13 @@ const Footer = () => {
                 >
                   {lang.label}
                 </button>
-                {i < LANG_OPTIONS.length - 1 && <span style={{ color: '#4A5568' }}>|</span>}
+                {i < LANG_OPTIONS.length - 1 && <span style={{ color: '#A0C4E8' }}>|</span>}
               </React.Fragment>
             ))}
           </div>
 
           {/* Copyright */}
-          <div className="text-xs text-center" style={{ color: '#718096' }}>
+          <div className="text-xs text-center" style={{ color: '#A0C4E8' }}>
             © {year} Avyakta. Every soul remembered, every life respected. &nbsp;|&nbsp; Built with{' '}
             <HeartIcon style={{ width: '0.75rem', height: '0.75rem', display: 'inline', color: '#FC8181' }} aria-hidden="true" />
             {' '}by Shivam Raj

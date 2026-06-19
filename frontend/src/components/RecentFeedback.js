@@ -95,7 +95,7 @@ const RecentFeedback = () => {
           <div key={s.label} className="rounded-2xl p-5 text-center"
             style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
             <div className="text-2xl font-bold text-white mb-1">{s.value}</div>
-            <div className="text-xs text-gray-400">{s.label}</div>
+            <div className="text-xs text-blue-200">{s.label}</div>
           </div>
         ))}
       </div>
@@ -110,7 +110,7 @@ const RecentFeedback = () => {
               <div>
                 <h4 className="font-semibold text-white text-sm">{item.name}</h4>
                 {item.location && (
-                  <p className="flex items-center gap-1 text-xs mt-0.5" style={{ color: '#9CA3AF' }}>
+                  <p className="flex items-center gap-1 text-xs mt-0.5" style={{ color: '#A0C4E8' }}>
                     <MapPinIcon style={{ width:'0.75rem', height:'0.75rem' }} aria-hidden="true" />
                     {item.location}
                   </p>
@@ -123,7 +123,7 @@ const RecentFeedback = () => {
                 "{item.comment}"
               </blockquote>
             )}
-            <div className="flex items-center gap-1 text-xs" style={{ color:'#6B7280' }}>
+            <div className="flex items-center gap-1 text-xs" style={{ color:'#90CDF4' }}>
               <CalendarDaysIcon style={{ width:'0.75rem', height:'0.75rem' }} aria-hidden="true" />
               {timeAgo(item.created_at)}
             </div>
@@ -147,7 +147,7 @@ const RecentFeedback = () => {
                   <div className="h-2 rounded-full transition-all duration-700"
                     style={{ width:`${pct}%`, background:'linear-gradient(90deg,#FBBF24,#F59E0B)' }} />
                 </div>
-                <span className="text-xs w-6 text-right" style={{ color:'#9CA3AF' }}>{count}</span>
+                <span className="text-xs w-6 text-right" style={{ color:'#A0C4E8' }}>{count}</span>
               </div>
             );
           })}

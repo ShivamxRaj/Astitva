@@ -118,7 +118,7 @@ function WhatsAppChatbox() {
     <>
       {/* Floating Button */}
       <button
-        className="fixed bottom-6 right-6 z-50 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg w-16 h-16 flex items-center justify-center text-3xl transition-all duration-300"
+        className="fixed bottom-6 right-6 z-50 bg-green-700 hover:bg-green-800 text-white rounded-full shadow-lg w-16 h-16 flex items-center justify-center text-3xl transition-all duration-300"
         onClick={() => setOpen((o) => !o)}
         aria-label={open ? 'Close chat' : 'Open WhatsApp chat'}
       >
@@ -127,9 +127,9 @@ function WhatsAppChatbox() {
 
       {/* Chatbox */}
       {open && (
-        <div className="fixed bottom-24 right-6 z-50 w-80 max-w-xs sm:max-w-sm bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-green-500 animate-fade-in-up">
+        <div className="fixed bottom-24 right-6 z-50 w-80 max-w-xs sm:max-w-sm bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-green-700 animate-fade-in-up">
           {/* Header */}
-          <div className="bg-green-500 text-white px-4 py-3 flex items-center gap-3">
+          <div className="bg-green-700 text-white px-4 py-3 flex items-center gap-3">
             <img src={BOT_AVATAR} alt="Bot" className="w-8 h-8 rounded-full" width="32" height="32" />
             <div>
               <div className="font-bold">Avyakta Support</div>
@@ -147,7 +147,7 @@ function WhatsAppChatbox() {
                 )}
                 <div
                   className={`rounded-2xl px-4 py-2 text-sm max-w-[70%] shadow
-                    ${msg.from === 'bot' ? 'bg-green-100 text-gray-900' : 'bg-green-500 text-white'}`}
+                    ${msg.from === 'bot' ? 'bg-green-100 text-gray-900' : 'bg-green-700 text-white'}`}
                 >
                   {msg.text}
                   {msg.options && msg.options.length > 0 && (
@@ -176,7 +176,7 @@ function WhatsAppChatbox() {
           <form onSubmit={handleSend} className="flex items-center gap-2 px-3 py-2 bg-white border-t">
             <input
               type="text"
-              className="flex-1 rounded-xl border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
+              className="flex-1 rounded-xl border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-700"
               placeholder="Type your message..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -184,7 +184,7 @@ function WhatsAppChatbox() {
             />
             <button
               type="submit"
-              className="bg-green-500 hover:bg-green-600 text-white rounded-xl px-4 py-2 font-semibold transition"
+              className="bg-green-700 hover:bg-green-800 text-white rounded-xl px-4 py-2 font-semibold transition"
             >
               Send
             </button>

@@ -72,11 +72,11 @@ const RatingForm = ({ onSubmit, onClose, isVisible }) => {
             <h3 id="rating-form-title" className="font-merriweather font-bold text-xl" style={{ color: '#1B3A6B' }}>
               Share Your Experience
             </h3>
-            <p className="text-xs mt-0.5" style={{ color: '#718096' }}>Help us improve our services</p>
+            <p className="text-xs mt-0.5" style={{ color: '#4A5568' }}>Help us improve our services</p>
           </div>
           <button onClick={onClose} aria-label="Close rating form"
             className="p-2 rounded-full hover:bg-gray-100 transition-colors">
-            <XMarkIcon style={{ width: '1.2rem', height: '1.2rem', color: '#718096' }} aria-hidden="true" />
+            <XMarkIcon style={{ width: '1.2rem', height: '1.2rem', color: '#4A5568' }} aria-hidden="true" />
           </button>
         </div>
 
@@ -118,7 +118,7 @@ const RatingForm = ({ onSubmit, onClose, isVisible }) => {
               ))}
             </div>
             {formData.rating > 0 && (
-              <p className="text-xs mt-1" style={{ color: '#6B7280' }}>
+              <p className="text-xs mt-1" style={{ color: '#4A5568' }}>
                 {['','Poor','Below Average','Average','Good','Excellent'][formData.rating]} — {formData.rating}/5
               </p>
             )}
@@ -129,13 +129,13 @@ const RatingForm = ({ onSubmit, onClose, isVisible }) => {
           <div>
             <label htmlFor="rf-comment" className="flex items-center gap-1.5 text-sm font-medium mb-1.5" style={{ color: '#374151' }}>
               <ChatBubbleLeftIcon style={{ width: '0.9rem', height: '0.9rem', color: '#2E7D9C' }} aria-hidden="true" />
-              Comment <span style={{ color: '#9CA3AF', fontWeight: 400 }}>(optional)</span>
+              Comment <span style={{ color: '#55657D', fontWeight: 400 }}>(optional)</span>
             </label>
             <textarea id="rf-comment" name="comment" value={formData.comment}
               onChange={handleInputChange} rows={3} placeholder="Share your experience..."
               className="w-full px-4 py-2.5 rounded-lg border text-sm focus:outline-none focus:ring-2 resize-none"
               style={{ borderColor: errors.comment ? '#C0392B' : '#D1D5DB' }} />
-            <p className="text-xs mt-0.5 text-right" style={{ color: formData.comment.length > 480 ? '#C0392B' : '#9CA3AF' }}>
+            <p className="text-xs mt-0.5 text-right" style={{ color: formData.comment.length > 480 ? '#C0392B' : '#55657D' }}>
               {formData.comment.length}/500
             </p>
             {errors.comment && <p className="text-xs" style={{ color: '#C0392B' }}>{errors.comment}</p>}
@@ -145,7 +145,7 @@ const RatingForm = ({ onSubmit, onClose, isVisible }) => {
           <div>
             <label htmlFor="rf-location" className="flex items-center gap-1.5 text-sm font-medium mb-1.5" style={{ color: '#374151' }}>
               <MapPinIcon style={{ width: '0.9rem', height: '0.9rem', color: '#2E7D9C' }} aria-hidden="true" />
-              Location <span style={{ color: '#9CA3AF', fontWeight: 400 }}>(optional)</span>
+              Location <span style={{ color: '#55657D', fontWeight: 400 }}>(optional)</span>
             </label>
             <input id="rf-location" name="location" type="text" value={formData.location}
               onChange={handleInputChange} placeholder="City, State"

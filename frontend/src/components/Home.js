@@ -121,7 +121,7 @@ const Home = () => {
           {/* ── Case Status Tracker Preview ── */}
           <div className={`flex justify-center transition-all duration-1000 delay-600 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <div style={{ width:'100%', maxWidth:'560px' }} className="px-2 sm:px-0">
-              <p className="text-xs mb-3" style={{ color:'#718096' }}>How a case progresses through our system:</p>
+              <p className="text-xs mb-3" style={{ color:'#4A5568' }}>How a case progresses through our system:</p>
               <CaseStatusTracker currentStep={1} lang={['hi','pa'].includes(navigator.language?.slice(0,2)) ? navigator.language.slice(0,2) : 'en'} />
             </div>
           </div>
@@ -172,7 +172,7 @@ const Home = () => {
                       style={{ background:`${c.statusColor}18`, color:c.statusColor, border:`1px solid ${c.statusColor}40` }}>
                       {c.status}
                     </span>
-                    <span className="text-xs" style={{ color:'#94A3B8' }}>{c.date}</span>
+                    <span className="text-xs" style={{ color:'#5A6B82' }}>{c.date}</span>
                   </div>
                   <p className="font-bold text-sm mb-1" style={{ color:'#1B3A6B' }}>{c.id}</p>
                   <p className="text-sm flex items-center gap-1" style={{ color:'#4A5568' }}>
