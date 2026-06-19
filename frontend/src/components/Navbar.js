@@ -122,6 +122,8 @@ const Navbar = () => {
                     className="h-9 w-9 object-contain filter brightness-0 invert drop-shadow-[0_0_8px_rgba(255,255,255,0.4)] group-hover:scale-105 transition-transform"
                     src={logo}
                     alt="Avyakta Logo"
+                    width="36"
+                    height="36"
                     onError={(e) => { e.target.style.display = 'none'; }}
                   />
                   <span className="text-white font-bold text-lg tracking-wider font-poppins">Avyakta</span>

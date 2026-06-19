@@ -122,7 +122,7 @@ function WhatsAppChatbox() {
         onClick={() => setOpen((o) => !o)}
         aria-label={open ? 'Close chat' : 'Open WhatsApp chat'}
       >
-        <img src={BOT_AVATAR} alt="Chat" className="w-10 h-10" />
+        <img src={BOT_AVATAR} alt="Chat" className="w-10 h-10" width="40" height="40" />
       </button>
 
       {/* Chatbox */}
@@ -130,7 +130,7 @@ function WhatsAppChatbox() {
         <div className="fixed bottom-24 right-6 z-50 w-80 max-w-xs sm:max-w-sm bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-green-500 animate-fade-in-up">
           {/* Header */}
           <div className="bg-green-500 text-white px-4 py-3 flex items-center gap-3">
-            <img src={BOT_AVATAR} alt="Bot" className="w-8 h-8 rounded-full" />
+            <img src={BOT_AVATAR} alt="Bot" className="w-8 h-8 rounded-full" width="32" height="32" />
             <div>
               <div className="font-bold">Avyakta Support</div>
               <div className="text-xs opacity-80">Online</div>
@@ -143,7 +143,7 @@ function WhatsAppChatbox() {
             {messages.map((msg, idx) => (
               <div key={idx} className={`flex mb-2 ${msg.from === 'user' ? 'justify-end' : 'justify-start'}`}>
                 {msg.from === 'bot' && (
-                  <img src={BOT_AVATAR} alt="Bot" className="w-7 h-7 rounded-full mr-2 self-end" />
+                  <img src={BOT_AVATAR} alt="Bot" className="w-7 h-7 rounded-full mr-2 self-end" width="28" height="28" />
                 )}
                 <div
                   className={`rounded-2xl px-4 py-2 text-sm max-w-[70%] shadow
@@ -165,7 +165,7 @@ function WhatsAppChatbox() {
                   )}
                 </div>
                 {msg.from === 'user' && (
-                  <img src={USER_AVATAR} alt="You" className="w-7 h-7 rounded-full ml-2 self-end" />
+                  <img src={USER_AVATAR} alt="You" className="w-7 h-7 rounded-full ml-2 self-end" width="28" height="28" />
                 )}
               </div>
             ))}

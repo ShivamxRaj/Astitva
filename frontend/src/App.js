@@ -1,31 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './components/Home';
-import AdminAuth from './components/AdminAuth';
-import AdminRatings from './components/AdminRatings';
-import AdminCases from './components/AdminCases';
-import AdminContacts from './components/AdminContacts';
-import About from './pages/About';
-
-import AvyaktaBot from './components/AvyaktaBot';
-import Contact from './components/Contact';
 import LoadingPage from './components/LoadingPage';
-import FAQPage from './components/FAQPage';
-import Testimonials from './components/Testimonials';
-import Guidelines from './pages/Guidelines';
-import CookiePolicy from './pages/CookiePolicy';
 import SplashLoader from './components/SplashLoader';
-import ReportUnclaimedBody from './components/ReportUnclaimedBody';
-import SearchMissingPerson from './pages/SearchMissingPerson';
-import CaseDetails from './components/CaseDetails';
 import ProtectedRoute from './components/ProtectedRoute';
-import ResetPassword from './components/ResetPassword';
 import SEOMetadata from './components/SEOMetadata';
-import NotFound from './pages/NotFound';
 import './i18n';
+
+// Lazy-loaded route components for optimization
+const AdminAuth = lazy(() => import('./components/AdminAuth'));
+const AdminRatings = lazy(() => import('./components/AdminRatings'));
+const AdminCases = lazy(() => import('./components/AdminCases'));
+const AdminContacts = lazy(() => import('./components/AdminContacts'));
+const About = lazy(() => import('./pages/About'));
+const AvyaktaBot = lazy(() => import('./components/AvyaktaBot'));
+const Contact = lazy(() => import('./components/Contact'));
+const FAQPage = lazy(() => import('./components/FAQPage'));
+const Testimonials = lazy(() => import('./components/Testimonials'));
+const Guidelines = lazy(() => import('./pages/Guidelines'));
+const CookiePolicy = lazy(() => import('./pages/CookiePolicy'));
+const ReportUnclaimedBody = lazy(() => import('./components/ReportUnclaimedBody'));
+const SearchMissingPerson = lazy(() => import('./pages/SearchMissingPerson'));
+const CaseDetails = lazy(() => import('./components/CaseDetails'));
+const ResetPassword = lazy(() => import('./components/ResetPassword'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 // API base URL (kept for future backend calls)
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api'; // eslint-disable-line no-unused-vars
@@ -43,10 +44,10 @@ function App() {
       return;
     }
 
-    // Simulate initial loading
+    // Simulate initial loading (optimized delay for faster LCP/FCP)
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2000);
+    }, 400);
 
     return () => clearTimeout(timer);
   }, []);
@@ -160,28 +161,34 @@ function App() {
         {isLoading && <SplashLoader />}
         {!isLoading && <Navbar />}
         <main className="flex-grow">
-          <Routes>
-            <Route exact path="/" element={<Home />} />
-            <Route exact path="/about" element={<About />} />
+          <Suspense fallback={<LoadingPage />}>
+            <Routes>
+              <Route exact path="/" element={<Home />} />
+              <Route exact path="/about" element={<About />} />
 
-            <Route exact path="/admin/login" element={<AdminAuth />} />
-            <Route exact path="/reset-password" element={<ResetPassword />} />
-            <Route exact path="/admin/ratings" element={<ProtectedRoute><AdminRatings /></ProtectedRoute>} />
-            <Route exact path="/admin/cases" element={<ProtectedRoute><AdminCases /></ProtectedRoute>} />
-            <Route exact path="/admin/contacts" element={<ProtectedRoute><AdminContacts /></ProtectedRoute>} />
-            <Route exact path="/contact" element={<Contact />} />
-            <Route exact path="/faq" element={<FAQPage />} />
-            <Route exact path="/testimonials" element={<Testimonials />} />
-            <Route exact path="/guidelines" element={<Guidelines />} />
-            <Route exact path="/cookies" element={<CookiePolicy />} />
-            <Route exact path="/report" element={<ReportUnclaimedBody />} />
-            <Route exact path="/search" element={<SearchMissingPerson />} />
-            <Route exact path="/case/:caseId" element={<CaseDetails />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+              <Route exact path="/admin/login" element={<AdminAuth />} />
+              <Route exact path="/reset-password" element={<ResetPassword />} />
+              <Route exact path="/admin/ratings" element={<ProtectedRoute><AdminRatings /></ProtectedRoute>} />
+              <Route exact path="/admin/cases" element={<ProtectedRoute><AdminCases /></ProtectedRoute>} />
+              <Route exact path="/admin/contacts" element={<ProtectedRoute><AdminContacts /></ProtectedRoute>} />
+              <Route exact path="/contact" element={<Contact />} />
+              <Route exact path="/faq" element={<FAQPage />} />
+              <Route exact path="/testimonials" element={<Testimonials />} />
+              <Route exact path="/guidelines" element={<Guidelines />} />
+              <Route exact path="/cookies" element={<CookiePolicy />} />
+              <Route exact path="/report" element={<ReportUnclaimedBody />} />
+              <Route exact path="/search" element={<SearchMissingPerson />} />
+              <Route exact path="/case/:caseId" element={<CaseDetails />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
         </main>
         <Footer />
-        {!isLoading && <AvyaktaBot />}
+        {!isLoading && (
+          <Suspense fallback={null}>
+            <AvyaktaBot />
+          </Suspense>
+        )}
       </div>
       {isServerDown && <LoadingPage type="server" />}
     </Router>
