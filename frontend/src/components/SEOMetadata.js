@@ -17,7 +17,7 @@ const SEOMetadata = () => {
 
     let title = "Avyakta - Unidentified Deceased & Missing Persons Portal";
     let description = "Avyakta Portal - Connecting families with unclaimed and unidentified deceased persons since 2020. Report a case anonymously or search the missing person database.";
-    let keywords = "avyakta, missing persons database, report unclaimed body, report unidentified body, NGO India, Punjab, find lost family member";
+    let keywords = "avyakta, astitva portal, missing persons India, unclaimed body report, unidentified deceased list, laawaris lash, NGO Punjab, humanitarian portal, officer coordination, zipnet missing search, report unclaimed body online";
     let ogImage = DEFAULT_IMAGE;
     let ogType = 'website';
     let structuredData = null;
@@ -26,7 +26,7 @@ const SEOMetadata = () => {
       case '/':
         title = "Avyakta - Unidentified Deceased & Missing Persons Portal";
         description = "Avyakta Portal - India's humanitarian platform connecting families with unclaimed and unidentified deceased persons since 2020. Report unclaimed bodies, search missing persons, and support dignified identification with officer coordination.";
-        keywords = "avyakta, missing persons India, unclaimed body report, unidentified deceased, NGO Punjab, humanitarian portal, officer coordination, dignity identification, family support";
+        keywords = "avyakta, astitva portal, missing persons India, unclaimed body report, unidentified deceased list, laawaris lash, NGO Punjab, humanitarian portal, officer coordination, zipnet missing search, report unclaimed body online";
         structuredData = [
           {
             "@context": "https://schema.org",
@@ -103,7 +103,7 @@ const SEOMetadata = () => {
       case '/report':
         title = "Report a Case - Avyakta Portal | Report Unclaimed Body";
         description = "Report details about an unclaimed or unidentified deceased person. Submit anonymously to help officers identify bodies and support families seeking closure and dignity.";
-        keywords = "report unclaimed body, report unidentified deceased, anonymous report, avyakta report, officer assistance";
+        keywords = "report unclaimed body, report unidentified deceased, anonymous report, avyakta report, officer assistance, report laawaris lash, unclaimed dead body report online";
         structuredData = [{
           "@context": "https://schema.org",
           "@type": "WebPage",
@@ -121,7 +121,7 @@ const SEOMetadata = () => {
       case '/search':
         title = "Search Missing Persons - Avyakta Portal | Find Lost Family";
         description = "Search the Avyakta database of missing persons and unidentified deceased cases. Help find lost family members with officer-coordinated support for dignified identification.";
-        keywords = "search missing persons, find lost family, unidentified bodies database, avyakta search, officer coordination, missing person FIR online India, missing person helpline number India";
+        keywords = "search missing persons, find lost family, unidentified bodies database, avyakta search, officer coordination, missing person FIR online India, missing person helpline number India, laawaris lash database, zipnet search India";
         structuredData = [{
           "@context": "https://schema.org",
           "@type": "WebPage",
