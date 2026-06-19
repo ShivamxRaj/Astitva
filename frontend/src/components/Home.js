@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../lib/supabaseClient';
@@ -13,8 +13,9 @@ import {
   MapPinIcon,
   ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline';
-import Testimonials from './Testimonials';
 import CaseStatusTracker from './CaseStatusTracker';
+
+const Testimonials = lazy(() => import('./Testimonials'));
 
 // ── Calmer Institutional Theme ──
 
@@ -293,7 +294,13 @@ const Home = () => {
       </section>
 
       {/* Testimonials */}
-      <Testimonials />
+      <Suspense fallback={
+        <div className="py-16 text-center" style={{ backgroundColor:'#1B3A6B' }}>
+          <div className="w-8 h-8 mx-auto border-3 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
+        </div>
+      }>
+        <Testimonials />
+      </Suspense>
 
       <hr className="section-divider" />
 

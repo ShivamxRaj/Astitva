@@ -44,13 +44,31 @@ function App() {
       return;
     }
 
+    // If we're on a subpage or direct link (like a case details page), bypass the loader
+    const path = window.location.pathname;
+    if (path !== '/' && path !== '') {
+      setIsLoading(false);
+      return;
+    }
+
     // Simulate initial loading (optimized delay for faster LCP/FCP)
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 400);
+    }, 800);
 
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    if (isLoading) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isLoading]);
 
   useEffect(() => {
     // Set document language
@@ -158,8 +176,7 @@ function App() {
     <Router>
       <SEOMetadata />
       <div className="min-h-screen flex flex-col">
-        {isLoading && <SplashLoader />}
-        {!isLoading && <Navbar />}
+        <Navbar />
         <main className="flex-grow">
           <Suspense fallback={<LoadingPage />}>
             <Routes>
@@ -184,11 +201,10 @@ function App() {
           </Suspense>
         </main>
         <Footer />
-        {!isLoading && (
-          <Suspense fallback={null}>
-            <AvyaktaBot />
-          </Suspense>
-        )}
+        <Suspense fallback={null}>
+          <AvyaktaBot />
+        </Suspense>
+        {isLoading && <SplashLoader />}
       </div>
       {isServerDown && <LoadingPage type="server" />}
     </Router>

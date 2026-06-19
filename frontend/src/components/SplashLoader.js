@@ -4,10 +4,10 @@ const SplashLoader = () => {
   const [isFading, setIsFading] = useState(false);
 
   useEffect(() => {
-    // Start fading out slightly before the 400ms mark when App.js unmounts it
+    // Start fading out after 400ms to smoothly complete by 800ms
     const fadeTimer = setTimeout(() => {
       setIsFading(true);
-    }, 100);
+    }, 400);
 
     return () => clearTimeout(fadeTimer);
   }, []);
