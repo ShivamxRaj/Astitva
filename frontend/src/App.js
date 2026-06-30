@@ -1,5 +1,5 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -30,6 +30,18 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 
 // API base URL (kept for future backend calls)
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api'; // eslint-disable-line no-unused-vars
+
+// Helper component to redirect password recovery flows to the correct route
+function AuthRedirectHandler() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash && hash.includes('type=recovery')) {
+      navigate('/reset-password' + hash, { replace: true });
+    }
+  }, [navigate]);
+  return null;
+}
 
 function App() {
   const { i18n } = useTranslation();
@@ -174,6 +186,7 @@ function App() {
 
   return (
     <Router>
+      <AuthRedirectHandler />
       <SEOMetadata />
       <div className="min-h-screen flex flex-col">
         <Navbar />

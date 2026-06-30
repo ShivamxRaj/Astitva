@@ -1,0 +1,3 @@
+# 
+
+{"tunnels":[{"name":"command_line","ID":"f7efcab21d0a7360ee92778d479c7328","uri":"/api/tunnels/command_line","public_url":"https://62df-2409-4091-4050-fc01-648e-abaf-2d91-de3.ngrok-free.app","proto":"https","config":{"addr":"http://localhost:5001","inspect":true},"metrics":{"conns":{"count":2,"gauge":0,"rate1":3.8169386511900385e-16,"rate5":0.000010466937783605498,"rate15":0.0002577069948436042,"p50":9117866050,"p90":12196814800,"p95":12196814800,"p99":12196814800},"http":{"count":5,"rate1":5.458464687566873e-16,"rate5":0.000023415692356187554,"rate15":0.0006212056860484572,"p50":18175000,"p90":24541700,"p95":24541700,"p99":24541700}}}],"uri":"/api/tunnels"}
