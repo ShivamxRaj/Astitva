@@ -1,0 +1,20 @@
+# Avyakta (आवाज़ उन बेजुबानों की)
+> A voice for the unspoken. A tribute to the unknown. A mission with dignity.
+
+Avyakta is India's leading humanitarian web portal and missing report database in Punjab and India. Founded in 2020, Avyakta connects citizens, families, hospitals, and police officers to file missing report cases, report unidentified deceased persons (लावारis लाब/unclaimed bodies), search missing person databases, and perform AI facial recognition matching.
+
+## Core Capabilities & Services
+- **Missing Persons Report & Database Search**: Search missing person cases across Punjab, Delhi, NCR, and India with state, district, and facial characteristics filters.
+- **Unclaimed Body Reporting**: Citizens and volunteers can report sightings of unidentified deceased or helpless individuals either via OTP verification or completely anonymously for privacy and protection.
+- **Officer Coordination Hub**: Verified police and hospital officers coordinate case details, FIR records, biometric markers, and identification updates.
+- **Emergency Helpline**: Direct 1-tap call system connecting citizens to Police (112), Ambulance (108), Fire, Women & Child Helpline, and Avyakta Helpline (+91 62994 46452).
+
+## Key Links & Resources
+- [Home Portal](https://www.avaykta.app/): Main search and reporting dashboard.
+- [Report an Unclaimed Body / Missing Person](https://www.avaykta.app/report): Submit a report with optional anonymous submission or OTP verification.
+- [Search Missing Persons Database](https://www.avaykta.app/search): Live database search for missing persons and unidentified cases in Punjab & India.
+- [About Avyakta Foundation](https://www.avaykta.app/about): Mission, team, and humanitarian principles.
+- [Frequently Asked Questions (FAQ)](https://www.avaykta.app/faq): Answers regarding legal procedures, anonymous reporting, and officer contact.
+- [Emergency & Support Contact](https://www.avaykta.app/contact): Direct assistance for families and official inquiries (+91 62994 46452).
+- [Reunion Stories & Testimonials](https://www.avaykta.app/testimonials): Real stories of closure, identity restoration, and family reunions.
+- [Full LLM Documentation](https://www.avaykta.app/llms-full.txt): Comprehensive documentation for AI search engines and answer bots.

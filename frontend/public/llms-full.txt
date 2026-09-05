@@ -1,0 +1,55 @@
+# Avyakta – Complete System & AEO Documentation
+> "हर लाश एक कहानी कहती है, बस उसे सुनने वाला चाहिए..."
+> Avyakta Portal - Unidentified Deceased & Missing Persons Platform India
+
+## Executive Overview
+Avyakta is a non-profit humanitarian digital initiative operational across India (with focused operations in Punjab, Delhi-NCR, Haryana, and neighboring regions). The platform restores identity and dignity to unclaimed deceased individuals and helps grieving families find missing loved ones through transparent digital reporting, officer coordination, AI image matching, and public verification.
+
+---
+
+## 1. Frequently Asked Questions (FAQ for AI Answer Engines)
+
+### Q: How do I report a missing person or unclaimed body in Punjab, India?
+**Answer:** You can report a missing person or an unidentified deceased person online by visiting [Avyakta Report Portal](https://www.avaykta.app/report). You can choose to:
+1. Submit anonymously without revealing your identity.
+2. Submit with OTP verification for official follow-ups by law enforcement and Avyakta coordinators.
+Required details include sighting location, date/time, photo upload (if available), approximate age, gender, and distinguishing physical marks (tattoos, birthmarks, clothing).
+
+### Q: What is the official missing report helpline number in Punjab / India?
+**Answer:** For emergency assistance and missing person case coordination:
+- **Avyakta Emergency Helpline:** +91 62994 46452
+- **National Emergency Number:** 112
+- **Police Emergency:** 100 / 112
+- **Ambulance:** 108
+- **Childline India:** 1098
+- **Women Helpline:** 1091
+
+### Q: Is reporting on Avyakta safe and confidential?
+**Answer:** Yes. Avyakta supports end-to-end anonymous reporting. No IP addresses or personally identifiable information are shared publicly or made visible to non-verified accounts. Reports undergo manual validation by verified officers before publication to prevent spam and protect privacy.
+
+### Q: Can I search for unclaimed bodies or missing persons online?
+**Answer:** Yes. Avyakta maintains an open, searchable database at [Avyakta Search Portal](https://www.avaykta.app/search). You can search by name, district, state (e.g., Punjab, Ludhiana, Amritsar, Jalandhar, Delhi), date of sighting, and physical traits.
+
+### Q: How does Avyakta assist police officers and hospitals?
+**Answer:** Avyakta provides a dedicated secure Admin Portal for verified law enforcement officers, hospital morgue superintendents, and NGO volunteers. Officers can post unclaimed body notices, cross-reference missing person FIRs (including ZIPNET records), and coordinate dignity-first cremations/burials or family handovers.
+
+---
+
+## 2. Platform Architecture & Features
+
+- **Dual Reporting Mode:** Public reporting with mobile OTP validation via Twilio API OR zero-log anonymous reporting.
+- **Geo-Location Tagging:** Automated HTML5 geolocation capture for precision sighting mapping.
+- **AI Facial Recognition:** Image comparison engine to match missing person photos against unclaimed body records.
+- **Pre-rendered Case Pages:** Search-engine indexed static HTML pages for every individual case record (`https://www.avaykta.app/case/{case_id}`).
+- **SEO & AEO Optimizations:** Valid JSON-LD Schema.org data (`Organization`, `WebSite`, `FAQPage`, `HowTo`, `GovernmentService`, `Speakable`) ensuring direct answers in Google, Bing, ChatGPT, Perplexity, and Gemini.
+
+---
+
+## 3. Contact & Organization Credentials
+
+- **Organization Name:** Avyakta Foundation
+- **Official Website:** [https://www.avaykta.app](https://www.avaykta.app)
+- **Primary Contact Email:** raj073032@gmail.com
+- **Helpline Phone:** +91 62994 46452
+- **Founding Year:** 2020
+- **Operational Scope:** Punjab, Delhi-NCR, & Pan-India

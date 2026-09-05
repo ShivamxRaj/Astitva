@@ -49,8 +49,8 @@ function App() {
   const [isServerDown, setIsServerDown] = useState(false);
 
   useEffect(() => {
-    // Check if the user agent is a search bot/crawler or Lighthouse to bypass loading delay for SEO/Performance audits
-    const isBotOrLighthouse = /bot|google|baidu|bing|msn|duckduckbot|teoma|slurp|yandex|lighthouse/i.test(navigator.userAgent);
+    // Check if the user agent is a search bot/crawler, AI answer engine, or Lighthouse to bypass loading delay for SEO/Performance audits
+    const isBotOrLighthouse = /bot|google|baidu|bing|msn|duckduckbot|teoma|slurp|yandex|lighthouse|gpt|perplexity|claude|anthropic|bytespider|applebot|facebookexternalhit|twitterbot/i.test(navigator.userAgent);
     if (isBotOrLighthouse) {
       setIsLoading(false);
       return;
