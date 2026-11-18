@@ -7,6 +7,8 @@ import {
   XMarkIcon,
   ChevronDownIcon,
   GlobeAltIcon,
+  MagnifyingGlassIcon,
+  ShieldCheckIcon,
 } from '@heroicons/react/24/outline';
 import logo from '../assets/logo.png';
 import DonationModal from './DonationModal';
@@ -94,14 +96,14 @@ const Navbar = () => {
       <div className="hidden sm:flex bg-slate-950 text-slate-400 py-2.5 px-4 sm:px-6 lg:px-8 text-[11px] font-semibold tracking-wider uppercase border-b border-white/5 items-center justify-between gap-2.5" role="banner">
         <div className="flex items-center gap-2">
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true" />
-          <span>🏛️ Official Humanitarian Portal &nbsp;|&nbsp; Punjab, India &nbsp;|&nbsp; Est. 2020</span>
+          <span>Official Humanitarian Portal &nbsp;|&nbsp; Punjab, India &nbsp;|&nbsp; Est. 2020</span>
         </div>
         <div className="flex items-center gap-4">
           <a href={`tel:${HELPLINE}`} className="hover:text-white transition-colors" aria-label={`Call helpline ${HELPLINE}`} title="Call Avaykta 24/7 helpline">
-            📞 Helpline: {HELPLINE}
+            Helpline: {HELPLINE}
           </a>
           <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors" aria-label="Chat on WhatsApp" title="Chat with support on WhatsApp">
-            💬 WhatsApp Support
+            WhatsApp Support
           </a>
         </div>
       </div>
@@ -194,7 +196,8 @@ const Navbar = () => {
                     aria-label="Search for missing person"
                     title="Search the missing persons database"
                   >
-                    🔍 {searchLabel}
+                    <MagnifyingGlassIcon className="w-4 h-4 text-slate-400" />
+                    {searchLabel}
                   </Link>
 
                   {/* Report Case — rose capsule */}
@@ -204,7 +207,7 @@ const Navbar = () => {
                     aria-label="Report an unclaimed body"
                     title="Report an unclaimed or unidentified body"
                   >
-                    🚨 {reportLabel}
+                    {reportLabel}
                   </Link>
 
                   {/* Support Us Button — Desktop */}
@@ -213,7 +216,7 @@ const Navbar = () => {
                     className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-full text-xs lg:text-sm font-bold shadow-lg shadow-amber-500/10 hover:shadow-amber-400/25 hover:scale-[1.03] active:scale-95 transition-all duration-200"
                     aria-label="Support Us"
                   >
-                    💛 Donate
+                    Donate
                   </button>
 
                   {/* Admin Login Icon */}
@@ -223,7 +226,7 @@ const Navbar = () => {
                     aria-label="Admin Login"
                     title="Login to Avaykta admin portal"
                   >
-                    🛡️
+                    <ShieldCheckIcon className="w-4 h-4 text-slate-400 hover:text-white" />
                     {isAdmin && pendingCount > 0 && (
                       <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5" title="New unverified report arrived">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
@@ -240,7 +243,7 @@ const Navbar = () => {
                     className="px-3.5 py-1.5 bg-rose-600 text-white text-xs font-bold rounded-full shadow-lg shadow-rose-950/20"
                     aria-label="Report a case"
                   >
-                    🚨 Report
+                    Report
                   </Link>
                   <Disclosure.Button
                     className="inline-flex items-center justify-center rounded-lg p-2 text-slate-300 hover:text-white hover:bg-white/5 focus:outline-none"
@@ -278,7 +281,8 @@ const Navbar = () => {
                     to="/search"
                     className="w-full flex items-center justify-center gap-1.5 py-2.5 px-4 border border-white/10 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition-all"
                   >
-                    🔍 Search Missing Person
+                    <MagnifyingGlassIcon className="w-4 h-4 text-slate-400" />
+                    Search Missing Person
                   </Disclosure.Button>
                   
                   <Disclosure.Button
@@ -286,7 +290,7 @@ const Navbar = () => {
                     onClick={() => setDonationOpen(true)}
                     className="w-full py-2.5 px-4 bg-amber-500 text-slate-950 rounded-xl text-sm font-bold hover:bg-amber-400 transition-all"
                   >
-                    💛 Donate to Avaykta
+                    Donate to Avaykta
                   </Disclosure.Button>
                 </div>
 
@@ -320,7 +324,7 @@ const Navbar = () => {
                       href={`tel:${HELPLINE}`}
                       className="flex items-center justify-center gap-1.5 py-2 px-3 border border-white/10 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition-all"
                     >
-                      📞 Call Helpline
+                      Call Helpline
                     </a>
                     <a
                       href={WHATSAPP_URL}
@@ -328,7 +332,7 @@ const Navbar = () => {
                       rel="noopener noreferrer"
                       className="flex items-center justify-center gap-1.5 py-2 px-3 border border-white/10 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition-all"
                     >
-                      💬 WhatsApp
+                      WhatsApp
                     </a>
                   </div>
                 </div>
@@ -341,7 +345,8 @@ const Navbar = () => {
                     to="/admin/login"
                     className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all"
                   >
-                    🔐 Admin Login
+                    <ShieldCheckIcon className="w-4 h-4 text-slate-400" />
+                    Admin Login
                     {isAdmin && pendingCount > 0 && (
                       <span className="flex h-2 w-2 relative">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
