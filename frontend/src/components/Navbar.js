@@ -15,7 +15,6 @@ import DonationModal from './DonationModal';
 import { supabase } from '../lib/supabaseClient';
 
 const HELPLINE = '+91 62994 46452';
-const WHATSAPP_URL = 'https://wa.me/916299446452?text=Hello%20Avaykta%2C%20I%20need%20assistance.';
 
 const LANG_OPTIONS = [
   { code: 'en', label: 'EN', full: 'English' },
@@ -101,9 +100,6 @@ const Navbar = () => {
         <div className="flex items-center gap-4">
           <a href={`tel:${HELPLINE}`} className="hover:text-white transition-colors" aria-label={`Call helpline ${HELPLINE}`} title="Call Avaykta 24/7 helpline">
             Helpline: {HELPLINE}
-          </a>
-          <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors" aria-label="Chat on WhatsApp" title="Chat with support on WhatsApp">
-            WhatsApp Support
           </a>
         </div>
       </div>
@@ -319,20 +315,12 @@ const Navbar = () => {
                 {/* Mobile Help & Support */}
                 <div className="pt-3 border-t border-white/5">
                   <p className="px-3 text-[10px] font-semibold uppercase tracking-wider text-slate-500 mb-2">Help & Support</p>
-                  <div className="grid grid-cols-2 gap-2 px-1">
+                  <div className="px-1">
                     <a
                       href={`tel:${HELPLINE}`}
-                      className="flex items-center justify-center gap-1.5 py-2 px-3 border border-white/10 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition-all"
+                      className="w-full flex items-center justify-center gap-1.5 py-2 px-3 border border-white/10 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition-all"
                     >
                       Call Helpline
-                    </a>
-                    <a
-                      href={WHATSAPP_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-1.5 py-2 px-3 border border-white/10 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition-all"
-                    >
-                      WhatsApp
                     </a>
                   </div>
                 </div>
