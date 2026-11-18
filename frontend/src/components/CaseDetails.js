@@ -26,7 +26,7 @@ const CaseDetails = () => {
 
         if (dbError || !data) {
           // 2. Fallback to local offline cache
-          const cachedCases = JSON.parse(localStorage.getItem('avyakta_offline_cases_cache') || '[]');
+          const cachedCases = JSON.parse(localStorage.getItem('avaykta_offline_cases_cache') || '[]');
           const matchedCache = cachedCases.find(c => c.case_id.replace('#', '') === cleanedId.replace('#', ''));
           
           if (matchedCache) {
@@ -70,7 +70,7 @@ const CaseDetails = () => {
   const shareCase = () => {
     if (navigator.share) {
       navigator.share({
-        title: `Unidentified Body Sighting Case - Avyakta`,
+        title: `Unidentified Body Sighting Case - Avaykta`,
         text: `Please help identify this case found at ${caseData?.location}. Sighted on ${caseData ? new Date(caseData.date_of_sighting).toLocaleDateString() : ''}.`,
         url: window.location.href,
       }).catch(console.error);
@@ -100,7 +100,7 @@ const CaseDetails = () => {
             <button onClick={() => navigate('/search')} className="btn-primary w-full py-2.5 rounded-xl font-bold text-sm">
               Search Missing Persons Directory
             </button>
-            <Link to="/" className="text-sm font-semibold text-slate-500 hover:text-slate-800 mt-2 block" title="Go back to Avyakta homepage">
+            <Link to="/" className="text-sm font-semibold text-slate-500 hover:text-slate-800 mt-2 block" title="Go back to Avaykta homepage">
               Back to Homepage
             </Link>
           </div>
@@ -229,13 +229,13 @@ const CaseDetails = () => {
                   <div className="flex-1">
                     <h4 className="text-sm font-bold text-slate-800 mb-1">Do you know this person?</h4>
                     <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                      If you recognize these details, or have matching information about a missing relative, please contact the Avyakta Foundation Helpline immediately or speak directly with local coordination officers.
+                      If you recognize these details, or have matching information about a missing relative, please contact the Avaykta Foundation Helpline immediately or speak directly with local coordination officers.
                     </p>
                   </div>
                 </div>
                 
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <a href="tel:+916299446452" className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-[#1B3A6B] hover:bg-[#152d52] text-white rounded-xl text-center text-sm font-bold transition-all shadow-sm whitespace-nowrap" title="Call Avyakta emergency helpline">
+                  <a href="tel:+916299446452" className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-[#1B3A6B] hover:bg-[#152d52] text-white rounded-xl text-center text-sm font-bold transition-all shadow-sm whitespace-nowrap" title="Call Avaykta emergency helpline">
                     📞 Call +91 62994 46452
                   </a>
                   <a href={`https://wa.me/916299446452?text=Inquiry%20regarding%20Case%20ID%20${caseData.case_id}`} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-center text-sm font-bold transition-all shadow-sm whitespace-nowrap" title="Inquire about this case on WhatsApp">

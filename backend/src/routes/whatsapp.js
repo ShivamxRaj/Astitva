@@ -130,7 +130,7 @@ Thank you for helping us restore dignity.`;
 
   // 2. Check if the user wants to REPORT a case
   if (normalizedText.includes('report') || normalizedText.includes('file')) {
-    const webReportUrl = 'https://avyakta.netlify.app/report'; // Update to your production URL
+    const webReportUrl = 'https://avaykta.netlify.app/report'; // Update to your production URL
     const responseMsg = `📢 *Report a Case*
 
 To file a report with photos, location, and enable AI biometric matching, please use our secure portal:
@@ -142,7 +142,7 @@ If you cannot access the link, you can submit details by typing them here in cha
   }
 
   // 3. Fallback welcome message
-  const welcomeText = `👋 *Welcome to Avyakta Portal Assistant*
+  const welcomeText = `👋 *Welcome to Avaykta Portal Assistant*
 
 I can assist you with case reporting and tracking.
 

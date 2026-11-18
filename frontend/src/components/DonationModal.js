@@ -89,7 +89,7 @@ const DonationModal = ({ isOpen, onClose }) => {
         key: process.env.REACT_APP_RAZORPAY_KEY_ID || 'rzp_test_SoACRQ4kcZ0fM8',
         amount: data.order.amount,
         currency: data.order.currency,
-        name: 'Avyakta',
+        name: 'Avaykta',
         description: 'Donation for bringing dignity to unclaimed souls',
         order_id: data.order.id,
         handler: async function (response) {
@@ -179,7 +179,7 @@ const DonationModal = ({ isOpen, onClose }) => {
 
   const handleWhatsAppShare = () => {
     const text = encodeURIComponent(
-      "I just donated to Avyakta — a portal that helps identify unclaimed bodies and bring dignity to forgotten souls in India. Join me: https://www.avaykta.app"
+      "I just donated to Avaykta — a portal that helps identify unclaimed bodies and bring dignity to forgotten souls in India. Join me: https://www.avaykta.app"
     );
     window.open(`https://wa.me/?text=${text}`, '_blank');
   };
@@ -221,7 +221,7 @@ const DonationModal = ({ isOpen, onClose }) => {
                     className="font-merriweather font-bold m-0"
                     style={{ color: 'white', fontSize: '1.2rem', lineHeight: '1.3' }}
                   >
-                    Support Avyakta
+                    Support Avaykta
                   </h2>
                   <p
                     style={{
@@ -639,7 +639,7 @@ const DonationModal = ({ isOpen, onClose }) => {
                       }}
                       onMouseEnter={(e) => (e.currentTarget.style.background = '#EBE3D5')}
                       onMouseLeave={(e) => (e.currentTarget.style.background = '#F5F0E8')}
-                      title="Copy Avyakta website link to clipboard"
+                      title="Copy Avaykta website link to clipboard"
                     >
                       Copy Link
                     </button>

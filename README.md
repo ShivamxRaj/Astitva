@@ -1,4 +1,4 @@
-# 🕊 Avyakta – आवाज़ उन बेजुबानों की
+# 🕊 Avaykta – आवाज़ उन बेजुबानों की
 
 > “A voice for the unspoken. A tribute to the unknown. A mission with dignity.”
 
@@ -6,7 +6,7 @@
 
 📌 **Project Snapshot**
 
-Avyakta is a socially driven platform that allows citizens to report unclaimed dead bodies in their vicinity — either anonymously or through OTP-verified submissions. It also provides a secure admin panel for officials to view and act upon reports.
+Avaykta is a socially driven platform that allows citizens to report unclaimed dead bodies in their vicinity — either anonymously or through OTP-verified submissions. It also provides a secure admin panel for officials to view and act upon reports.
 
 The platform emphasizes empathy, security, and speed to bring peace, identity, and dignity to those who can no longer speak for themselves.
 
@@ -94,11 +94,11 @@ The platform emphasizes empathy, security, and speed to bring peace, identity, a
 
 ---
 
-💡 **Thought Behind Avyakta**
+💡 **Thought Behind Avaykta**
 
 > "हर लाश एक कहानी कहती है, बस उसे सुनने वाला चाहिए..."
 
-We built Avyakta with the belief that even the unknown deserve a voice. From emergency access to anonymous reporting, every detail was made with dignity in mind. Each checkpoint was aligned with our mission to merge technology with compassion.
+We built Avaykta with the belief that even the unknown deserve a voice. From emergency access to anonymous reporting, every detail was made with dignity in mind. Each checkpoint was aligned with our mission to merge technology with compassion.
 
 ---
 

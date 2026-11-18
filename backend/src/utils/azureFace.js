@@ -2,7 +2,7 @@ const axios = require('axios');
 
 const key = process.env.AZURE_FACE_API_KEY;
 const endpoint = process.env.AZURE_FACE_ENDPOINT || 'https://shivam-face-api.cognitiveservices.azure.com/';
-const faceListId = 'avyakta-unidentified-bodies';
+const faceListId = 'avaykta-unidentified-bodies';
 
 if (!key) {
   console.warn('⚠️ Warning: AZURE_FACE_API_KEY environment variable is not defined.');
@@ -25,8 +25,8 @@ async function initFaceList() {
     console.log(`[Azure Face] Initializing FaceList at ${url}...`);
     
     await axios.put(url, {
-      name: 'Avyakta Unidentified Bodies FaceList',
-      userData: 'Persistent list of registered unidentified bodies for Avyakta portal.'
+      name: 'Avaykta Unidentified Bodies FaceList',
+      userData: 'Persistent list of registered unidentified bodies for Avaykta portal.'
     }, { headers });
     
     console.log('[Azure Face] FaceList initialized successfully.');

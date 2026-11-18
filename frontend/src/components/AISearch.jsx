@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { UserIcon, MapPinIcon, SparklesIcon, PhoneIcon, DocumentMagnifyingGlassIcon } from '@heroicons/react/24/outline';
-import { supabase, supabaseAdmin } from '../lib/supabaseClient';
+import { supabase } from '../lib/supabaseClient';
 
 const AISearch = () => {
   const [activeTab, setActiveTab] = useState('ai_search'); // 'ai_search' or 'track_report'
@@ -35,15 +35,15 @@ const AISearch = () => {
     setIsSearching(true);
     setHasSearched(true);
     try {
-      // Fetch all cases directly from Supabase (bypassing the broken Render backend)
-      const { data: allCases, error: fetchError } = await supabaseAdmin
+      // Fetch all cases directly from Supabase
+      const { data: allCases, error: fetchError } = await supabase
         .from('orphan_cases')
         .select('*');
 
       if (fetchError) throw fetchError;
 
       // Construct AI Prompt (mirrors the original backend logic)
-      let prompt = `You are an AI matching system for Avyakta, a missing persons platform in India.
+      let prompt = `You are an AI matching system for Avaykta, a missing persons platform in India.
 Given a family's search details and a list of reported unidentified cases from the database, find the best matches. 
 
 Family is searching for:
@@ -107,8 +107,8 @@ Rules:
     try {
       const cleanedId = trackId.trim().replace(/[^\w#-]/g, '');
       
-      // Query directly via Supabase Admin (bypasses RLS and broken backend)
-      const { data: foundCase, error: dbError } = await supabaseAdmin
+      // Query via Supabase
+      const { data: foundCase, error: dbError } = await supabase
         .from('orphan_cases')
         .select('*')
         .eq('case_id', cleanedId)

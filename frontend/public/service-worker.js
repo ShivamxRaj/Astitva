@@ -1,4 +1,4 @@
-const CACHE_NAME = 'avyakta-cache-v1';
+const CACHE_NAME = 'avaykta-cache-v1';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { supabase, supabaseAdmin } from '../lib/supabaseClient';
+import { supabase } from '../lib/supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import {
   CheckCircleIcon,
@@ -57,7 +57,7 @@ const AdminCases = () => {
 
       const apiUrl = window.location.hostname === 'localhost'
         ? 'http://localhost:5001'
-        : (process.env.REACT_APP_API_URL || 'https://avyakta-backend.onrender.com');
+        : (process.env.REACT_APP_API_URL || 'https://avaykta-backend.onrender.com');
 
       const remainingReports = [];
 
@@ -122,7 +122,7 @@ const AdminCases = () => {
       try {
         const apiUrl = window.location.hostname === 'localhost'
           ? 'http://localhost:5001'
-          : (process.env.REACT_APP_API_URL || 'https://avyakta-backend.onrender.com');
+          : (process.env.REACT_APP_API_URL || 'https://avaykta-backend.onrender.com');
         const res = await fetch(`${apiUrl}/api/cases/all`);
         if (res.ok) {
           const data = await res.json();
@@ -164,7 +164,7 @@ const AdminCases = () => {
     setError('');
     const apiUrl = window.location.hostname === 'localhost'
       ? 'http://localhost:5001'
-      : (process.env.REACT_APP_API_URL || 'https://avyakta-backend.onrender.com');
+      : (process.env.REACT_APP_API_URL || 'https://avaykta-backend.onrender.com');
 
     try {
       // 1. Try to update via the Backend API (Secure & handles RLS bypass on server)
@@ -196,7 +196,7 @@ const AdminCases = () => {
       
       // 2. Fallback to direct client-side update
       try {
-        const { error: sbErr } = await supabaseAdmin
+        const { error: sbErr } = await supabase
           .from('orphan_cases')
           .update({ status })
           .eq('id', id);

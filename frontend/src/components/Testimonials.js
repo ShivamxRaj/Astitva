@@ -4,7 +4,7 @@ import RecentFeedback from "./RecentFeedback";
 
 const TESTIMONIALS = [
   {
-    text: "I never thought reporting an unclaimed soul could be this simple. Avyakta gave me courage when I was afraid to step forward.",
+    text: "I never thought reporting an unclaimed soul could be this simple. Avaykta gave me courage when I was afraid to step forward.",
     author: "Jaspreet Kaur",
     role: "Sister of Missing Person",
     location: "Punjab",
@@ -28,7 +28,7 @@ const TESTIMONIALS = [
     rating: 5,
   },
   {
-    text: "Our village never had such a system. Avyakta is not just a website. It's hope. It's dignity. It's voice for the voiceless.",
+    text: "Our village never had such a system. Avaykta is not just a website. It's hope. It's dignity. It's voice for the voiceless.",
     author: "Rakesh Yadav",
     role: "Panchayat Member",
     location: "Bihar",
@@ -36,7 +36,7 @@ const TESTIMONIALS = [
     rating: 5,
   },
   {
-    text: "This is more than tech. This is humanity encoded into a platform. I wish every state had something like Avyakta.",
+    text: "This is more than tech. This is humanity encoded into a platform. I wish every state had something like Avaykta.",
     author: "Nandini Patil",
     role: "Social Worker",
     location: "Maharashtra",
@@ -44,7 +44,7 @@ const TESTIMONIALS = [
     rating: 5,
   },
   {
-    text: "I could chat with a bot and get help instantly. I didn't feel alone. Avyakta made me feel heard.",
+    text: "I could chat with a bot and get help instantly. I didn't feel alone. Avaykta made me feel heard.",
     author: "Shivam Raj",
     role: "Reporting Witness",
     location: "Kolkata",
@@ -60,7 +60,7 @@ const TESTIMONIALS = [
     rating: 5,
   },
   {
-    text: "We use Avyakta to coordinate between hospitals and morgues. It has reduced identification time by nearly 60% in our district.",
+    text: "We use Avaykta to coordinate between hospitals and morgues. It has reduced identification time by nearly 60% in our district.",
     author: "Dr. Meena Rao",
     role: "District Medical Officer",
     location: "Lucknow",

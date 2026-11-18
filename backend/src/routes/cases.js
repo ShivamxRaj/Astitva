@@ -13,7 +13,7 @@ const { detectFace, addFaceToFaceList, findSimilarFaces, getFaceListMapping } = 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER || 'avyaktahumanitarian@gmail.com',
+    user: process.env.EMAIL_USER || 'avayktahumanitarian@gmail.com',
     pass: process.env.EMAIL_PASS || 'dummy_override_pass'
   }
 });
@@ -25,7 +25,8 @@ const supabase = createClient(
 );
 
 // Initialize Gemini AI
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "AIzaSyAw7bUUfo4EWW-gDOFJ3DYr6TqDiwGqbXQ");
+const geminiApiKey = process.env.GEMINI_API_KEY || '';
+const genAI = new GoogleGenerativeAI(geminiApiKey);
 const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
 // Multer setup for memory storage
@@ -108,22 +109,22 @@ router.post('/report', upload.single('photo'), async (req, res) => {
       const targetEmail = emailMatch ? emailMatch[0] : contact_info.trim();
       
       const subject = `Case Report Received - ID: ${case_id}`;
-      const textContent = `Thank you for your humanity. Your report (ID: ${case_id}) has been received.\n\nLocation: ${location}\nDate: ${date_of_sighting}\n\nOur team is currently verifying the details to restore dignity to the individual.\n\nWarm regards,\nAvyakta Team`;
+      const textContent = `Thank you for your humanity. Your report (ID: ${case_id}) has been received.\n\nLocation: ${location}\nDate: ${date_of_sighting}\n\nOur team is currently verifying the details to restore dignity to the individual.\n\nWarm regards,\nAvaykta Team`;
       const htmlContent = `<div style="font-family: Arial, sans-serif; color: #1B3A6B; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px;">
-        <h2 style="color: #1B3A6B;">Avyakta Foundation</h2>
+        <h2 style="color: #1B3A6B;">Avaykta Foundation</h2>
         <p><strong>Thank you for your humanity. Your report (ID: ${case_id}) has been received.</strong></p>
         <p><strong>Location:</strong> ${location}</p>
         <p><strong>Date Logged:</strong> ${new Date().toLocaleString()}</p>
         <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 20px 0;" />
         <p style="font-size: 13px; color: #64748b;">Our verification officers have been dispatched to analyze the record. You can use your Report ID to track live updates directly on our portal.</p>
-        <p style="font-size: 12px; color: #94a3b8;">Avyakta Humanitarian Assistance · Restoring dignity, one soul at a time</p>
+        <p style="font-size: 12px; color: #94a3b8;">Avaykta Humanitarian Assistance · Restoring dignity, one soul at a time</p>
       </div>`;
 
       // Check if user has configured a Resend API Key for modern transactional email delivery
-      const resendKey = process.env.RESEND_API_KEY || 're_B9xF5LjX_9MhpgYeMT9CbM6KgkKLnxCzA';
+      const resendKey = process.env.RESEND_API_KEY;
       if (resendKey) {
         axios.post('https://api.resend.com/emails', {
-          from: 'Avyakta Foundation <onboarding@resend.dev>',
+          from: 'Avaykta Foundation <onboarding@resend.dev>',
           to: [targetEmail],
           subject,
           html: htmlContent,
@@ -137,7 +138,7 @@ router.post('/report', upload.single('photo'), async (req, res) => {
       } else {
         // Fallback standard Nodemailer transport execution
         transporter.sendMail({
-          from: '"Avyakta Foundation" <avyaktahumanitarian@gmail.com>',
+          from: '"Avaykta Foundation" <avayktahumanitarian@gmail.com>',
           to: targetEmail,
           subject,
           text: textContent,
@@ -269,7 +270,7 @@ router.post('/search', upload.single('photo'), async (req, res) => {
       };
     });
 
-    let prompt = `You are an AI matching system for Avyakta, a missing persons platform in India.
+    let prompt = `You are an AI matching system for Avaykta, a missing persons platform in India.
 Given a family's search details and a list of reported unidentified cases from the database (some of which contain "biometricMatchConfidence" scores from our Azure Face AI recognition system), find the best matches. 
 
 Family is searching for:

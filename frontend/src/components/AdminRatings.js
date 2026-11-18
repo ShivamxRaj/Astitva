@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase, supabaseAdmin } from '../lib/supabaseClient';
+import { supabase } from '../lib/supabaseClient';
 import {
   CheckCircleIcon,
   XCircleIcon,
@@ -61,7 +61,7 @@ const AdminRatings = () => {
   useEffect(() => { fetchRatings(); }, [filter]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const updateStatus = async (id, status) => {
-    const { error: err } = await supabaseAdmin
+    const { error: err } = await supabase
       .from('ratings')
       .update({ status, reviewed_at: new Date().toISOString() })
       .eq('id', id);

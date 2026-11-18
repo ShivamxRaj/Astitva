@@ -13,18 +13,18 @@ const stats = [
   { label: "Reports Received", value: "1,285" },
   { label: "Families Reunited", value: "743" },
   { label: "States Reached", value: "22" },
-  { label: "Built with ❤ by Team Astitva", value: "" },
+  { label: "Built with ❤ by Team Avaykta", value: "" },
 ];
 
 const stories = [
   {
     name: "Ravi Kumar",
-    story: "After months of searching, Avyakta helped us find closure for our missing brother. Their support was compassionate and professional.",
+    story: "After months of searching, Avaykta helped us find closure for our missing brother. Their support was compassionate and professional.",
     relation: "Family Member"
   },
   {
     name: "Inspector Sharma",
-    story: "Avyakta's platform made it easier for us to connect unclaimed cases with families. It truly brings dignity to every life.",
+    story: "Avaykta's platform made it easier for us to connect unclaimed cases with families. It truly brings dignity to every life.",
     relation: "Police Officer"
   },
   {
@@ -60,7 +60,7 @@ export default function Home() {
       <section className="relative min-h-[70vh] flex flex-col justify-center items-center">
         <div className="max-w-3xl text-center py-16 px-4">
           <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-800 mb-4">
-            Avyakta: Honoring Every Life, Even in Absence
+            Avaykta: Honoring Every Life, Even in Absence
           </h1>
           <p className="text-lg sm:text-xl text-gray-600 mb-8">
             Every soul deserves dignity, even in silence.<br />
@@ -145,21 +145,21 @@ export default function Home() {
             <Link
               to="/contact"
               className="group inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-              title="Get involved with Avyakta Foundation"
+              title="Get involved with Avaykta Foundation"
             >
               Get Involved
             </Link>
             <Link
               to="/admin/login?tab=register"
               className="group inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-bold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-              title="Register to become an Avyakta volunteer"
+              title="Register to become an Avaykta volunteer"
             >
               Become a Volunteer
             </Link>
             <Link
               to="/about"
               className="group inline-flex items-center justify-center px-8 py-4 border-2 border-blue-600 text-blue-600 font-bold rounded-full hover:bg-blue-600 hover:text-white transition-all duration-300 hover:scale-105"
-              title="Learn more about Avyakta's mission and team"
+              title="Learn more about Avaykta's mission and team"
             >
               Learn More
             </Link>

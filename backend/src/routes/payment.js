@@ -86,7 +86,7 @@ router.post('/create-stripe-session', async (req, res) => {
           price_data: {
             currency: 'inr',
             product_data: {
-              name: 'Avyakta NGO Donation',
+              name: 'Avaykta NGO Donation',
               description: 'Donation for bringing dignity to unclaimed souls',
             },
             unit_amount: Math.round(amount * 100), // in paise

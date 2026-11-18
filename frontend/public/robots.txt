@@ -1,4 +1,4 @@
-# Avyakta Robots.txt
+# Avaykta Robots.txt
 # Allowed all search engine and AI Answer Engine crawlers for humanitarian missing report indexing
 
 User-agent: *

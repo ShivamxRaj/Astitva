@@ -298,7 +298,7 @@ function Contact() {
                     </div>
                     <div className="ml-3 sm:ml-4">
                       <h3 className="text-base sm:text-lg font-semibold mb-1" style={{ color: 'var(--navy)' }}>Email</h3>
-                      <p className="text-sm sm:text-base font-medium" style={{ color: 'var(--text-dark)' }}>support@avyakta.org</p>
+                      <p className="text-sm sm:text-base font-medium" style={{ color: 'var(--text-dark)' }}>support@avaykta.app</p>
                       <p className="text-xs sm:text-sm mt-1" style={{ color: 'var(--text-light)' }}>We'll respond within 24 hours</p>
                     </div>
                   </div>
@@ -333,7 +333,7 @@ function Contact() {
                       allowFullScreen=""
                       loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"
-                      title="Avyakta National Headquarters - New Delhi"
+                      title="Avaykta National Headquarters - New Delhi"
                       className="rounded-xl"
                     ></iframe>
                   </div>
@@ -341,7 +341,7 @@ function Contact() {
                     <div className="flex items-center justify-center space-x-2">
                       <div className="w-3 h-3 rounded-full animate-pulse" style={{ background: 'var(--alert-red)' }}></div>
                       <p className="text-xs sm:text-sm font-medium" style={{ color: 'var(--teal)' }}>
-                        Avyakta Main Office - Connaught Place, New Delhi, India
+                        Avaykta Main Office - Connaught Place, New Delhi, India
                       </p>
                     </div>
                     <p className="text-xs mt-1 text-center" style={{ color: 'var(--text-light)' }}>
@@ -354,7 +354,7 @@ function Contact() {
                         rel="noopener noreferrer"
                         className="btn-primary inline-block"
                         style={{ padding: '0.5rem 1.25rem', fontSize: '0.875rem' }}
-                        title="Get directions to Avyakta office on Google Maps"
+                        title="Get directions to Avaykta office on Google Maps"
                       >
                         Get Directions
                       </a>
@@ -373,7 +373,7 @@ function Contact() {
                       { bg: '#1A1A1A', icon: <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/> },
                       { bg: 'var(--teal)', icon: <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/> },
                     ].map((social, i) => (
-                      <a key={i} href="#" className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 text-white rounded-full transition-all duration-300 transform hover:scale-110 shadow-md" style={{ background: social.bg }} title={`Follow Avyakta on ${i === 0 ? 'Facebook' : i === 1 ? 'X (Twitter)' : 'LinkedIn'}`}>
+                      <a key={i} href="#" className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 text-white rounded-full transition-all duration-300 transform hover:scale-110 shadow-md" style={{ background: social.bg }} title={`Follow Avaykta on ${i === 0 ? 'Facebook' : i === 1 ? 'X (Twitter)' : 'LinkedIn'}`}>
                         <svg className="h-5 w-5 sm:h-6 sm:w-6" fill="currentColor" viewBox="0 0 24 24">
                           {social.icon}
                         </svg>

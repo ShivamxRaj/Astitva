@@ -16,7 +16,7 @@ const AdminRatings = lazy(() => import('./components/AdminRatings'));
 const AdminCases = lazy(() => import('./components/AdminCases'));
 const AdminContacts = lazy(() => import('./components/AdminContacts'));
 const About = lazy(() => import('./pages/About'));
-const AvyaktaBot = lazy(() => import('./components/AvyaktaBot'));
+const AvayktaBot = lazy(() => import('./components/AvayktaBot'));
 const Contact = lazy(() => import('./components/Contact'));
 const FAQPage = lazy(() => import('./components/FAQPage'));
 const Testimonials = lazy(() => import('./components/Testimonials'));
@@ -215,7 +215,7 @@ function App() {
         </main>
         <Footer />
         <Suspense fallback={null}>
-          <AvyaktaBot />
+          <AvayktaBot />
         </Suspense>
         {isLoading && <SplashLoader />}
       </div>

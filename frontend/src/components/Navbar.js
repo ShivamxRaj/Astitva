@@ -13,7 +13,7 @@ import DonationModal from './DonationModal';
 import { supabase } from '../lib/supabaseClient';
 
 const HELPLINE = '+91 62994 46452';
-const WHATSAPP_URL = 'https://wa.me/916299446452?text=Hello%20Avyakta%2C%20I%20need%20assistance.';
+const WHATSAPP_URL = 'https://wa.me/916299446452?text=Hello%20Avaykta%2C%20I%20need%20assistance.';
 
 const LANG_OPTIONS = [
   { code: 'en', label: 'EN', full: 'English' },
@@ -64,7 +64,7 @@ const Navbar = () => {
     return () => clearInterval(interval);
   }, []);
 
-  /* Listen for 'open-donation-modal' event from AvyaktaBot & check URL query params */
+  /* Listen for 'open-donation-modal' event from AvayktaBot & check URL query params */
   useEffect(() => {
     const handler = () => setDonationOpen(true);
     window.addEventListener('open-donation-modal', handler);
@@ -97,7 +97,7 @@ const Navbar = () => {
           <span>🏛️ Official Humanitarian Portal &nbsp;|&nbsp; Punjab, India &nbsp;|&nbsp; Est. 2020</span>
         </div>
         <div className="flex items-center gap-4">
-          <a href={`tel:${HELPLINE}`} className="hover:text-white transition-colors" aria-label={`Call helpline ${HELPLINE}`} title="Call Avyakta 24/7 helpline">
+          <a href={`tel:${HELPLINE}`} className="hover:text-white transition-colors" aria-label={`Call helpline ${HELPLINE}`} title="Call Avaykta 24/7 helpline">
             📞 Helpline: {HELPLINE}
           </a>
           <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors" aria-label="Chat on WhatsApp" title="Chat with support on WhatsApp">
@@ -117,16 +117,16 @@ const Navbar = () => {
               <div className="flex h-16 sm:h-20 items-center justify-between px-4 sm:px-6 gap-4">
 
                 {/* Logo + Brand */}
-                <Link to="/" className="flex items-center gap-3 flex-shrink-0 group" aria-label="Avyakta Home" title="Go to Avyakta homepage">
+                <Link to="/" className="flex items-center gap-3 flex-shrink-0 group" aria-label="Avaykta Home" title="Go to Avaykta homepage">
                   <img
                     className="h-9 w-9 object-contain filter brightness-0 invert drop-shadow-[0_0_8px_rgba(255,255,255,0.4)] group-hover:scale-105 transition-transform"
                     src={logo}
-                    alt="Avyakta Logo"
+                    alt="Avaykta Logo"
                     width="36"
                     height="36"
                     onError={(e) => { e.target.style.display = 'none'; }}
                   />
-                  <span className="text-white font-bold text-lg tracking-wider font-poppins">Avyakta</span>
+                  <span className="text-white font-bold text-lg tracking-wider font-poppins">Avaykta</span>
                 </Link>
 
                 {/* Desktop Nav Links */}
@@ -221,7 +221,7 @@ const Navbar = () => {
                     to="/admin/login"
                     className="p-2 rounded-full border border-white/10 text-slate-400 hover:text-white hover:bg-white/5 transition-all duration-200 relative flex items-center justify-center"
                     aria-label="Admin Login"
-                    title="Login to Avyakta admin portal"
+                    title="Login to Avaykta admin portal"
                   >
                     🛡️
                     {isAdmin && pendingCount > 0 && (
@@ -286,7 +286,7 @@ const Navbar = () => {
                     onClick={() => setDonationOpen(true)}
                     className="w-full py-2.5 px-4 bg-amber-500 text-slate-950 rounded-xl text-sm font-bold hover:bg-amber-400 transition-all"
                   >
-                    💛 Donate to Avyakta
+                    💛 Donate to Avaykta
                   </Disclosure.Button>
                 </div>
 

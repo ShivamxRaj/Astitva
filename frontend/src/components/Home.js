@@ -229,7 +229,7 @@ const Home = () => {
         <div className="container-responsive">
           <div className="text-center mb-10">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-merriweather font-bold mb-3" style={{ color:'#1B3A6B' }}>
-              Why Choose Avyakta
+              Why Choose Avaykta
             </h2>
             <p className="text-base sm:text-lg max-w-3xl mx-auto" style={{ color:'#4A5568' }}>
               Built on the principles of dignity, compassion, and technological innovation.
@@ -322,7 +322,7 @@ const Home = () => {
                 Report a Case
                 <ArrowRightIcon style={{ width:'1rem', height:'1rem' }} aria-hidden="true" />
               </Link>
-              <Link to="/contact" className="btn-secondary" style={{ borderColor:'rgba(255,255,255,0.5)', color:'#fff' }} title="Contact Avyakta support team">
+              <Link to="/contact" className="btn-secondary" style={{ borderColor:'rgba(255,255,255,0.5)', color:'#fff' }} title="Contact Avaykta support team">
                 Contact Us
                 <ArrowRightIcon style={{ width:'1rem', height:'1rem' }} aria-hidden="true" />
               </Link>

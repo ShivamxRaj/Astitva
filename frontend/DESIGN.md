@@ -1,7 +1,7 @@
 # Design System Strategy: The Compassionate Beacon
 
 ## 1. Overview & Creative North Star: "The Compassionate Beacon"
-This design system is built upon the North Star of **"The Compassionate Beacon."** For a platform like Avyakta dedicated to reporting unclaimed deceased persons and reuniting families, trust, empathy, and absolute clarity are paramount. 
+This design system is built upon the North Star of **"The Compassionate Beacon."** For a platform like Avaykta dedicated to reporting unclaimed deceased persons and reuniting families, trust, empathy, and absolute clarity are paramount. 
 
 We avoid the clinical sterility of raw medical portals and the starkness of brutalist layouts. Instead, we embrace an **Empathetic Humanitarian** aesthetic. This uses soft warm colors, deep solemn blues, and clear serif display typefaces to create an environment that feels respectful, safe, and professional.
 

@@ -6,7 +6,7 @@ const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || '';
 const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY || '';
 
 async function prerender() {
-  console.log('🚀 Starting Avyakta Post-Build SEO & AEO Pre-renderer...');
+  console.log('🚀 Starting Avaykta Post-Build SEO & AEO Pre-renderer...');
 
   const buildDir = path.join(__dirname, 'build');
   const indexHtmlPath = path.join(buildDir, 'index.html');
@@ -44,9 +44,9 @@ async function prerender() {
 
     // Clean description snippet for unique meta description
     const cleanDesc = desc.replace(/[\r\n\t]+/g, ' ').trim();
-    const shortDesc = cleanDesc.length > 140 ? cleanDesc.slice(0, 137) + '...' : (cleanDesc || 'View physical traits, location, and sighting notes on Avyakta missing portal.');
+    const shortDesc = cleanDesc.length > 140 ? cleanDesc.slice(0, 137) + '...' : (cleanDesc || 'View physical traits, location, and sighting notes on Avaykta missing portal.');
 
-    const pageTitle = `Unidentified Case #${caseId} (${location}) - Avyakta Portal`;
+    const pageTitle = `Unidentified Case #${caseId} (${location}) - Avaykta Portal`;
     const pageMetaDesc = `Case report #${caseId} sighted on ${dateStr} at ${location}. Physical characteristics: ${shortDesc} Contact helpline +91 62994 46452 to assist identification.`;
 
     let prerenderedHtml = baseHtml;
@@ -60,7 +60,7 @@ async function prerender() {
     // Inject unique Open Graph & Meta tags
     const ogTags = `
     <meta name="description" content="${pageMetaDesc}">
-    <meta name="keywords" content="case #${caseId}, unclaimed body ${location}, missing person ${location}, avyakta case report">
+    <meta name="keywords" content="case #${caseId}, unclaimed body ${location}, missing person ${location}, avaykta case report">
     <meta property="og:title" content="${pageTitle}">
     <meta property="og:description" content="${pageMetaDesc}">
     <meta property="og:url" content="https://www.avaykta.app/case/${caseId}">
@@ -76,7 +76,7 @@ async function prerender() {
       "headline": "${pageTitle}",
       "description": "${pageMetaDesc}",
       "url": "https://www.avaykta.app/case/${caseId}",
-      "publisher": { "@type": "Organization", "name": "Avyakta Foundation", "url": "https://www.avaykta.app" }
+      "publisher": { "@type": "Organization", "name": "Avaykta Foundation", "url": "https://www.avaykta.app" }
     }
     </script>
     `;
@@ -103,7 +103,7 @@ async function prerender() {
         ${photoUrl ? `<p><strong>📸 Case Photograph:</strong> <a href="${photoUrl}">${photoUrl}</a></p>` : ''}
         
         <div style="margin-top: 30px; padding: 16px; background-color: #f0f7ff; border: 1px solid #blue-100; border-radius: 8px; font-size: 14px;">
-          <strong>Do you recognize this person?</strong> Call the Avyakta Helpline (+91 62994 46452) or contact local coordination officers immediately.
+          <strong>Do you recognize this person?</strong> Call the Avaykta Helpline (+91 62994 46452) or contact local coordination officers immediately.
         </div>
       </div>
     </noscript>

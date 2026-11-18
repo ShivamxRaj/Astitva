@@ -47,7 +47,7 @@ const FloatingActionButton = ({ isChatOpen: externalIsChatOpen, onChatToggle }) 
         text: "Hi! I'm here to help you with any questions about our website or support you in difficult situations. How can I assist you today?",
         timestamp: new Date(),
         quickActions: [
-          { text: "About Avyakta", action: "about" },
+          { text: "About Avaykta", action: "about" },
           { text: "Emergency Help", action: "emergency" },
           { text: "Contact Us", action: "contact" },
           { text: "How to Report", action: "report" }
@@ -70,12 +70,12 @@ const FloatingActionButton = ({ isChatOpen: externalIsChatOpen, onChatToggle }) 
           messages: [
             {
               role: 'system',
-              content: `You are a compassionate AI assistant helping users with a platform dedicated to giving dignity to the forgotten. Avyakta helps identify unclaimed bodies, provides emergency support, and connects families with lost loved ones.
+              content: `You are a compassionate AI assistant helping users with a platform dedicated to giving dignity to the forgotten. Avaykta helps identify unclaimed bodies, provides emergency support, and connects families with lost loved ones.
 
 Key Information:
 - Emergency: Call 100 (Police), 102 (Ambulance), 101 (Fire)
 - Helpline: +91 62994 46452
-- Email: support@avyakta.org
+- Email: support@avaykta.app
 - Location: New Delhi, India
 - Specialized: Women (1091), Children (1098), Mental Health (9152987821)
 
@@ -155,10 +155,10 @@ Always prioritize safety and emergency situations. Be compassionate, helpful, an
       };
     }
 
-    // About Avyakta
-    if (lowerMessage.includes('about') || lowerMessage.includes('what is') || lowerMessage.includes('avyakta')) {
+    // About Avaykta
+    if (lowerMessage.includes('about') || lowerMessage.includes('what is') || lowerMessage.includes('avaykta')) {
       return {
-        text: "🏛️ ABOUT AVYAKTA\n\nAvyakta is a compassionate platform dedicated to giving dignity to the forgotten. We help:\n\n• Report and identify unclaimed bodies\n• Provide emergency support 24/7\n• Connect families with lost loved ones\n• Support victims of violence and abuse\n• Offer counseling and legal assistance\n• Coordinate with authorities\n\nOur Mission:\nTo ensure no life goes unnoticed or unclaimed. Every person deserves dignity, justice, and peace.\n\nWe work with:\n• Police departments\n• Hospitals and morgues\n• NGOs and support organizations\n• Legal authorities\n• Medical professionals",
+        text: "🏛️ ABOUT AVAYKTA\n\nAvaykta is a compassionate platform dedicated to giving dignity to the forgotten. We help:\n\n• Report and identify unclaimed bodies\n• Provide emergency support 24/7\n• Connect families with lost loved ones\n• Support victims of violence and abuse\n• Offer counseling and legal assistance\n• Coordinate with authorities\n\nOur Mission:\nTo ensure no life goes unnoticed or unclaimed. Every person deserves dignity, justice, and peace.\n\nWe work with:\n• Police departments\n• Hospitals and morgues\n• NGOs and support organizations\n• Legal authorities\n• Medical professionals",
         quickActions: [
           { text: "🎯 Our Mission", action: "mission" },
           { text: "🆘 Emergency Help", action: "emergency" },
@@ -171,7 +171,7 @@ Always prioritize safety and emergency situations. Be compassionate, helpful, an
     // Contact Information
     if (lowerMessage.includes('contact') || lowerMessage.includes('phone') || lowerMessage.includes('email') || lowerMessage.includes('reach') || lowerMessage.includes('call')) {
       return {
-        text: "📞 CONTACT INFORMATION\n\n24/7 Emergency Helpline:\n📞 +91 62994 46452\n\nGeneral Support:\n📧 Email: support@avyakta.org\n🌐 Website: www.avaykta.app\n📍 Location: New Delhi, India\n\nSpecialized Helplines:\n👩 Women: 1091\n👶 Children: 1098\n🚨 Police: 100\n🚑 Ambulance: 102\n🔥 Fire: 101\n\nResponse Times:\n• Emergency: Immediate\n• General queries: Within 24 hours\n• Reports: Within 48 hours\n\nWe're here 24/7 to help you!",
+        text: "📞 CONTACT INFORMATION\n\n24/7 Emergency Helpline:\n📞 +91 62994 46452\n\nGeneral Support:\n📧 Email: support@avaykta.app\n🌐 Website: www.avaykta.app\n📍 Location: New Delhi, India\n\nSpecialized Helplines:\n👩 Women: 1091\n👶 Children: 1098\n🚨 Police: 100\n🚑 Ambulance: 102\n🔥 Fire: 101\n\nResponse Times:\n• Emergency: Immediate\n• General queries: Within 24 hours\n• Reports: Within 48 hours\n\nWe're here 24/7 to help you!",
         quickActions: [
           { text: "📞 Call Helpline", action: "call_helpline" },
           { text: "📧 Send Email", action: "send_email" },
@@ -231,12 +231,12 @@ If you are searching for a loved one or have found someone in need, please:
 🏥 *Medical Emergencies*
 For accidents, injuries, or sudden illness, call 102 for an ambulance. Stay with the person, keep them comfortable, and wait for help. Every moment matters, and your courage can save a life.
 
-🏛️ *About Avyakta*
+🏛️ *About Avaykta*
 We are dedicated to giving dignity to the forgotten, reuniting families, and supporting those in crisis. Our mission is to bring hope, justice, and peace to every soul.
 
 📞 *Contact & Support*
 • Helpline: +91 62994 46452
-• Email: support@avyakta.org
+• Email: support@avaykta.app
 • Website: www.avaykta.app
 • Location: New Delhi, India
 
@@ -302,7 +302,7 @@ Your pain is seen, your voice is heard, and your story matters. Together, we can
 
       // Communication Actions
       case 'send_email':
-        window.location.href = 'mailto:support@avyakta.org';
+        window.location.href = 'mailto:support@avaykta.app';
         response = { text: "📧 Opening email client. Please send us your message and we'll respond within 24 hours. Include your contact details for faster response." };
         break;
       case 'visit_website':
@@ -443,7 +443,7 @@ Your pain is seen, your voice is heard, and your story matters. Together, we can
         response = { text: "📝 Registration process:\n\nWho Can Register:\n• Police officers\n• Medical professionals\n• NGO workers\n• Government officials\n• Authorized personnel\n• Common users\n\nSteps:\n1️⃣ Fill personal details\n2️⃣ Verify mobile with OTP\n3️⃣ Provide credentials\n4️⃣ Security verification\n5️⃣ Terms agreement\n6️⃣ Account activation\n\nVisit our admin page to start registration." };
         break;
       case 'help':
-        response = { text: "📞 Need help?\n\nTechnical Support:\n• Registration issues\n• Login problems\n• Website navigation\n• Report submission\n\nGeneral Support:\n• Information requests\n• Service inquiries\n• Coordination help\n• Resource guidance\n\nContact us:\n📞 +91 62994 46452\n📧 support@avyakta.org\n\nWe're here to help with any questions or issues." };
+        response = { text: "📞 Need help?\n\nTechnical Support:\n• Registration issues\n• Login problems\n• Website navigation\n• Report submission\n\nGeneral Support:\n• Information requests\n• Service inquiries\n• Coordination help\n• Resource guidance\n\nContact us:\n📞 +91 62994 46452\n📧 support@avaykta.app\n\nWe're here to help with any questions or issues." };
         break;
       case 'security':
         response = { text: "🔒 Security information:\n\nData Protection:\n• Encrypted storage\n• Secure transmission\n• Access controls\n• Regular backups\n\nAuthentication:\n• Multi-factor verification\n• OTP confirmation\n• Security codes\n• Session management\n\nPrivacy:\n• Confidential information\n• Limited access\n• Secure sharing\n• Data retention policies\n\nYour information is protected with industry-standard security measures." };
@@ -495,7 +495,7 @@ Your pain is seen, your voice is heard, and your story matters. Together, we can
           <button
             onClick={() => setChatOpen(!chatOpen)}
             className="w-14 h-14 rounded-full bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg flex items-center justify-center transform hover:scale-110 transition-all duration-300 hover:shadow-xl"
-            title="Chat with Avyakta AI assistant"
+            title="Chat with Avaykta AI assistant"
           >
             <ChatBubbleLeftRightIcon className="w-6 h-6" />
           </button>
@@ -605,7 +605,7 @@ Your pain is seen, your voice is heard, and your story matters. Together, we can
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                placeholder="Ask me anything about Avyakta..."
+                placeholder="Ask me anything about Avaykta..."
                 className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm bg-white text-gray-900"
                 disabled={false}
                 autoComplete="off"

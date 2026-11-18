@@ -13,7 +13,7 @@ import {
    ═══════════════════════════════════════ */
 const RESPONSES = {
   greeting: {
-    text: `Namaste 🙏 I'm the Avyakta Assistant.\nI'm here to help you report, search, or understand our process.\nHow can I help you today?`,
+    text: `Namaste 🙏 I'm the Avaykta Assistant.\nI'm here to help you report, search, or understand our process.\nHow can I help you today?`,
     chips: ['Report a body', 'Search missing person', 'How does it work?', 'Talk to a human'],
   },
   report: {
@@ -28,7 +28,7 @@ const RESPONSES = {
   },
   process: {
     keywords: ['process', 'kaise', 'how', 'steps', 'kya karna', 'work', 'procedure'],
-    text: `Here's how Avyakta works:\n1️⃣ Someone reports an unclaimed body\n2️⃣ Our team verifies and documents the case\n3️⃣ We notify police, NGOs, and hospitals\n4️⃣ If a match is found, family is contacted\n5️⃣ Case is resolved with dignity\n\nThe whole process is free and confidential.`,
+    text: `Here's how Avaykta works:\n1️⃣ Someone reports an unclaimed body\n2️⃣ Our team verifies and documents the case\n3️⃣ We notify police, NGOs, and hospitals\n4️⃣ If a match is found, family is contacted\n5️⃣ Case is resolved with dignity\n\nThe whole process is free and confidential.`,
     chips: ['Report now', 'Search now', 'More questions'],
   },
   anonymous: {
@@ -38,7 +38,7 @@ const RESPONSES = {
   },
   helpline: {
     keywords: ['helpline', 'phone', 'call', 'number', 'contact', 'dial', 'ring'],
-    text: `Our 24/7 helpline: +91 62994 46452\nWhatsApp: Available via the WhatsApp button\nEmail: support@avyakta.org\n\nFor life-threatening emergencies, please call 112 immediately.`,
+    text: `Our 24/7 helpline: +91 62994 46452\nWhatsApp: Available via the WhatsApp button\nEmail: support@avaykta.app\n\nFor life-threatening emergencies, please call 112 immediately.`,
     chips: ['Open WhatsApp', 'Support Us'],
   },
   human: {
@@ -48,7 +48,7 @@ const RESPONSES = {
   },
   thanks: {
     keywords: ['thanks', 'thank', 'shukriya', 'dhanyawad', 'thnx', 'thx'],
-    text: `You're welcome 🙏\nEvery report matters. Every search matters.\nAvyakta is here whenever you need us.`,
+    text: `You're welcome 🙏\nEvery report matters. Every search matters.\nAvaykta is here whenever you need us.`,
     chips: ['Go to Home', 'Report a case'],
   },
   guide: {
@@ -67,7 +67,7 @@ const RESPONSES = {
   },
 };
 
-const WHATSAPP_URL = 'https://wa.me/916299446452?text=Hello%20Avyakta%2C%20I%20need%20assistance.';
+const WHATSAPP_URL = 'https://wa.me/916299446452?text=Hello%20Avaykta%2C%20I%20need%20assistance.';
 
 /* ── Match user input to an intent ── */
 function matchIntent(input) {
@@ -113,9 +113,9 @@ const API_BASE_URL = getApiBaseUrl();
 const SESSION_ID = 'session_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 
 /* ═══════════════════════════════════════
-   AvyaktaBot Component
+   AvayktaBot Component
    ═══════════════════════════════════════ */
-const AvyaktaBot = () => {
+const AvayktaBot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
@@ -374,7 +374,7 @@ const AvyaktaBot = () => {
             className="absolute bottom-full right-0 mb-3 whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-medium pointer-events-none"
             style={{ background: '#1B3A6B', color: '#F0F6FF' }}
           >
-            Talk to Avyakta Assistant
+            Talk to Avaykta Assistant
           </div>
         )}
 
@@ -391,7 +391,7 @@ const AvyaktaBot = () => {
             border: 'none',
             cursor: 'pointer',
           }}
-          aria-label="Toggle Avyakta chatbot"
+          aria-label="Toggle Avaykta chatbot"
         >
           {isOpen ? (
             <XMarkIcon style={{ width: '24px', height: '24px', color: '#fff' }} />
@@ -438,7 +438,7 @@ const AvyaktaBot = () => {
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden',
-            animation: 'avyaktaBotSlideUp 250ms ease-out forwards',
+            animation: 'avayktaBotSlideUp 250ms ease-out forwards',
           }}
         >
           {/* ── Header ── */}
@@ -459,7 +459,7 @@ const AvyaktaBot = () => {
               <SparklesIcon style={{ width: '18px', height: '18px', color: '#fff' }} />
             </div>
             <div className="flex-1 min-w-0">
-              <div style={{ color: '#fff', fontWeight: 600, fontSize: '0.9rem' }}>Avyakta Assistant</div>
+              <div style={{ color: '#fff', fontWeight: 600, fontSize: '0.9rem' }}>Avaykta Assistant</div>
               <div style={{ color: '#7EB5D6', fontSize: '0.75rem' }}>
                 <span style={{ color: '#4CAF50' }}>●</span> Online · Replies instantly
               </div>
@@ -641,7 +641,7 @@ const AvyaktaBot = () => {
 
       {/* Animation keyframe */}
       <style>{`
-        @keyframes avyaktaBotSlideUp {
+        @keyframes avayktaBotSlideUp {
           from { opacity: 0; transform: translateY(20px); }
           to   { opacity: 1; transform: translateY(0); }
         }
@@ -650,4 +650,4 @@ const AvyaktaBot = () => {
   );
 };
 
-export default AvyaktaBot;
+export default AvayktaBot;

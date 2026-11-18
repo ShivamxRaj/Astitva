@@ -4,7 +4,7 @@ const { createClient } = require('@supabase/supabase-js');
 const Contact = require('../models/Contact');
 
 // Initialize Supabase admin client
-const supabaseUrl = process.env.SUPABASE_URL || 'https://xnzxenupdsjzcxpbpxqs.supabase.co';
+const supabaseUrl = process.env.SUPABASE_URL || '';
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 

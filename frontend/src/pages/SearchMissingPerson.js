@@ -104,10 +104,10 @@ const SearchMissingPerson = () => {
       if (fetchError) throw fetchError;
       allCases = data || [];
       // Cache fetched cases for offline querying
-      localStorage.setItem('avyakta_offline_cases_cache', JSON.stringify(allCases));
+      localStorage.setItem('avaykta_offline_cases_cache', JSON.stringify(allCases));
     } catch (dbErr) {
       console.warn('Failed to fetch from Supabase directly. Checking offline cache fallback:', dbErr);
-      allCases = JSON.parse(localStorage.getItem('avyakta_offline_cases_cache') || '[]');
+      allCases = JSON.parse(localStorage.getItem('avaykta_offline_cases_cache') || '[]');
       if (!allCases || allCases.length === 0) {
         allCases = JSON.parse(localStorage.getItem('citizen_offline_reports') || '[]');
       }
@@ -119,7 +119,7 @@ const SearchMissingPerson = () => {
       }
 
       // Construct AI Prompt
-      let prompt = `You are an AI matching system for Avyakta, a missing persons platform in India.
+      let prompt = `You are an AI matching system for Avaykta, a missing persons platform in India.
 Given a family's search details and a list of reported unidentified cases from the database, find the best matches. 
 
 Family is searching for:
@@ -162,11 +162,8 @@ Return ONLY a valid JSON array of matched cases with two extra fields added to e
 - Only include cases with matchScore above 40.
 - Return ONLY the JSON array. No markdown, no "here is the json", no other text.`;
 
-      // Call Gemini AI REST API directly
-      const k1 = 'AIzaSy';
-      const k2 = 'Aw7bUUfo4EWW-g';
-      const k3 = 'DOFJ3DYr6TqDiwGqbXQ';
-      const apiKey = process.env.REACT_APP_GEMINI_API_KEY || (k1 + k2 + k3);
+      // Call Gemini AI REST API
+      const apiKey = process.env.REACT_APP_GEMINI_API_KEY || '';
       
       const requestBody = {
         contents: [{
@@ -289,7 +286,7 @@ Return ONLY a valid JSON array of matched cases with two extra fields added to e
 
     const apiUrl = window.location.hostname === 'localhost'
       ? 'http://localhost:5001'
-      : (process.env.REACT_APP_API_URL || 'https://avyakta-backend.onrender.com');
+      : (process.env.REACT_APP_API_URL || 'https://avaykta-backend.onrender.com');
 
     // 1. Try backend API first
     try {
@@ -515,11 +512,11 @@ Return ONLY a valid JSON array of matched cases with two extra fields added to e
                             📍 {match.location}
                           </Link>
                           {(match.status === 'identified' || match.status === 'investigating' || match.status === 'approved') && (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm" title="Officially verified by Avyakta Foundation">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm" title="Officially verified by Avaykta Foundation">
                               <svg className="w-3.5 h-3.5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path>
                               </svg>
-                              Verified by Avyakta
+                              Verified by Avaykta
                             </span>
                           )}
                         </div>
@@ -546,7 +543,7 @@ Return ONLY a valid JSON array of matched cases with two extra fields added to e
                         <svg className="w-3.5 h-3.5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path>
                         </svg>
-                        Verified by Avyakta
+                        Verified by Avaykta
                       </span>
                     )}
                   </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabaseAdmin } from '../lib/supabaseClient';
+import { supabase } from '../lib/supabaseClient';
 import axios from 'axios';
 
 const loadLeaflet = () => {
@@ -311,7 +311,7 @@ const ReportUnclaimedBody = () => {
 
   // Load draft from localStorage on mount
   useEffect(() => {
-    const saved = localStorage.getItem('avyakta_report_draft');
+    const saved = localStorage.getItem('avaykta_report_draft');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -329,7 +329,7 @@ const ReportUnclaimedBody = () => {
   // Save draft to localStorage on form changes
   useEffect(() => {
     const { image, ...serializableForm } = form;
-    localStorage.setItem('avyakta_report_draft', JSON.stringify(serializableForm));
+    localStorage.setItem('avaykta_report_draft', JSON.stringify(serializableForm));
   }, [form]);
 
   const handleMapConfirm = (address, lat, lon) => {
@@ -428,12 +428,12 @@ const ReportUnclaimedBody = () => {
         const filePath = `cases/${safeCaseId}/${fileName}`;
 
         try {
-          const { error: uploadError } = await supabaseAdmin.storage
+          const { error: uploadError } = await supabase.storage
             .from('case-photos')
             .upload(filePath, form.image);
 
           if (!uploadError) {
-            const { data: { publicUrl } } = supabaseAdmin.storage
+            const { data: { publicUrl } } = supabase.storage
               .from('case-photos')
               .getPublicUrl(filePath);
             photo_url = publicUrl;
@@ -486,8 +486,8 @@ ${form.description}`;
       } catch (storageSaveErr) {}
 
       let finalReportId = case_id;
-      // Insert into Supabase using the admin client to reliably bypass RLS blocks
-      const { error: dbError } = await supabaseAdmin
+      // Insert into Supabase using standard client
+      const { error: dbError } = await supabase
         .from('orphan_cases')
         .insert([caseData]);
 
@@ -526,20 +526,20 @@ ${form.description}`;
         const targetEmail = emailMatch ? emailMatch[0] : form.contact.trim();
         try {
           await axios.post('https://api.resend.com/emails', {
-            from: 'Avyakta Foundation <onboarding@resend.dev>',
+            from: 'Avaykta Foundation <onboarding@resend.dev>',
             to: [targetEmail],
             subject: `Case Report Received - ID: ${finalReportId}`,
             html: `<div style="font-family: Arial, sans-serif; color: #1B3A6B; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px;">
-              <h2 style="color: #1B3A6B;">Avyakta Foundation</h2>
+              <h2 style="color: #1B3A6B;">Avaykta Foundation</h2>
               <p><strong>Thank you for your humanity. Your report (ID: ${finalReportId}) has been received.</strong></p>
               <p><strong>Location:</strong> ${form.location}</p>
               <p><strong>Date:</strong> ${form.dateTime}</p>
               <p>Our verification officers are reviewing the case to restore identity and dignity.</p>
-              <p>Warm regards,<br/>Avyakta Team</p>
+              <p>Warm regards,<br/>Avaykta Team</p>
             </div>`
           }, {
             headers: {
-              'Authorization': 'Bearer re_B9xF5LjX_9MhpgYeMT9CbM6KgkKLnxCzA',
+              'Authorization': `Bearer ${process.env.REACT_APP_RESEND_API_KEY || ''}`,
               'Content-Type': 'application/json'
             }
           });
@@ -552,7 +552,7 @@ ${form.description}`;
       setSubmitted(true);
       setForm(initialForm);
       setImagePreview(null);
-      localStorage.removeItem('avyakta_report_draft');
+      localStorage.removeItem('avaykta_report_draft');
       setStep(1);
     } catch (err) {
       console.error('Failed to submit report workflow:', err);

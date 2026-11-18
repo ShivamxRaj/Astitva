@@ -6,12 +6,12 @@ const USER_AVATAR = 'https://ui-avatars.com/api/?name=User&background=0D8ABC&col
 const initialBotMessages = [
   {
     from: 'bot',
-    text: 'Hello Sir/Madam, thank you for joining Avyakta. What issue are you facing? Please tell me, I will definitely help you out to the best of my ability.',
+    text: 'Hello Sir/Madam, thank you for joining Avaykta. What issue are you facing? Please tell me, I will definitely help you out to the best of my ability.',
     options: [
       'Report an Issue',
       'Track My Request',
       'Contact Support',
-      'Know About Avyakta',
+      'Know About Avaykta',
       'Other',
     ],
     timestamp: new Date(),
@@ -28,11 +28,11 @@ const botResponses = {
     options: [],
   },
   'Contact Support': {
-    text: 'You can reach us at support@avyakta.org or describe your issue here.',
+    text: 'You can reach us at support@avaykta.app or describe your issue here.',
     options: [],
   },
-  'Know About Avyakta': {
-    text: 'Avyakta is a humanitarian platform to help report and support unclaimed/orphaned dead bodies with dignity. Would you like to know more?',
+  'Know About Avaykta': {
+    text: 'Avaykta is a humanitarian platform to help report and support unclaimed/orphaned dead bodies with dignity. Would you like to know more?',
     options: ['Our Mission', 'How It Works', 'Back'],
   },
   'Other': {
@@ -61,7 +61,7 @@ const botResponses = {
       'Report an Issue',
       'Track My Request',
       'Contact Support',
-      'Know About Avyakta',
+      'Know About Avaykta',
       'Other',
     ],
   },
@@ -132,7 +132,7 @@ function WhatsAppChatbox() {
           <div className="bg-green-700 text-white px-4 py-3 flex items-center gap-3">
             <img src={BOT_AVATAR} alt="Bot" className="w-8 h-8 rounded-full" width="32" height="32" />
             <div>
-              <div className="font-bold">Avyakta Support</div>
+              <div className="font-bold">Avaykta Support</div>
               <div className="text-xs opacity-80">Online</div>
             </div>
             <button className="ml-auto text-white text-xl opacity-70 hover:opacity-100" onClick={() => setOpen(false)}>&times;</button>

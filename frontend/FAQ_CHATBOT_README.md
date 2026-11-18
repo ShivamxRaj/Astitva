@@ -1,8 +1,8 @@
-# Avyakta FAQ Chatbot System
+# Avaykta FAQ Chatbot System
 
 ## Overview
 
-The Avyakta FAQ Chatbot is a comprehensive, human-like chat interface that provides instant answers to common questions about the Avyakta platform. It's designed to help users quickly find information about reporting missing persons, account management, privacy, and more.
+The Avaykta FAQ Chatbot is a comprehensive, human-like chat interface that provides instant answers to common questions about the Avaykta platform. It's designed to help users quickly find information about reporting missing persons, account management, privacy, and more.
 
 ## Features
 
@@ -21,7 +21,7 @@ The Avyakta FAQ Chatbot is a comprehensive, human-like chat interface that provi
 ### 📚 Comprehensive FAQ Database
 The chatbot covers 8 main categories:
 
-1. **General Questions** - What is Avyakta, how it works, mission
+1. **General Questions** - What is Avaykta, how it works, mission
 2. **Account & Registration** - How to register, user roles, password management
 3. **Reporting Cases** - How to report missing persons, required information
 4. **Case Management** - Tracking cases, timelines, status updates
@@ -112,7 +112,7 @@ The chatbot uses a scoring system to find the best match:
 - **Modern UI**: Clean, professional design with gradients and animations
 - **Responsive**: Works on all screen sizes
 - **Accessible**: Proper ARIA labels and keyboard navigation
-- **Consistent**: Matches the overall Avyakta design system
+- **Consistent**: Matches the overall Avaykta design system
 
 ## Integration
 

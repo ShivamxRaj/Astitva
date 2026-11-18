@@ -199,7 +199,7 @@ const EmergencyHelp = () => {
               {/* WhatsApp Emergency Contact */}
               <div className="mt-8 flex flex-col items-center">
                 <a
-                  href="https://wa.me/916299446452?text=Hello%20Avyakta%20Support%2C%20I%20need%20emergency%20help."
+                  href="https://wa.me/916299446452?text=Hello%20Avaykta%20Support%2C%20I%20need%20emergency%20help."
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl font-semibold shadow-lg text-lg transition mt-2"
@@ -207,7 +207,7 @@ const EmergencyHelp = () => {
                   <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-6 h-6"><path d="M20.52 3.48A12.07 12.07 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.11.55 4.16 1.6 5.97L0 24l6.22-1.63A12.13 12.13 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.21-1.25-6.22-3.48-8.52zM12 22c-1.7 0-3.37-.44-4.83-1.28l-.35-.2-3.69.97.99-3.59-.22-.37A9.94 9.94 0 0 1 2 12c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.2-7.6c-.28-.14-1.65-.81-1.9-.9-.25-.09-.43-.14-.61.14-.18.28-.7.9-.86 1.08-.16.18-.32.2-.6.07-.28-.14-1.18-.44-2.25-1.4-.83-.74-1.39-1.65-1.55-1.93-.16-.28-.02-.43.12-.57.12-.12.28-.32.42-.48.14-.16.18-.28.28-.46.09-.18.05-.34-.02-.48-.07-.14-.61-1.47-.84-2.01-.22-.53-.45-.46-.61-.47-.16-.01-.34-.01-.52-.01-.18 0-.48.07-.73.34-.25.27-.97.95-.97 2.3s.99 2.67 1.13 2.85c.14.18 1.95 2.98 4.74 4.06.66.23 1.18.37 1.58.47.66.17 1.26.15 1.73.09.53-.08 1.65-.67 1.88-1.32.23-.65.23-1.2.16-1.32-.07-.12-.25-.18-.53-.32z"/></svg>
                   WhatsApp: Chat Now
                 </a>
-                <span className="text-sm text-gray-500 mt-2 text-center">You will be redirected to WhatsApp to chat with Avyakta Support for emergency help.</span>
+                <span className="text-sm text-gray-500 mt-2 text-center">You will be redirected to WhatsApp to chat with Avaykta Support for emergency help.</span>
               </div>
             </div>
 

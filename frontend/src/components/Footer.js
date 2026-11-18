@@ -8,7 +8,7 @@ import TermsOfService from '../pages/Guidelines';
 import { PrivacyPolicy } from '../pages/About';
 
 const HELPLINE     = '+91 62994 46452';
-const WHATSAPP_URL = 'https://wa.me/916299446452?text=Hello%20Avyakta%2C%20I%20need%20assistance.';
+const WHATSAPP_URL = 'https://wa.me/916299446452?text=Hello%20Avaykta%2C%20I%20need%20assistance.';
 
 const Footer = () => {
   const { i18n } = useTranslation();
@@ -41,7 +41,7 @@ const Footer = () => {
           <PhoneIcon style={{ width: '1.1rem', height: '1.1rem', color: '#FFFFFF', flexShrink: 0 }} aria-hidden="true" />
           <span className="font-bold text-white text-sm">
             24/7 Emergency Helpline:&nbsp;
-            <a href={`tel:${HELPLINE}`} className="underline underline-offset-2 hover:text-red-100 transition-colors" aria-label={`Call ${HELPLINE}`} title="Call Avyakta 24/7 Emergency Helpline">
+            <a href={`tel:${HELPLINE}`} className="underline underline-offset-2 hover:text-red-100 transition-colors" aria-label={`Call ${HELPLINE}`} title="Call Avaykta 24/7 Emergency Helpline">
               {HELPLINE}
             </a>
           </span>
@@ -52,7 +52,7 @@ const Footer = () => {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 font-bold text-white text-sm hover:text-red-100 transition-colors"
             aria-label="Chat on WhatsApp"
-            title="Chat with Avyakta support on WhatsApp"
+            title="Chat with Avaykta support on WhatsApp"
           >
             <ChatBubbleLeftRightIcon style={{ width: '1rem', height: '1rem' }} aria-hidden="true" />
             WhatsApp Support
@@ -67,7 +67,7 @@ const Footer = () => {
         <div className="lg:col-span-1">
           <div className="flex items-center gap-2 mb-3">
             <ShieldCheckIcon style={{ width: '1.4rem', height: '1.4rem', color: '#63B3ED' }} aria-hidden="true" />
-            <span className="font-bold text-white text-lg">Avyakta</span>
+            <span className="font-bold text-white text-lg">Avaykta</span>
           </div>
           <p className="text-sm mb-4" style={{ color: '#A0C4E8', lineHeight: '1.6' }}>
             Official humanitarian portal connecting families with unclaimed bodies since 2020. Every soul remembered, every life respected.
@@ -83,12 +83,12 @@ const Footer = () => {
           <h3 className="font-bold text-white text-sm mb-4 tracking-wide uppercase" style={{ fontSize: '0.78rem', letterSpacing: '0.08em' }}>Navigate</h3>
           <ul className="space-y-2.5">
             {[
-              { label: 'Home',           path: '/',        title: 'Go to Avyakta homepage' },
-              { label: 'About Us',       path: '/about',   title: 'Learn about Avyakta mission and team' },
+              { label: 'Home',           path: '/',        title: 'Go to Avaykta homepage' },
+              { label: 'About Us',       path: '/about',   title: 'Learn about Avaykta mission and team' },
               { label: 'Report a Case',  path: '/report',  title: 'Report an unclaimed or unidentified body' },
               { label: 'Search Records', path: '/search',  title: 'Search missing persons database' },
-              { label: 'FAQ',            path: '/faq',     title: 'Frequently asked questions about Avyakta' },
-              { label: 'Contact Us',     path: '/contact', title: 'Get in touch with Avyakta support team' },
+              { label: 'FAQ',            path: '/faq',     title: 'Frequently asked questions about Avaykta' },
+              { label: 'Contact Us',     path: '/contact', title: 'Get in touch with Avaykta support team' },
             ].map((item) => (
               <li key={item.path}>
                 <Link to={item.path} className="footer-link text-sm" title={item.title}>{item.label}</Link>
@@ -102,22 +102,22 @@ const Footer = () => {
           <h3 className="font-bold text-white text-sm mb-4 tracking-wide uppercase" style={{ fontSize: '0.78rem', letterSpacing: '0.08em' }}>Support & Legal</h3>
           <ul className="space-y-2.5">
             <li>
-              <button type="button" className="footer-link bg-transparent border-none p-0 text-sm" onClick={() => openModal('privacy')} title="Read Avyakta privacy policy">
+              <button type="button" className="footer-link bg-transparent border-none p-0 text-sm" onClick={() => openModal('privacy')} title="Read Avaykta privacy policy">
                 Privacy Policy
               </button>
             </li>
             <li>
-              <button type="button" className="footer-link bg-transparent border-none p-0 text-sm" onClick={() => openModal('cookies')} title="Read Avyakta cookie policy">
+              <button type="button" className="footer-link bg-transparent border-none p-0 text-sm" onClick={() => openModal('cookies')} title="Read Avaykta cookie policy">
                 Cookie Policy
               </button>
             </li>
             <li>
-              <button type="button" className="footer-link bg-transparent border-none p-0 text-sm" onClick={() => openModal('terms')} title="Read Avyakta terms of service">
+              <button type="button" className="footer-link bg-transparent border-none p-0 text-sm" onClick={() => openModal('terms')} title="Read Avaykta terms of service">
                 Terms of Service
               </button>
             </li>
             <li>
-              <Link to="/guidelines" className="footer-link text-sm" title="View Avyakta platform guidelines and reporting procedures">Guidelines</Link>
+              <Link to="/guidelines" className="footer-link text-sm" title="View Avaykta platform guidelines and reporting procedures">Guidelines</Link>
             </li>
           </ul>
         </div>
@@ -167,7 +167,7 @@ const Footer = () => {
 
       {/* Quote */}
       <div className="max-w-3xl mx-auto text-center py-6 px-4 italic" style={{ color: '#90CDF4', fontSize: '0.95rem', fontFamily: 'Georgia, serif' }}>
-        "In silent departures, we find our greatest humanity." — Avyakta Team
+        "In silent departures, we find our greatest humanity." — Avaykta Team
       </div>
 
       {/* Bottom Bar */}
@@ -193,7 +193,7 @@ const Footer = () => {
 
           {/* Copyright */}
           <div className="text-xs text-center" style={{ color: '#A0C4E8' }}>
-            © {year} Avyakta. Every soul remembered, every life respected. &nbsp;|&nbsp; Built with{' '}
+            © {year} Avaykta. Every soul remembered, every life respected. &nbsp;|&nbsp; Built with{' '}
             <HeartIcon style={{ width: '0.75rem', height: '0.75rem', display: 'inline', color: '#FC8181' }} aria-hidden="true" />
             {' '}by Shivam Raj
           </div>

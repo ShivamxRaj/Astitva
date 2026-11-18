@@ -34,15 +34,15 @@ const FAQPage = () => {
       icon: InformationCircleIcon,
       questions: [
         {
-          question: 'What is Avyakta?',
-          answer: 'Avyakta is a humanitarian platform dedicated to identifying unclaimed bodies and helping families find their missing loved ones. We use technology to bridge the gap between law enforcement, hospitals, and grieving families.'
+          question: 'What is Avaykta?',
+          answer: 'Avaykta is a humanitarian platform dedicated to identifying unclaimed bodies and helping families find their missing loved ones. We use technology to bridge the gap between law enforcement, hospitals, and grieving families.'
         },
         {
-          question: 'How much does it cost to use Avyakta?',
+          question: 'How much does it cost to use Avaykta?',
           answer: 'All our services are completely free. We operate as a humanitarian organization supported by donations, grants, and volunteers.'
         },
         {
-          question: 'Is Avyakta a government agency?',
+          question: 'Is Avaykta a government agency?',
           answer: 'No, we are an independent NGO that works in close collaboration with police departments, hospitals, and government agencies to facilitate the identification process.'
         }
       ]
@@ -61,7 +61,7 @@ const FAQPage = () => {
         },
         {
           question: 'Who handles the investigation after I submit a report?',
-          answer: 'The primary investigation is managed by local police and authorities. Avyakta acts as a facilitating platform to organize, match, and escalate cases where necessary.'
+          answer: 'The primary investigation is managed by local police and authorities. Avaykta acts as a facilitating platform to organize, match, and escalate cases where necessary.'
         }
       ]
     },
@@ -84,7 +84,7 @@ const FAQPage = () => {
       icon: PhoneIcon,
       questions: [
         {
-          question: 'How can I contact Avyakta support?',
+          question: 'How can I contact Avaykta support?',
           answer: 'You can reach us 24/7 via the helpline on our Contact page or use the live chat feature below.'
         },
         {
@@ -98,7 +98,7 @@ const FAQPage = () => {
       icon: HeartIcon,
       questions: [
         {
-          question: 'How can I help Avyakta?',
+          question: 'How can I help Avaykta?',
           answer: 'You can volunteer, spread awareness, report suspicious cases, or donate. We welcome technical, legal, and medical volunteers.'
         },
         {
@@ -259,10 +259,10 @@ const FAQPage = () => {
           <h3 className="text-2xl font-bold mb-3" style={{ color: 'var(--navy)' }}>Still need help?</h3>
           <p className="mb-6" style={{ color: 'var(--text-mid)' }}>Our support team is here to help you. Get in touch with us for personalized assistance.</p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <button onClick={() => window.dispatchEvent(new Event('open-chat'))} className="btn-primary" title="Open live chat with Avyakta support assistant">
+            <button onClick={() => window.dispatchEvent(new Event('open-chat'))} className="btn-primary" title="Open live chat with Avaykta support assistant">
               <ChatBubbleLeftRightIcon className="w-5 h-5 mr-2" /> Chat with us
             </button>
-            <a href="/contact" className="btn-secondary" title="Contact Avyakta support team via email or phone">
+            <a href="/contact" className="btn-secondary" title="Contact Avaykta support team via email or phone">
               <PhoneIcon className="w-5 h-5 mr-2" /> Contact Support
             </a>
           </div>

@@ -130,7 +130,7 @@ const AdminAuth = () => {
             style={{ background: 'rgba(255,255,255,0.15)', border: '2px solid rgba(255,255,255,0.3)' }}>
             <ShieldCheckIcon style={{ width: '2rem', height: '2rem', color: '#fff' }} aria-hidden="true" />
           </div>
-          <h1 className="text-2xl font-merriweather font-bold text-white mb-1">Avyakta Admin</h1>
+          <h1 className="text-2xl font-merriweather font-bold text-white mb-1">Avaykta Admin</h1>
           <p className="text-blue-100 text-sm">Secure administrative access portal</p>
         </div>
 
@@ -179,7 +179,7 @@ const AdminAuth = () => {
                     required
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder="you@avyakta.org"
+                    placeholder="you@avaykta.app"
                     className="w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:ring-2 transition-all"
                     style={{ borderColor: '#D1D5DB', focusBorderColor: '#1B3A6B' }}
                     aria-label="Email address"
@@ -293,7 +293,7 @@ const AdminAuth = () => {
                       type="email"
                       value={forgotEmail}
                       onChange={e => setForgotEmail(e.target.value)}
-                      placeholder="you@avyakta.org"
+                      placeholder="you@avaykta.app"
                       required
                       className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2"
                       aria-label="Email for password reset"
@@ -323,7 +323,7 @@ const AdminAuth = () => {
                 Invite-Only Access
               </h2>
               <p className="text-sm text-gray-600 mb-5 leading-relaxed">
-                The Avyakta admin portal is restricted to authorized personnel only. New accounts are created exclusively by the system administrator.
+                The Avaykta admin portal is restricted to authorized personnel only. New accounts are created exclusively by the system administrator.
               </p>
               <div className="rounded-xl p-4 mb-6 text-left" style={{ background: '#F0F7FF', border: '1px solid #BFDBFE' }}>
                 <p className="text-xs font-bold uppercase tracking-wide mb-3" style={{ color: '#1B3A6B' }}>
@@ -332,8 +332,8 @@ const AdminAuth = () => {
                 <ul className="space-y-2">
                   <li className="flex items-center gap-2 text-sm text-gray-700">
                     <EnvelopeIcon style={{ width: '1rem', height: '1rem', color: '#2E7D9C', flexShrink: 0 }} aria-hidden="true" />
-                    <a href="mailto:support@avyakta.org" className="hover:underline" style={{ color: '#2E7D9C' }}>
-                      support@avyakta.org
+                    <a href="mailto:support@avaykta.app" className="hover:underline" style={{ color: '#2E7D9C' }}>
+                      support@avaykta.app
                     </a>
                   </li>
                   <li className="flex items-center gap-2 text-sm text-gray-700">

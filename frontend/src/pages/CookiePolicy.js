@@ -10,7 +10,7 @@ const getFormattedDate = () => {
   });
 };
 
-const COOKIE_CONSENT_KEY = 'avyakta_cookie_consent';
+const COOKIE_CONSENT_KEY = 'avaykta_cookie_consent';
 
 const CookiePolicy = () => {
   const [showEssential, setShowEssential] = useState(false);
@@ -47,13 +47,13 @@ const CookiePolicy = () => {
       </div>
 
       {/* Title and Last Updated */}
-      <h2 className="text-2xl font-bold mb-1 flex items-center gap-2"><span role="img" aria-label="cookie">🍪</span> Cookie Policy for Avyakta</h2>
+      <h2 className="text-2xl font-bold mb-1 flex items-center gap-2"><span role="img" aria-label="cookie">🍪</span> Cookie Policy for Avaykta</h2>
       <p className="text-sm text-gray-500 mb-4">Last updated: {getFormattedDate()} <span className="text-xs">(updated automatically)</span></p>
 
       {/* Empathetic intro */}
       <div className="bg-gray-50 border-l-4 border-blue-200 rounded-md p-4 mb-6">
         <p className="text-gray-800 text-base">
-          At Avyakta, we believe that every soul deserves respect — including yours. That's why we use only the most essential cookies to keep your visit smooth, secure, and private. <strong>No ads. No hidden tracking. Just clarity and compassion.</strong>
+          At Avaykta, we believe that every soul deserves respect — including yours. That's why we use only the most essential cookies to keep your visit smooth, secure, and private. <strong>No ads. No hidden tracking. Just clarity and compassion.</strong>
         </p>
       </div>
 
@@ -147,7 +147,7 @@ const CookiePolicy = () => {
       {/* Legal Compliance */}
       <section className="mb-6 bg-white border border-green-200 rounded-lg p-4 shadow-sm">
         <h3 className="font-semibold text-lg mb-2 flex items-center gap-2"><span role="img" aria-label="legal">📜</span> Legal & Privacy Commitment</h3>
-        <p className="text-gray-700">We comply with privacy laws such as the GDPR, and are committed to protecting your dignity and data. We never sell or misuse your information. For more details, contact us at <a href="mailto:support@avyakta.org" className="text-blue-600 underline">support@avyakta.org</a>.</p>
+        <p className="text-gray-700">We comply with privacy laws such as the GDPR, and are committed to protecting your dignity and data. We never sell or misuse your information. For more details, contact us at <a href="mailto:support@avaykta.app" className="text-blue-600 underline">support@avaykta.app</a>.</p>
       </section>
 
       {/* Changes to Policy */}

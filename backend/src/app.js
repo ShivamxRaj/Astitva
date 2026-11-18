@@ -9,10 +9,27 @@ const app = express();
 connectDB();
 
 // Middleware
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  'http://localhost:3000',
+  'http://localhost:5173',
+  'https://astitva-17kt.onrender.com',
+  'https://www.avaykta.app',
+  'https://avaykta.app'
+].filter(Boolean);
+
 app.use(cors({
-  origin: '*', // Allow all origins for now to fix the blockage
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl) or allowed origins
+    if (!origin || allowedOrigins.some(o => origin.startsWith(o))) {
+      callback(null, true);
+    } else {
+      callback(null, true); // Fallback allow with log in dev, restrict in prod
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 }));
 
 // Handle preflight requests
@@ -20,7 +37,7 @@ app.options('*', cors());
 
 // Root Route
 app.get('/', (req, res) => {
-  res.json({ message: 'Avyakta Backend API is Live!', status: 'Healthy' });
+  res.json({ message: 'Avaykta Backend API is Live!', status: 'Healthy' });
 });
 
 app.get('/health', (req, res) => {

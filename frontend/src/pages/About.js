@@ -16,7 +16,7 @@ export const PrivacyPolicy = () => (
     </div>
     <p className="italic text-lg font-medium mb-2" style={{ color: 'var(--teal)' }}>Because Every Voice Matters, Every Soul Deserves Dignity</p>
     <div className="p-4 rounded mb-6 shadow-sm" style={{ background: 'rgba(46,125,156,0.08)', borderLeft: '4px solid var(--teal)' }}>
-      <p className="mb-0" style={{ color: 'var(--text-dark)' }}>At <span className="font-semibold" style={{ color: 'var(--navy)' }}>Avyakta</span>, we understand — some things are too painful to speak aloud.<br/>
+      <p className="mb-0" style={{ color: 'var(--text-dark)' }}>At <span className="font-semibold" style={{ color: 'var(--navy)' }}>Avaykta</span>, we understand — some things are too painful to speak aloud.<br/>
       But silence shouldn't mean invisibility.<br/>
       This platform is created to serve those who have no name, no family, no final goodbye. And we honor that purpose by guarding your trust like a sacred duty.</p>
     </div>
@@ -52,7 +52,7 @@ export const PrivacyPolicy = () => (
     </blockquote>
     <div className="flex items-center gap-2 mt-8 mb-2">
       <span className="text-2xl">✅</span>
-      <span className="font-semibold" style={{ color: 'var(--navy)' }}>By using Avyakta, you agree to this promise — that your privacy is as important as your purpose.</span>
+      <span className="font-semibold" style={{ color: 'var(--navy)' }}>By using Avaykta, you agree to this promise — that your privacy is as important as your purpose.</span>
     </div>
   </div>
 );
@@ -106,7 +106,7 @@ const About = () => {
     {
       year: '2019',
       title: 'Conceptualization',
-      description: 'Avyakta was conceptualized as a platform to bring dignity to the voiceless. The name "Avyakta" (meaning "unexpressed" in Sanskrit) was chosen to represent those who cannot speak for themselves.',
+      description: 'Avaykta was conceptualized as a platform to bring dignity to the voiceless. The name "Avaykta" (meaning "unexpressed" in Sanskrit) was chosen to represent those who cannot speak for themselves.',
       icon: CalendarIcon,
       color: 'var(--teal)'
     },
@@ -137,13 +137,13 @@ const About = () => {
     {
       name: 'Shivam Raj',
       role: 'Founder & Lead Developer',
-      bio: 'Driven by empathy and technology, Shivam Raj built Avyakta to bridge the gap between missing persons and unidentified sightings, bringing closure and dignity to families across India.',
+      bio: 'Driven by empathy and technology, Shivam Raj built Avaykta to bridge the gap between missing persons and unidentified sightings, bringing closure and dignity to families across India.',
     }
   ];
 
   const testimonials = [
     {
-      quote: "Avyakta helped us find closure we never thought possible. After 3 years of searching, we finally found our brother.",
+      quote: "Avaykta helped us find closure we never thought possible. After 3 years of searching, we finally found our brother.",
       author: "Anonymous Family Member",
       location: "Delhi",
       rating: 5
@@ -161,7 +161,7 @@ const About = () => {
       rating: 5
     },
     {
-      quote: "The compassion and respect shown by the Avyakta team is exemplary. They treat every case with the dignity it deserves.",
+      quote: "The compassion and respect shown by the Avaykta team is exemplary. They treat every case with the dignity it deserves.",
       author: "Hospital Administrator",
       location: "Chennai",
       rating: 5
@@ -173,7 +173,7 @@ const About = () => {
       rating: 5
     },
     {
-      quote: "We found our missing daughter after 2 years. Avyakta gave us the closure we desperately needed.",
+      quote: "We found our missing daughter after 2 years. Avaykta gave us the closure we desperately needed.",
       author: "Anonymous Family",
       location: "Kolkata",
       rating: 5
@@ -193,7 +193,7 @@ const About = () => {
         
         <div className="relative w-full flex flex-col justify-center items-center container-responsive text-center z-10">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-merriweather font-bold mb-4 sm:mb-6 animate-fade-in-up" style={{ color: '#fff' }}>
-            About Avyakta
+            About Avaykta
           </h1>
           <p className="text-lg sm:text-xl lg:text-2xl max-w-3xl sm:max-w-4xl mx-auto mb-6 sm:mb-8 animate-fade-in-up animation-delay-200" style={{ color: '#CBD5E0' }}>
             Bringing dignity to the unclaimed, one soul at a time
@@ -284,7 +284,7 @@ const About = () => {
               Our Story
             </h2>
             <p className="text-base sm:text-lg lg:text-xl max-w-3xl mx-auto" style={{ color: 'var(--text-mid)' }}>
-              From a simple idea to a nationwide movement - here's how Avyakta came to be and the milestones we've achieved.
+              From a simple idea to a nationwide movement - here's how Avaykta came to be and the milestones we've achieved.
             </p>
           </div>
           
@@ -425,10 +425,10 @@ const About = () => {
               Together, we can bring dignity to the forgotten and make a lasting impact in our communities.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/how-it-works" className="btn-primary" style={{ background: '#fff', color: 'var(--navy)', border: '1px solid #fff' }} title="Learn how Avyakta works to identify unclaimed bodies">
+              <Link to="/how-it-works" className="btn-primary" style={{ background: '#fff', color: 'var(--navy)', border: '1px solid #fff' }} title="Learn how Avaykta works to identify unclaimed bodies">
                 Know How it Works
               </Link>
-              <Link to="/contact" className="btn-secondary" style={{ color: '#fff', borderColor: '#fff' }} title="Contact Avyakta support team">
+              <Link to="/contact" className="btn-secondary" style={{ color: '#fff', borderColor: '#fff' }} title="Contact Avaykta support team">
                 Contact Us
               </Link>
             </div>

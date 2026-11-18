@@ -52,7 +52,7 @@ const TermsOfService = () => (
       {/* Mutual Promise */}
       <SectionCard icon={HeartIcon} title="A Mutual Promise of Dignity and Trust" highlight>
         <p>
-          By accessing or using this platform, you and we (Team Avyakta) enter into a sacred agreement.<br />
+          By accessing or using this platform, you and we (Team Avaykta) enter into a sacred agreement.<br />
           This is not just a legal formality — it is a bond of responsibility and humanity.
         </p>
         <p className="mt-3">
@@ -113,8 +113,8 @@ const TermsOfService = () => (
       <SectionCard icon={EnvelopeIcon} title="6. Need Support or Have Doubts?" highlight>
         <p>
           Reach out to us at:<br />
-          <a href="mailto:support@avyakta.org" className="inline-block mt-2 font-semibold hover:underline" style={{ color: 'var(--teal)' }} title="Email Avyakta support team for assistance">
-            📧 support@avyakta.org
+          <a href="mailto:support@avaykta.app" className="inline-block mt-2 font-semibold hover:underline" style={{ color: 'var(--teal)' }} title="Email Avaykta support team for assistance">
+            📧 support@avaykta.app
           </a>
         </p>
         <p className="mt-3 font-medium text-gray-800">

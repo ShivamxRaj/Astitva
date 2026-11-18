@@ -291,13 +291,13 @@ const PasswordRecovery = ({ onClose }) => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <img src="/images/logo.png" alt="Avyakta" className="h-12 w-auto mx-auto mb-4" />
+              <img src="/images/logo.png" alt="Avaykta" className="h-12 w-auto mx-auto mb-4" />
             </div>
             <h2 className="text-xl sm:text-2xl font-bold text-[#003f88] mb-4">Password Reset Successful! 🎉</h2>
             <p className="text-sm sm:text-base text-gray-600 mb-6">
-              Your password has been reset successfully. Welcome back to Avyakta! 😊
+              Your password has been reset successfully. Welcome back to Avaykta! 😊
             </p>
-            <p className="text-[#003f88] font-semibold mb-6">— Team Avyakta</p>
+            <p className="text-[#003f88] font-semibold mb-6">— Team Avaykta</p>
             <button
               onClick={handleSuccessModalClose}
               className="w-full sm:w-auto rounded-full bg-[#003f88] px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base font-bold text-white shadow-lg hover:bg-blue-700 transition-all duration-300 hover:scale-105"

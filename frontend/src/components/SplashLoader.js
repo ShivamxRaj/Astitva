@@ -84,7 +84,7 @@ const SplashLoader = () => {
             backgroundClip: 'text'
           }}
         >
-          Avyakta
+          Avaykta
         </h1>
 
         {/* Tagline */}

@@ -1,8 +1,8 @@
-# Avyakta Integrated Chatbot System
+# Avaykta Integrated Chatbot System
 
 ## 🎯 Overview
 
-The Avyakta Integrated Chatbot is a comprehensive, human-like chat interface positioned near the SOS button for easy access. It provides instant answers to common questions about the Avyakta platform with MongoDB integration for conversation persistence.
+The Avaykta Integrated Chatbot is a comprehensive, human-like chat interface positioned near the SOS button for easy access. It provides instant answers to common questions about the Avaykta platform with MongoDB integration for conversation persistence.
 
 ## ✨ Key Features
 
