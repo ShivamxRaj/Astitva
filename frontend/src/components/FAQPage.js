@@ -262,9 +262,6 @@ const FAQPage = () => {
             <button onClick={() => window.dispatchEvent(new Event('open-chat'))} className="btn-primary" title="Open live chat with Avaykta support assistant">
               <ChatBubbleLeftRightIcon className="w-5 h-5 mr-2" /> Chat with us
             </button>
-            <a href="/contact" className="btn-secondary" title="Contact Avaykta support team via email or phone">
-              <PhoneIcon className="w-5 h-5 mr-2" /> Contact Support
-            </a>
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import RatingForm from "./RatingForm";
 import RecentFeedback from "./RecentFeedback";
 
@@ -87,51 +87,42 @@ function badgeLabel(badge) {
 const SmallStars = ({ rating }) => (
   <div className="flex gap-0.5">
     {[...Array(5)].map((_, i) => (
-      <span key={i} style={{ fontSize: "14px", color: i < rating ? "#D4870A" : "rgba(255,255,255,0.15)" }}>★</span>
+      <span key={i} style={{ fontSize: "14px", color: i < rating ? "#D97706" : "#E2E8F0" }}>★</span>
     ))}
   </div>
 );
 
 /* ── Single testimonial card ── */
-const TestimonialCard = ({ item, style, visible }) => {
-  const [expanded, setExpanded] = useState(false);
-  const needsTruncate = item.text.length > 180;
-
+const TestimonialCard = ({ item }) => {
   return (
     <div
-      className="testimonial-card flex flex-col h-full"
+      className="flex flex-col justify-between w-[320px] sm:w-[380px] flex-shrink-0"
       style={{
-        background: "rgba(255,255,255,0.05)",
-        border: "1px solid rgba(255,255,255,0.10)",
-        borderRadius: "12px",
-        padding: "28px",
-        backdropFilter: "blur(8px)",
-        WebkitBackdropFilter: "blur(8px)",
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(16px)",
-        transition: "opacity 0.5s ease-out, transform 0.5s ease-out, border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease",
+        background: "#FFFFFF",
+        border: "1px solid #E2E8F0",
+        borderRadius: "16px",
+        padding: "22px 24px",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
+        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
         cursor: "default",
-        ...style,
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.borderColor = "rgba(46,125,156,0.4)";
-        e.currentTarget.style.background = "rgba(255,255,255,0.08)";
-        e.currentTarget.style.transform = "translateY(-4px)";
-        e.currentTarget.style.boxShadow = "0 12px 32px rgba(0,0,0,0.2)";
+        e.currentTarget.style.borderColor = "#93C5FD";
+        e.currentTarget.style.transform = "translateY(-3px)";
+        e.currentTarget.style.boxShadow = "0 10px 25px rgba(27,58,107,0.08)";
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.borderColor = "rgba(255,255,255,0.10)";
-        e.currentTarget.style.background = "rgba(255,255,255,0.05)";
+        e.currentTarget.style.borderColor = "#E2E8F0";
         e.currentTarget.style.transform = "translateY(0)";
-        e.currentTarget.style.boxShadow = "none";
+        e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.03)";
       }}
     >
       {/* Top row: open-quote + stars */}
-      <div className="flex items-start justify-between mb-3">
+      <div className="flex items-center justify-between mb-3">
         <span
           style={{
             color: "#2E7D9C",
-            fontSize: "4rem",
+            fontSize: "2.8rem",
             lineHeight: "0.8",
             fontFamily: "Georgia, serif",
             opacity: 0.6,
@@ -141,60 +132,27 @@ const TestimonialCard = ({ item, style, visible }) => {
         >
           &ldquo;
         </span>
-        {item.rating === 5 && <SmallStars rating={5} />}
+        <SmallStars rating={item.rating || 5} />
       </div>
 
       {/* Quote text */}
       <blockquote
-        className="flex-1"
-        style={{
-          fontSize: "0.95rem",
-          lineHeight: "1.7",
-          color: "#D6E8FF",
-          fontStyle: "italic",
-        }}
+        className="flex-1 mb-4 text-xs sm:text-sm text-slate-600 italic leading-relaxed"
+        style={{ minHeight: "68px" }}
       >
-        {needsTruncate && !expanded ? (
-          <>
-            {item.text.slice(0, 180).trim()}…{" "}
-            <button
-              onClick={() => setExpanded(true)}
-              style={{
-                color: "#4BA3C3",
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                fontStyle: "normal",
-                fontWeight: 500,
-                fontSize: "0.85rem",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.textDecoration = "underline")}
-              onMouseLeave={(e) => (e.currentTarget.style.textDecoration = "none")}
-            >
-              Read more
-            </button>
-          </>
-        ) : (
-          item.text
-        )}
+        "{item.text}"
       </blockquote>
 
-      {/* Separator */}
-      <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", margin: "16px 0" }} />
-
       {/* Author row */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 pt-3" style={{ borderTop: "1px solid #F1F5F9" }}>
         {/* Avatar circle with initials */}
         <div
-          className="flex-shrink-0 flex items-center justify-center rounded-full"
+          className="flex-shrink-0 flex items-center justify-center rounded-full text-xs font-bold text-white shadow-sm"
           style={{
-            width: "40px",
-            height: "40px",
-            background: "linear-gradient(135deg, #1B3A6B, #2E7D9C)",
-            border: "2px solid rgba(46,125,156,0.4)",
-            color: "#fff",
-            fontSize: "0.85rem",
-            fontWeight: 600,
+            width: "38px",
+            height: "38px",
+            background: "linear-gradient(135deg, #1E3A8A, #0284C7)",
+            border: "1.5px solid rgba(255,255,255,0.8)",
           }}
         >
           {getInitials(item.author)}
@@ -203,14 +161,12 @@ const TestimonialCard = ({ item, style, visible }) => {
         {/* Name + role */}
         <div className="flex-1 min-w-0">
           <div
-            className="truncate"
-            style={{ color: "#F0F6FF", fontWeight: 600, fontSize: "0.9rem" }}
+            className="truncate text-slate-800 font-semibold text-xs sm:text-sm"
           >
             {item.author}
           </div>
           <div
-            className="truncate"
-            style={{ color: "#8BAFD4", fontSize: "0.8rem" }}
+            className="truncate text-slate-500 text-[11px] sm:text-xs"
           >
             {item.role} · {item.location}
           </div>
@@ -218,15 +174,11 @@ const TestimonialCard = ({ item, style, visible }) => {
 
         {/* Badge pill */}
         <span
-          className="flex-shrink-0"
+          className="flex-shrink-0 text-[10px] px-2.5 py-0.5 rounded-full font-medium"
           style={{
-            background: "rgba(46,125,156,0.15)",
-            border: "1px solid rgba(46,125,156,0.3)",
-            color: "#7EB5D6",
-            fontSize: "0.7rem",
-            padding: "2px 10px",
-            borderRadius: "999px",
-            fontWeight: 500,
+            background: "#E0F2FE",
+            border: "1px solid #BAE6FD",
+            color: "#0369A1",
           }}
         >
           {badgeLabel(item.badge)}
@@ -243,26 +195,15 @@ const Testimonials = () => {
   const [showRatingForm, setShowRatingForm] = useState(false);
   const [showRecentFeedback, setShowRecentFeedback] = useState(false);
   const [submissionSuccess, setSubmissionSuccess] = useState(null);
-  const [cardsVisible, setCardsVisible] = useState(false);
   const sectionRef = useRef(null);
 
-  /* IntersectionObserver — trigger card fade-in once */
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setCardsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.15 }
-    );
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
+  const row1 = TESTIMONIALS.slice(0, 4);
+  const row2 = TESTIMONIALS.slice(4, 8);
+  const marqueeRow1 = [...row1, ...row1, ...row1];
+  const marqueeRow2 = [...row2, ...row2, ...row2];
 
   const handleRatingSubmit = () => {
-    setSubmissionSuccess("✅ Thank you! Your feedback has been submitted for review.");
+    setSubmissionSuccess("Thank you! Your feedback has been submitted for review.");
     setShowRatingForm(false);
     setTimeout(() => setSubmissionSuccess(null), 4000);
   };
@@ -272,20 +213,16 @@ const Testimonials = () => {
       ref={sectionRef}
       className="relative py-16 sm:py-20 lg:py-24 overflow-hidden"
       style={{
-        backgroundColor: "#1B3A6B",
-        backgroundImage: `
-          radial-gradient(circle at 20% 50%, rgba(46,125,156,0.08) 0%, transparent 60%),
-          radial-gradient(circle at 80% 20%, rgba(46,125,156,0.05) 0%, transparent 50%)
-        `,
+        backgroundColor: "#F0F4F8",
       }}
     >
-      <div className="container-responsive relative z-10">
+      <div className="relative z-10 w-full">
         {/* ── Section Header ── */}
-        <div className="text-center mb-12 sm:mb-16">
+        <div className="text-center mb-10 sm:mb-14 px-4">
           <h2
             className="font-merriweather font-bold mb-2"
             style={{
-              color: "#F0F6FF",
+              color: "#1B3A6B",
               fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
             }}
           >
@@ -302,133 +239,101 @@ const Testimonials = () => {
               borderRadius: "2px",
             }}
           />
-          <p
+        </div>
+
+        {/* ── Sliding Marquee Showcase ── */}
+        <div className="relative w-full overflow-hidden marquee-container py-2">
+          {/* Edge Fade Gradients */}
+          <div
+            className="pointer-events-none absolute left-0 top-0 bottom-0 w-16 sm:w-36 z-20"
             style={{
-              color: "#8BAFD4",
-              fontSize: "1rem",
-              marginTop: "12px",
+              background: "linear-gradient(to right, #F0F4F8 0%, rgba(240,244,248,0) 100%)",
             }}
-          >
-            Real stories from families, officers, and volunteers
-          </p>
-        </div>
+          />
+          <div
+            className="pointer-events-none absolute right-0 top-0 bottom-0 w-16 sm:w-36 z-20"
+            style={{
+              background: "linear-gradient(to left, #F0F4F8 0%, rgba(240,244,248,0) 100%)",
+            }}
+          />
 
-        {/* ── Desktop Grid (hidden on mobile) ── */}
-        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {TESTIMONIALS.map((item, idx) => (
-            <TestimonialCard
-              key={idx}
-              item={item}
-              visible={cardsVisible}
-              style={{ transitionDelay: `${idx * 100}ms` }}
-            />
-          ))}
-        </div>
+          {/* Row 1 — Continuous Slide Left */}
+          <div className="marquee-track-left mb-6">
+            {marqueeRow1.map((item, idx) => (
+              <TestimonialCard key={`r1-${idx}`} item={item} />
+            ))}
+          </div>
 
-        {/* ── Mobile Horizontal Scroll (visible on mobile only) ── */}
-        <div
-          className="md:hidden flex gap-4 overflow-x-auto pb-4 px-1"
-          style={{
-            scrollSnapType: "x mandatory",
-            WebkitOverflowScrolling: "touch",
-            msOverflowStyle: "none",
-            scrollbarWidth: "none",
-          }}
-        >
-          {TESTIMONIALS.map((item, idx) => (
-            <div
-              key={idx}
-              className="flex-shrink-0"
-              style={{
-                width: "85vw",
-                maxWidth: "360px",
-                scrollSnapAlign: "start",
-              }}
-            >
-              <TestimonialCard
-                item={item}
-                visible={cardsVisible}
-                style={{ transitionDelay: `${idx * 80}ms` }}
-              />
-            </div>
-          ))}
-        </div>
-
-        {/* Mobile swipe hint */}
-        <div className="md:hidden flex justify-center mt-4 gap-1.5">
-          {TESTIMONIALS.map((_, idx) => (
-            <div
-              key={idx}
-              style={{
-                width: "6px",
-                height: "6px",
-                borderRadius: "50%",
-                background: idx === 0 ? "#4BA3C3" : "rgba(255,255,255,0.2)",
-              }}
-            />
-          ))}
+          {/* Row 2 — Continuous Slide Right */}
+          <div className="marquee-track-right">
+            {marqueeRow2.map((item, idx) => (
+              <TestimonialCard key={`r2-${idx}`} item={item} />
+            ))}
+          </div>
         </div>
 
         {/* ── Success Message ── */}
         {submissionSuccess && (
           <div className="max-w-md mx-auto mt-8 rounded-lg p-4 text-center" style={{ background: "rgba(39,174,96,0.12)", border: "1px solid rgba(39,174,96,0.25)" }}>
-            <p style={{ color: "#6FCF97", fontWeight: 500, fontSize: "0.9rem" }}>{submissionSuccess}</p>
+            <p style={{ color: "#27AE60", fontWeight: 500, fontSize: "0.9rem" }}>{submissionSuccess}</p>
           </div>
         )}
 
         {/* ── Recent Feedback ── */}
         {showRecentFeedback && (
-          <div className="max-w-6xl mx-auto mt-10">
+          <div className="max-w-6xl mx-auto mt-10 px-4">
             <RecentFeedback />
           </div>
         )}
 
-        {/* ── Action Buttons (below grid) ── */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-12 sm:mt-16">
+        {/* ── Action Buttons ── */}
+        <div className="flex flex-wrap gap-3 justify-center items-center mt-10 sm:mt-14 px-4">
           <button
             onClick={() => setShowRatingForm(true)}
-            className="flex items-center gap-2 font-semibold transition-all duration-200"
+            className="inline-flex items-center gap-2 font-semibold transition-all duration-200"
             style={{
-              background: "transparent",
-              border: "1.5px solid rgba(46,125,156,0.5)",
-              color: "#7EB5D6",
-              borderRadius: "8px",
-              padding: "10px 24px",
-              fontSize: "0.9rem",
+              background: "#FFFFFF",
+              border: "1px solid #CBD5E1",
+              color: "#1B3A6B",
+              borderRadius: "999px",
+              padding: "9px 22px",
+              fontSize: "0.85rem",
+              boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgba(46,125,156,0.1)";
-              e.currentTarget.style.borderColor = "#2E7D9C";
+              e.currentTarget.style.background = "#F8FAFC";
+              e.currentTarget.style.borderColor = "#94A3B8";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = "transparent";
-              e.currentTarget.style.borderColor = "rgba(46,125,156,0.5)";
+              e.currentTarget.style.background = "#FFFFFF";
+              e.currentTarget.style.borderColor = "#CBD5E1";
             }}
           >
-            ⭐ Rate Your Experience
+            Rate Your Experience
           </button>
           <button
             onClick={() => setShowRecentFeedback(!showRecentFeedback)}
-            className="flex items-center gap-2 font-semibold transition-all duration-200"
+            className="inline-flex items-center gap-2 font-semibold transition-all duration-200"
             style={{
-              background: "transparent",
-              border: "1.5px solid rgba(46,125,156,0.5)",
-              color: "#7EB5D6",
-              borderRadius: "8px",
-              padding: "10px 24px",
-              fontSize: "0.9rem",
+              background: "#FFFFFF",
+              border: "1px solid #CBD5E1",
+              color: "#1B3A6B",
+              borderRadius: "999px",
+              padding: "9px 22px",
+              fontSize: "0.85rem",
+              boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgba(46,125,156,0.1)";
-              e.currentTarget.style.borderColor = "#2E7D9C";
+              e.currentTarget.style.background = "#F8FAFC";
+              e.currentTarget.style.borderColor = "#94A3B8";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = "transparent";
-              e.currentTarget.style.borderColor = "rgba(46,125,156,0.5)";
+              e.currentTarget.style.background = "#FFFFFF";
+              e.currentTarget.style.borderColor = "#CBD5E1";
             }}
             title="View recent user feedback and ratings"
           >
-            💬 {showRecentFeedback ? "Hide Recent Feedback" : "View Recent Feedback"}
+            {showRecentFeedback ? "Hide Recent Feedback" : "View Community Feedback"}
           </button>
         </div>
       </div>
@@ -440,9 +345,34 @@ const Testimonials = () => {
         onSubmit={handleRatingSubmit}
       />
 
-      {/* Hide scrollbar on mobile scroller */}
+      {/* Marquee Animation Styles */}
       <style>{`
-        .md\\:hidden::-webkit-scrollbar { display: none; }
+        @keyframes marqueeLeft {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(calc(-100% / 3)); }
+        }
+        @keyframes marqueeRight {
+          0% { transform: translateX(calc(-100% / 3)); }
+          100% { transform: translateX(0); }
+        }
+        .marquee-track-left {
+          display: flex;
+          gap: 1.25rem;
+          width: max-content;
+          animation: marqueeLeft 38s linear infinite;
+          will-change: transform;
+        }
+        .marquee-track-right {
+          display: flex;
+          gap: 1.25rem;
+          width: max-content;
+          animation: marqueeRight 42s linear infinite;
+          will-change: transform;
+        }
+        .marquee-container:hover .marquee-track-left,
+        .marquee-container:hover .marquee-track-right {
+          animation-play-state: paused;
+        }
       `}</style>
     </section>
   );

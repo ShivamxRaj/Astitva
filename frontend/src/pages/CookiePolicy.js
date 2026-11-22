@@ -39,7 +39,8 @@ const CookiePolicy = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto my-8 p-4 bg-white text-gray-900 rounded-lg shadow">
+    <div className="min-h-screen pt-24 sm:pt-28 pb-12 px-4" style={{ background: 'var(--off-white)' }}>
+      <div className="max-w-2xl mx-auto p-4 sm:p-6 bg-white text-gray-900 rounded-2xl shadow-sm border border-slate-200/80">
       {/* Privacy-respecting banner */}
       <div className="rounded-lg bg-blue-50 border border-blue-200 p-3 mb-6 flex items-center gap-2 shadow-sm">
         <span role="img" aria-label="shield">🛡️</span>
@@ -201,6 +202,7 @@ const CookiePolicy = () => {
           </form>
         </div>
       )}
+      </div>
     </div>
   );
 };

@@ -211,7 +211,7 @@ const PasswordRecovery = ({ onClose }) => {
                 onClick={() => setStep(1)}
                 className="text-sm text-blue-600 hover:text-blue-500 transition-colors duration-200"
               >
-                ← Back to previous step
+                Back to previous step
               </button>
             </div>
           </form>
@@ -265,7 +265,7 @@ const PasswordRecovery = ({ onClose }) => {
                 onClick={() => setStep(2)}
                 className="text-sm text-blue-600 hover:text-blue-500 transition-colors duration-200"
               >
-                ← Back to OTP verification
+                Back to OTP verification
               </button>
             </div>
           </form>

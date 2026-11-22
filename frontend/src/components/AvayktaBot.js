@@ -7,72 +7,177 @@ import {
   SparklesIcon,
   TrashIcon,
 } from '@heroicons/react/24/solid';
+import { supabase } from '../lib/supabaseClient';
 
 /* ═══════════════════════════════════════
-   Keyword → Response mapping
+   Keyword → Response mapping (Professional / Enterprise)
    ═══════════════════════════════════════ */
 const RESPONSES = {
   greeting: {
-    text: `Namaste 🙏 I'm the Avaykta Assistant.\nI'm here to help you report, search, or understand our process.\nHow can I help you today?`,
-    chips: ['Report a body', 'Search missing person', 'How does it work?', 'Talk to a human'],
+    text: `Hello, I am the Avaykta Assistant.\nI am here to help you report an unclaimed case, track an existing report, or search our verified database.\n\nHow may I assist you today?`,
+    chips: ['Track a report', 'Report a case', 'Search database', 'Contact support'],
+  },
+  track: {
+    keywords: ['track', 'status', 'report id', 'case id', 'kahan pahuncha', 'check status', 'tracking'],
+    text: `To track an active report, please enter your **Report ID** (e.g. **#AVY-2026051215426853** or **AVY-1778530818885**).\n\nI will instantly check our live database and provide the current verification and investigation status.`,
+    chips: ['Search database', 'Report a case', 'Helpline support'],
   },
   report: {
     keywords: ['report', 'body', 'unclaimed', 'mila', 'mile', 'laash', 'dead'],
-    text: `To report an unclaimed body, please click the 'Report Case' button in the navbar.\nYou can report anonymously — no personal details required.\nShall I guide you through the process?`,
-    chips: ['Yes, guide me', 'Report anonymously', 'What info is needed?'],
+    text: `To report an unclaimed body, please use the **Report Case** button in the navigation bar.\n\n• Anonymous Reporting: You do not need to share any personal details.\n• Immediate Transmission: Relevant authorities and verified partner NGOs are alerted.\n\nWould you like guidance through the reporting requirements?`,
+    chips: ['Required details', 'Report anonymously', 'How it works'],
   },
   search: {
     keywords: ['search', 'missing', 'dhundna', 'family', 'pariwar', 'find', 'khoyi', 'lost'],
-    text: `To search for a missing person, go to the Search section. You can search by name, location, age, or case ID.\nWould you like me to take you there?`,
-    chips: ['Open Search', 'What details needed?', 'Talk to helpline'],
+    text: `To search for a missing person, visit our **Search Portal**.\n\nYou can query active records by:\n• Full or partial name\n• Location, city, or district\n• Estimated age range and gender\n• Unique Case ID\n\nWould you like to open the Search section?`,
+    chips: ['Open Search', 'Helpline support', 'Contact support'],
   },
   process: {
     keywords: ['process', 'kaise', 'how', 'steps', 'kya karna', 'work', 'procedure'],
-    text: `Here's how Avaykta works:\n1️⃣ Someone reports an unclaimed body\n2️⃣ Our team verifies and documents the case\n3️⃣ We notify police, NGOs, and hospitals\n4️⃣ If a match is found, family is contacted\n5️⃣ Case is resolved with dignity\n\nThe whole process is free and confidential.`,
-    chips: ['Report now', 'Search now', 'More questions'],
+    text: `The Avaykta humanitarian verification workflow:\n\n1. Initial Intake: An unclaimed case is reported to the verified registry.\n2. Verification & Record Creation: Case details, physical traits, and clothing markings are documented.\n3. Institutional Notification: Regional police departments, morgues, and registered NGOs are notified.\n4. Matching & Identification: Active missing-person inquiries are systematically cross-referenced.\n5. Dignified Resolution: Families are respectfully contacted and the case is closed with dignity.\n\nThe entire process is 100% free, confidential, and compliant with statutory standards.`,
+    chips: ['Report a case', 'Search database', 'More questions'],
   },
   anonymous: {
     keywords: ['anonymous', 'private', 'naam nahi', 'identity', 'safe', 'secure', 'privacy', 'gupt'],
-    text: `Yes, you can report completely anonymously 🔒\nWe collect ZERO personal data in anonymous mode.\nAuthorities only receive the case details — never your identity.\nYour safety is our priority.`,
-    chips: ['Report anonymously', 'How is data stored?'],
+    text: `Yes, reports can be submitted completely anonymously.\n\n• Zero Tracking: No phone numbers, IP addresses, or personal credentials are recorded.\n• Relevant Data Only: Authorities receive incident and case details exclusively.\n• Whistleblower Protection: Submissions comply with statutory data privacy standards.`,
+    chips: ['Report anonymously', 'Security standards'],
   },
   helpline: {
     keywords: ['helpline', 'phone', 'call', 'number', 'contact', 'dial', 'ring'],
-    text: `Our 24/7 helpline: +91 62994 46452\nWhatsApp: Available via the WhatsApp button\nEmail: support@avaykta.app\n\nFor life-threatening emergencies, please call 112 immediately.`,
-    chips: ['Open WhatsApp', 'Support Us'],
+    text: `Official Support Channels:\n\n• 24/7 Helpline: +91 62994 46452\n• WhatsApp Support: Direct chat assistance available\n• Email Inquiries: support@avaykta.app\n\nNote: For life-threatening emergencies, please call 112 immediately.`,
+    chips: ['Open WhatsApp', 'Call helpline', 'Support Us'],
   },
   human: {
     keywords: ['human', 'officer', 'real person', 'agent', 'support', 'baat', 'talk'],
-    text: `I'll connect you with our support team.\nThe fastest way is WhatsApp — usually responded to within 2 hours during 9AM-8PM.\nFor urgent help, call +91 62994 46452`,
+    text: `You can connect directly with our operational support team:\n\n• WhatsApp Support: Fastest response time (9 AM – 8 PM IST)\n• Direct Telephone: +91 62994 46452\n• Email Support: support@avaykta.app`,
     chips: ['Open WhatsApp', 'Call helpline'],
   },
   thanks: {
     keywords: ['thanks', 'thank', 'shukriya', 'dhanyawad', 'thnx', 'thx'],
-    text: `You're welcome 🙏\nEvery report matters. Every search matters.\nAvaykta is here whenever you need us.`,
+    text: `You are welcome.\n\nEvery report and search brings us closer to reuniting families with dignity. Avaykta is here whenever you need assistance.`,
     chips: ['Go to Home', 'Report a case'],
   },
   guide: {
-    keywords: ['guide', 'yes, guide', 'info is needed', 'details needed', 'what info'],
-    text: `To report a case you'll need:\n📍 Location where the body was found\n📅 Approximate date & time\n🧍 Physical description (clothing, age, gender)\n📸 A photo (optional but helpful)\n\nYou do NOT need to share your personal details.`,
+    keywords: ['guide', 'yes, guide', 'info is needed', 'details needed', 'what info', 'required'],
+    text: `Information required to report a case:\n\n• **Location:** Specific area, landmark, or coordinates where the body was found\n• **Date & Time:** Approximate date and estimated time\n• **Physical Description:** Estimated age range, gender, visible marks, and clothing\n• **Photographs (Optional):** Clear photograph if available\n\nNote: You are NOT required to provide personal identity details to submit a report.`,
     chips: ['Report now', 'Report anonymously', 'More questions'],
   },
   data: {
-    keywords: ['data stored', 'data', 'storage', 'encrypt', 'database'],
-    text: `All data is stored securely with encryption.\n🔐 Reports are stored in our secure database\n🚫 Anonymous reports have zero personal identifiers\n👮 Only verified authorities can access case details\n\nWe follow strict data protection guidelines.`,
-    chips: ['Report now', 'More questions'],
+    keywords: ['data stored', 'data', 'storage', 'encrypt', 'database', 'security'],
+    text: `Data Protection & Security Architecture:\n\n• End-to-End Encryption: Case records are stored with AES-256 database encryption.\n• Identity Segregation: Anonymous submissions contain zero personal identifiers.\n• Role-Based Access: Case files are strictly accessible by authorized personnel and law enforcement.\n\nAll operations adhere to the Information Technology Act (IT Act 2000).`,
+    chips: ['Report a case', 'How it works'],
   },
   default: {
-    text: `I didn't quite understand that.\nHere are some things I can help with:`,
-    chips: ['Report a body', 'Search missing person', 'Call helpline', 'How it works'],
+    text: `I could not find an exact match for your inquiry.\n\nPlease select one of the common options below, or type your question:`,
+    chips: ['Report a case', 'Search database', 'How it works', 'Helpline support'],
   },
 };
 
 const WHATSAPP_URL = 'https://wa.me/916299446452?text=Hello%20Avaykta%2C%20I%20need%20assistance.';
 
+/* ── Formatted Text Renderer (Bold + Lists + Notes without raw phone emojis) ── */
+const renderFormattedText = (str, isUser) => {
+  if (!str) return null;
+  if (!str.includes('**')) return str;
+  const parts = str.split(/(\*\*.*?\*\*)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return (
+        <strong
+          key={i}
+          className={`font-semibold ${isUser ? 'text-white' : 'text-slate-900'}`}
+        >
+          {part.slice(2, -2)}
+        </strong>
+      );
+    }
+    return part;
+  });
+};
+
+const renderMessageContent = (text, isUser = false) => {
+  if (!text) return null;
+  const lines = text.split('\n');
+  return (
+    <div className="space-y-1">
+      {lines.map((line, idx) => {
+        const trimmed = line.trim();
+        if (!trimmed) {
+          return <div key={idx} className="h-1" />;
+        }
+
+        // Bullet items: • or -
+        if (trimmed.startsWith('• ') || trimmed.startsWith('- ')) {
+          const content = trimmed.substring(2);
+          return (
+            <div key={idx} className="flex items-start gap-2 pl-0.5 py-0.5">
+              <span
+                className={`w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0 ${
+                  isUser ? 'bg-sky-200' : 'bg-slate-400'
+                }`}
+              />
+              <div className="flex-1 leading-relaxed">
+                {renderFormattedText(content, isUser)}
+              </div>
+            </div>
+          );
+        }
+
+        // Numbered steps: 1. , 2. , etc.
+        const numMatch = trimmed.match(/^(\d+)\.\s+(.*)$/);
+        if (numMatch) {
+          return (
+            <div key={idx} className="flex items-start gap-2 pl-0.5 py-0.5">
+              <span
+                className={`inline-flex items-center justify-center w-4 h-4 rounded-full text-[10px] font-bold flex-shrink-0 mt-0.5 ${
+                  isUser
+                    ? 'bg-sky-700 text-sky-100 border border-sky-500'
+                    : 'bg-slate-100 text-slate-700 border border-slate-300'
+                }`}
+              >
+                {numMatch[1]}
+              </span>
+              <div className="flex-1 leading-relaxed">
+                {renderFormattedText(numMatch[2], isUser)}
+              </div>
+            </div>
+          );
+        }
+
+        // Notice / Note callout
+        if (trimmed.toLowerCase().startsWith('note:')) {
+          return (
+            <div
+              key={idx}
+              className={`mt-2 p-2 rounded-lg text-xs leading-relaxed ${
+                isUser
+                  ? 'bg-white/10 text-sky-100 border border-white/20'
+                  : 'bg-slate-50 text-slate-700 border border-slate-200'
+              }`}
+            >
+              <strong className={isUser ? 'text-white' : 'text-slate-900'}>
+                Note:{' '}
+              </strong>
+              {renderFormattedText(trimmed.substring(5).trim(), isUser)}
+            </div>
+          );
+        }
+
+        // Regular line
+        return (
+          <p key={idx} className="leading-relaxed">
+            {renderFormattedText(trimmed, isUser)}
+          </p>
+        );
+      })}
+    </div>
+  );
+};
+
 /* ── Match user input to an intent ── */
 function matchIntent(input) {
   const lower = input.toLowerCase().trim();
-  const intents = ['report', 'search', 'process', 'anonymous', 'helpline', 'human', 'thanks', 'guide', 'data'];
+  const intents = ['track', 'report', 'search', 'process', 'anonymous', 'helpline', 'human', 'thanks', 'guide', 'data'];
   for (const key of intents) {
     const r = RESPONSES[key];
     if (r.keywords && r.keywords.some((kw) => lower.includes(kw))) {
@@ -111,6 +216,58 @@ const API_BASE_URL = getApiBaseUrl();
 
 // Generate a unique session ID for this page load session (resets on refresh)
 const SESSION_ID = 'session_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+
+/* ── Report / Case ID Tracking Helpers ── */
+const extractCaseId = (text) => {
+  if (!text) return null;
+  // Match patterns like #AVY-12345, AVY-12345, #CASE-1234, CASE-1234
+  const match = text.match(/#?(AVY|CASE)[-_][A-Za-z0-9_-]+/i);
+  if (match) return match[0];
+  const trimmed = text.trim();
+  if (/^#?[A-Za-z0-9_-]{8,30}$/.test(trimmed) && /\d/.test(trimmed)) {
+    return trimmed;
+  }
+  return null;
+};
+
+const looksLikeSpecificId = (text) => {
+  const trimmed = text.trim();
+  return /^(#?AVY|#?CASE)[-_]/i.test(trimmed) || /^#[A-Za-z0-9_-]{6,30}$/.test(trimmed);
+};
+
+const lookupCase = async (rawInput) => {
+  const cleanedId = rawInput.trim().replace(/[^\w#-]/g, '');
+  const withHash = cleanedId.startsWith('#') ? cleanedId : `#${cleanedId}`;
+  const withoutHash = cleanedId.replace(/^#/, '');
+
+  try {
+    const { data } = await supabase
+      .from('orphan_cases')
+      .select('*')
+      .or(`case_id.eq.${cleanedId},case_id.eq.${withHash},case_id.eq.${withoutHash}`)
+      .maybeSingle();
+
+    if (data) {
+      return { found: true, data };
+    }
+  } catch (err) {
+    console.warn('Supabase case lookup error:', err);
+  }
+
+  // Check offline local storage cache
+  try {
+    const cached = JSON.parse(localStorage.getItem('avaykta_offline_cases_cache') || '[]');
+    const match = cached.find((c) => {
+      const cId = (c.case_id || '').replace('#', '').toLowerCase();
+      return cId === withoutHash.toLowerCase() || cId === cleanedId.toLowerCase();
+    });
+    if (match) {
+      return { found: true, data: match };
+    }
+  } catch (e) {}
+
+  return { found: false };
+};
 
 /* ═══════════════════════════════════════
    AvayktaBot Component
@@ -276,6 +433,60 @@ const AvayktaBot = () => {
     setMessages(prev => [...prev, typingMsg]);
 
     try {
+      // 0. Live Case / Report ID Tracking check
+      const candidateCaseId = extractCaseId(text.trim());
+      if (candidateCaseId) {
+        const result = await lookupCase(candidateCaseId);
+        if (result.found) {
+          const caseData = result.data;
+          const statusUpper = (caseData.status || 'Active').toUpperCase();
+          const dateStr = caseData.created_at || caseData.date_of_sighting
+            ? new Date(caseData.created_at || caseData.date_of_sighting).toLocaleDateString('en-IN', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric',
+              })
+            : 'Recently Reported';
+
+          let statusDetail = 'Report is securely registered and active in the national database for verification.';
+          if (caseData.status === 'identified') {
+            statusDetail = 'This case has been successfully identified and resolution protocols are active.';
+          } else if (caseData.status === 'investigating') {
+            statusDetail = 'Authorities and partner medical officers are actively investigating and cross-referencing records.';
+          }
+
+          const botMsg = {
+            from: 'bot',
+            text: `**Report Status: ${statusUpper}**\n\n• **Report ID:** ${caseData.case_id}\n• **Status:** **${statusUpper}**\n• **Location:** ${caseData.location || 'Reported Location'}\n• **Filed On:** ${dateStr}\n\n${statusDetail}`,
+            chips: [`View Case #${caseData.case_id.replace('#', '')}`, 'Track another report', 'Search database'],
+            time: new Date(),
+          };
+
+          setMessages(prev => {
+            const filtered = prev.filter(m => !m.isTyping);
+            const updated = [...filtered, botMsg];
+            saveConversationToDB(updated);
+            return updated;
+          });
+          return;
+        } else if (looksLikeSpecificId(text.trim())) {
+          const botMsg = {
+            from: 'bot',
+            text: `No case record was found matching Report ID **${candidateCaseId}**.\n\nPlease double-check the ID (for example: **#AVY-...**). If you recently submitted this report, please allow a couple of minutes for database sync.`,
+            chips: ['Track another report', 'Search database', 'Helpline support'],
+            time: new Date(),
+          };
+
+          setMessages(prev => {
+            const filtered = prev.filter(m => !m.isTyping);
+            const updated = [...filtered, botMsg];
+            saveConversationToDB(updated);
+            return updated;
+          });
+          return;
+        }
+      }
+
       // 1. Translate user message to English
       const userTranslationResult = await translateText(text.trim(), 'en');
       const englishInput = userTranslationResult.translations[0];
@@ -327,6 +538,19 @@ const AvayktaBot = () => {
   /* Handle chip click actions */
   const handleChip = (chip) => {
     const lower = chip.toLowerCase();
+    if (chip.toLowerCase().startsWith('view case')) {
+      const match = chip.match(/(#?AVY-[A-Za-z0-9_-]+|#?CASE-[A-Za-z0-9_-]+|[A-Za-z0-9_-]+$)/i);
+      const caseIdToNav = match ? match[0].replace(/^#/, '') : '';
+      if (caseIdToNav) {
+        navigate(`/case/${encodeURIComponent(caseIdToNav)}`);
+        setIsOpen(false);
+        return;
+      }
+    }
+    if (lower === 'track a report' || lower === 'track report' || lower === 'track another report') {
+      sendMessage('Track a report');
+      return;
+    }
     if (lower === 'open whatsapp') {
       window.open(WHATSAPP_URL, '_blank');
       return;
@@ -336,9 +560,25 @@ const AvayktaBot = () => {
       setIsOpen(false);
       return;
     }
-    if (lower === 'open search' || lower === 'search now') {
+    if (lower === 'open search' || lower === 'search now' || lower === 'search database') {
       navigate('/search');
       setIsOpen(false);
+      return;
+    }
+    if (lower === 'required details' || lower === 'what info is needed?' || lower === 'what details needed?') {
+      sendMessage('What info is needed?');
+      return;
+    }
+    if (lower === 'how it works' || lower === 'how does it work?') {
+      sendMessage('How does it work?');
+      return;
+    }
+    if (lower === 'contact support' || lower === 'talk to a human') {
+      sendMessage('Talk to a human');
+      return;
+    }
+    if (lower === 'security standards' || lower === 'how is data stored?') {
+      sendMessage('How is data stored?');
       return;
     }
     if (lower === 'go to home') {
@@ -351,7 +591,7 @@ const AvayktaBot = () => {
       window.dispatchEvent(new CustomEvent('open-donation-modal'));
       return;
     }
-    if (lower === 'call helpline' || lower === 'talk to helpline') {
+    if (lower === 'call helpline' || lower === 'talk to helpline' || lower === 'helpline support') {
       window.location.href = 'tel:+916299446452';
       return;
     }
@@ -427,10 +667,10 @@ const AvayktaBot = () => {
         <div
           className="fixed z-50"
           style={{
-            bottom: '80px',
-            right: '20px',
-            width: 'min(340px, 90vw)',
-            height: 'min(480px, 70vh)',
+            bottom: '76px',
+            right: '12px',
+            width: 'min(350px, calc(100vw - 24px))',
+            height: 'min(500px, 75vh)',
             borderRadius: '16px',
             background: '#FAF7F2',
             border: '1px solid #E0D5C5',
@@ -460,9 +700,6 @@ const AvayktaBot = () => {
             </div>
             <div className="flex-1 min-w-0">
               <div style={{ color: '#fff', fontWeight: 600, fontSize: '0.9rem' }}>Avaykta Assistant</div>
-              <div style={{ color: '#7EB5D6', fontSize: '0.75rem' }}>
-                <span style={{ color: '#4CAF50' }}>●</span> Online · Replies instantly
-              </div>
             </div>
             <button
               onClick={clearConversation}
@@ -484,9 +721,9 @@ const AvayktaBot = () => {
           {/* ── Messages ── */}
           <div
             className="flex-1 overflow-y-auto"
-            style={{ padding: '16px', background: '#FAF7F2' }}
+            style={{ padding: '16px', background: '#F8FAFC' }}
           >
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2.5">
               {messages.map((msg, idx) => (
                 <div key={idx}>
                   {/* Message bubble */}
@@ -497,43 +734,44 @@ const AvayktaBot = () => {
                     <div
                       style={{
                         maxWidth: '85%',
-                        padding: '10px 14px',
-                        fontSize: '0.875rem',
+                        padding: '11px 15px',
+                        fontSize: '0.85rem',
                         lineHeight: '1.5',
                         marginBottom: '2px',
-                        whiteSpace: 'pre-line',
                         ...(msg.from === 'bot'
                           ? {
-                              background: '#fff',
-                              border: '1px solid #E0D5C5',
-                              borderRadius: '12px 12px 12px 4px',
-                              color: '#2E4057',
+                              background: '#FFFFFF',
+                              border: '1px solid #E2E8F0',
+                              borderRadius: '16px 16px 16px 4px',
+                              color: '#1E293B',
+                              boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
                             }
                           : {
                               background: '#1B3A6B',
-                              color: '#F0F6FF',
-                              borderRadius: '12px 12px 4px 12px',
+                              color: '#FFFFFF',
+                              borderRadius: '16px 16px 4px 16px',
+                              boxShadow: '0 1px 3px rgba(27,58,107,0.15)',
                             }),
                       }}
                     >
                       {msg.isTyping ? (
-                        <div className="flex items-center gap-1 py-1">
-                          <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                          <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                          <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                        <div className="flex items-center gap-1.5 py-1 px-1">
+                          <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                          <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                          <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
                         </div>
                       ) : (
-                        msg.text
+                        renderMessageContent(msg.text, msg.from === 'user')
                       )}
                     </div>
                   </div>
                   {/* Timestamp */}
                   <div
                     style={{
-                      fontSize: '0.7rem',
-                      color: '#93AABF',
+                      fontSize: '0.68rem',
+                      color: '#94A3B8',
                       textAlign: msg.from === 'user' ? 'right' : 'left',
-                      marginBottom: '8px',
+                      marginBottom: '6px',
                       paddingLeft: msg.from === 'bot' ? '4px' : 0,
                       paddingRight: msg.from === 'user' ? '4px' : 0,
                     }}
@@ -551,24 +789,25 @@ const AvayktaBot = () => {
                         <button
                           key={ci}
                           onClick={() => handleChip(chip)}
-                          className="transition-all duration-150"
+                          className="transition-all duration-150 active:scale-95"
                           style={{
-                            background: '#fff',
-                            border: '1px solid #D9CEBC',
-                            color: '#2E7D9C',
+                            background: '#FFFFFF',
+                            border: '1px solid #CBD5E1',
+                            color: '#0F172A',
                             borderRadius: '999px',
-                            padding: '6px 14px',
-                            fontSize: '0.8rem',
+                            padding: '6px 13px',
+                            fontSize: '0.78rem',
                             cursor: 'pointer',
                             fontWeight: 500,
+                            boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.background = '#E0F2F8';
-                            e.currentTarget.style.borderColor = '#2E7D9C';
+                            e.currentTarget.style.background = '#F1F5F9';
+                            e.currentTarget.style.borderColor = '#94A3B8';
                           }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.background = '#fff';
-                            e.currentTarget.style.borderColor = '#D9CEBC';
+                            e.currentTarget.style.background = '#FFFFFF';
+                            e.currentTarget.style.borderColor = '#CBD5E1';
                           }}
                         >
                           {chip}
@@ -587,8 +826,8 @@ const AvayktaBot = () => {
             onSubmit={handleSubmit}
             className="flex items-center gap-2 flex-shrink-0"
             style={{
-              background: '#fff',
-              borderTop: '1px solid #E0D5C5',
+              background: '#FFFFFF',
+              borderTop: '1px solid #E2E8F0',
               padding: '12px 16px',
             }}
           >
@@ -597,25 +836,27 @@ const AvayktaBot = () => {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Type a message..."
+              placeholder="Ask a question..."
               style={{
                 flex: 1,
-                border: '1.5px solid #E0D5C5',
+                border: '1px solid #CBD5E1',
                 borderRadius: '24px',
                 padding: '8px 16px',
-                fontSize: '0.875rem',
-                color: '#2E4057',
-                background: '#FAF7F2',
+                fontSize: '0.85rem',
+                color: '#0F172A',
+                background: '#F8FAFC',
                 outline: 'none',
-                transition: 'border-color 0.2s, box-shadow 0.2s',
+                transition: 'border-color 0.2s, box-shadow 0.2s, background-color 0.2s',
               }}
               onFocus={(e) => {
-                e.currentTarget.style.borderColor = '#2E7D9C';
-                e.currentTarget.style.boxShadow = '0 0 0 3px rgba(46,125,156,0.12)';
+                e.currentTarget.style.borderColor = '#1B3A6B';
+                e.currentTarget.style.boxShadow = '0 0 0 3px rgba(27,58,107,0.12)';
+                e.currentTarget.style.background = '#FFFFFF';
               }}
               onBlur={(e) => {
-                e.currentTarget.style.borderColor = '#E0D5C5';
+                e.currentTarget.style.borderColor = '#CBD5E1';
                 e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.style.background = '#F8FAFC';
               }}
             />
             <button
@@ -625,12 +866,12 @@ const AvayktaBot = () => {
                 width: '36px',
                 height: '36px',
                 borderRadius: '50%',
-                background: '#2E7D9C',
+                background: '#1B3A6B',
                 border: 'none',
                 cursor: 'pointer',
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = '#1A5F78')}
-              onMouseLeave={(e) => (e.currentTarget.style.background = '#2E7D9C')}
+              onMouseEnter={(e) => (e.currentTarget.style.background = '#0F172A')}
+              onMouseLeave={(e) => (e.currentTarget.style.background = '#1B3A6B')}
               aria-label="Send message"
             >
               <PaperAirplaneIcon style={{ width: '16px', height: '16px', color: '#fff' }} />

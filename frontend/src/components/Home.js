@@ -1,17 +1,14 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { supabase } from '../lib/supabaseClient';
 import {
   HeartIcon,
   UserGroupIcon,
   ShieldCheckIcon,
   GlobeAltIcon,
-  ArrowRightIcon,
   StarIcon,
   ClockIcon,
   MapPinIcon,
-  ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline';
 import CaseStatusTracker from './CaseStatusTracker';
 
@@ -22,42 +19,8 @@ const Testimonials = lazy(() => import('./Testimonials'));
 const Home = () => {
   const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
-  const [recentCases, setRecentCases] = useState([]);
-  const [casesLoading, setCasesLoading] = useState(true);
 
   useEffect(() => { setIsVisible(true); }, []);
-
-  useEffect(() => {
-    const fetchRecentCases = async () => {
-      setCasesLoading(true);
-      try {
-        const { data, error } = await supabase
-          .from('orphan_cases')
-          .select('*')
-          .order('created_at', { ascending: false })
-          .limit(4);
-        
-        if (!error && data) {
-          // Map Supabase fields to the UI format
-          const mapped = data.map(c => ({
-            id: c.case_id,
-            location: c.location,
-            date: new Date(c.created_at).toLocaleDateString(),
-            status: c.status.charAt(0).toUpperCase() + c.status.slice(1),
-            statusColor: c.status === 'identified' ? '#27AE60' : 
-                         c.status === 'investigating' ? '#8B5CF6' : 
-                         c.status === 'unidentified' ? '#F59E0B' : '#2E7D9C'
-          }));
-          setRecentCases(mapped);
-        }
-      } catch (err) {
-        console.error('Error fetching recent cases:', err);
-      } finally {
-        setCasesLoading(false);
-      }
-    };
-    fetchRecentCases();
-  }, []);
 
   const features = [
     { icon: ShieldCheckIcon, title: 'Secure & Confidential',  description: 'All information is handled with utmost privacy and security under IT Act 2000.' },
@@ -80,12 +43,22 @@ const Home = () => {
           HERO — Cosmic dark (preserved), improved CTAs
       ══════════════════════════════════════════════════ */}
       {/* ── Hero section: soft light blue-gray background with a calm, dignified institutional look ── */}
-      <section className="relative overflow-hidden pt-8 sm:pt-12 pb-10 sm:pb-14" style={{ backgroundColor: '#F0F4F8', backgroundImage: 'radial-gradient(circle at 10% 20%, #F5F7FA 0%, #E4ECF5 100%)' }}>
+      <section className="relative min-h-[calc(100vh-100px)] flex flex-col justify-center overflow-hidden pt-8 sm:pt-12 pb-16 sm:pb-24" style={{ backgroundColor: '#F0F4F8' }}>
         
         {/* Soft Dignified Overlay */}
         <div className="absolute inset-0 pointer-events-none" style={{
-          background: 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%)'
+          background: 'radial-gradient(circle at 50% 40%, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 100%)'
         }} />
+
+        {/* Smooth color grading transition into next section */}
+        <div
+          className="absolute bottom-0 left-0 right-0 pointer-events-none z-0"
+          style={{
+            height: '160px',
+            background: 'linear-gradient(to bottom, rgba(240,244,248,0) 0%, rgba(248,250,252,0.7) 60%, #F8FAFC 100%)',
+          }}
+          aria-hidden="true"
+        />
 
         <div className="relative z-10 container-responsive text-center">
 
@@ -126,95 +99,13 @@ const Home = () => {
               <CaseStatusTracker currentStep={1} lang={['hi','pa'].includes(navigator.language?.slice(0,2)) ? navigator.language.slice(0,2) : 'en'} />
             </div>
           </div>
-        </div>
 
-
-        {/* Bottom fade — subtle smooth blend into Recent Cases */}
-        <div className="absolute bottom-0 left-0 right-0 pointer-events-none" style={{
-          height: '40px',
-          background: 'linear-gradient(to bottom, transparent, var(--off-white))'
-        }} />
-      </section>
-
-      {/* ══════════════════════════════════════════════════
-          RECENT CASES — warm off-white
-      ══════════════════════════════════════════════════ */}
-      <section className="bg-[var(--off-white)] pt-6 sm:pt-8 pb-12 px-4 sm:px-6 lg:px-8">
-        <div className="container-responsive">
-          <div className="text-center mb-6">
-            <h2 className="text-2xl sm:text-3xl font-merriweather font-bold mb-2" style={{ color:'#1B3A6B' }}>
-              Recent Cases
-            </h2>
-            <p className="text-sm sm:text-base" style={{ color:'#4A5568' }}>
-              Our portal is actively maintained. Here are the latest cases:
-            </p>
-          </div>
-          
-          {casesLoading ? (
-            <div className="flex justify-center py-12">
-              <div className="w-8 h-8 border-3 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
-            </div>
-          ) : recentCases.length === 0 ? (
-            <div className="text-center py-12 px-6 rounded-2xl bg-gray-50 border border-gray-100">
-              <p className="text-gray-500 italic">No recent cases reported yet. Your help can change this.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {recentCases.map((c) => (
-                <div key={c.id} className="inst-card">
-                  <div className="flex justify-between items-start mb-3">
-                    <span className="text-xs font-bold px-2 py-1 rounded-full"
-                      style={{ background:`${c.statusColor}18`, color:c.statusColor, border:`1px solid ${c.statusColor}40` }}>
-                      {c.status}
-                    </span>
-                    <span className="text-xs" style={{ color:'#5A6B82' }}>{c.date}</span>
-                  </div>
-                  <p className="font-bold text-sm mb-1" style={{ color:'#1B3A6B' }}>{c.id}</p>
-                  <p className="text-sm flex items-center gap-1" style={{ color:'#4A5568' }}>
-                    <MapPinIcon style={{ width:'0.85rem', height:'0.85rem', flexShrink:0 }} aria-hidden="true" />
-                    {c.location}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
-          <div className="text-center mt-6">
-            <Link to="/search" className="btn-secondary" style={{ fontSize:'0.9rem', padding:'0.6rem 1.5rem' }} title="View all reported cases in the database">
-              View All Cases <ArrowRightIcon style={{ width:'1rem', height:'1rem' }} aria-hidden="true" />
-            </Link>
+          {/* ── Subtle Elegant Divider Line (soft faded gradient) ── */}
+          <div className={`mt-8 sm:mt-10 max-w-2xl mx-auto px-4 flex items-center justify-center transition-all duration-1000 delay-700 ${isVisible ? 'opacity-100' : 'opacity-0'}`} aria-hidden="true">
+            <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-slate-300/80 to-transparent" />
           </div>
         </div>
       </section>
-
-      <hr className="section-divider" />
-
-      {/* ══════════════════════════════════════════════════
-          STATS — navy section
-      ══════════════════════════════════════════════════ */}
-      <section className="content-section-navy">
-        <div className="container-responsive">
-          <div className="text-center mb-10">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-merriweather font-bold mb-3 text-white">
-              The Reality We Face
-            </h2>
-            <p className="text-base sm:text-lg max-w-3xl mx-auto" style={{ color:'#BEE3F8' }}>
-              Every year, thousands of unclaimed bodies are found across India. These are not just statistics — they are human beings who deserve dignity and closure.
-            </p>
-          </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {stats.map((stat, i) => (
-              <div key={i} className="p-5 sm:p-6 text-center rounded-xl border border-white/15"
-                style={{ background:'rgba(255,255,255,0.08)', backdropFilter:'blur(10px)' }}>
-                <stat.icon className="w-8 h-8 mx-auto mb-3" style={{ color:'#63B3ED' }} aria-hidden="true" />
-                <h3 className="text-2xl sm:text-3xl font-bold mb-1 text-white">{stat.number}</h3>
-                <p className="text-xs sm:text-sm" style={{ color:'#BEE3F8' }}>{stat.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <hr className="section-divider" />
 
       {/* ══════════════════════════════════════════════════
           FEATURES — warm white cards
@@ -244,8 +135,6 @@ const Home = () => {
         </div>
       </section>
 
-      <hr className="section-divider" />
-
       {/* ══════════════════════════════════════════════════
           GRIEF SUPPORT — warm off-white
       ══════════════════════════════════════════════════ */}
@@ -266,13 +155,13 @@ const Home = () => {
                     className="text-sm font-semibold px-3 py-1.5 rounded-lg hover:opacity-90 transition-opacity"
                     style={{ background:'#DBEAFE', color:'#1E40AF' }}
                     title="Visit iCall free counselling helpline website">
-                    iCall Helpline →
+                    iCall Helpline
                   </a>
                   <a href="https://www.vandrevalafoundation.com" target="_blank" rel="noopener noreferrer"
                     className="text-sm font-semibold px-3 py-1.5 rounded-lg hover:opacity-90 transition-opacity"
                     style={{ background:'#D1FAE5', color:'#065F46' }}
                     title="Visit Vandrevala Foundation mental health support">
-                    Vandrevala Foundation →
+                    Vandrevala Foundation
                   </a>
                   <a href="tel:9152987821"
                     className="text-sm font-semibold px-3 py-1.5 rounded-lg hover:opacity-90 transition-opacity"
@@ -287,38 +176,64 @@ const Home = () => {
         </div>
       </section>
 
+      {/* ══════════════════════════════════════════════════
+          STATS — The Reality We Face (Positioned below Grief Support)
+      ══════════════════════════════════════════════════ */}
+      <section className="py-16 sm:py-20 bg-slate-50">
+        <div className="container-responsive">
+          <div className="text-center mb-10 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-merriweather font-bold mb-3" style={{ color: '#1B3A6B' }}>
+              The Reality We Face
+            </h2>
+            <p className="text-sm sm:text-base md:text-lg max-w-3xl mx-auto" style={{ color: '#4A5568' }}>
+              Every year, thousands of unclaimed bodies are found across India. These are not just statistics — they are human beings who deserve dignity and closure.
+            </p>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {stats.map((stat, i) => (
+              <div
+                key={i}
+                className="p-6 text-center rounded-2xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md hover:border-sky-300 transition-all duration-300 group"
+              >
+                <div className="w-12 h-12 rounded-xl bg-sky-50 border border-sky-100 flex items-center justify-center mx-auto mb-3.5 group-hover:scale-110 transition-transform">
+                  <stat.icon className="w-6 h-6 text-sky-600" aria-hidden="true" />
+                </div>
+                <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-1 font-merriweather" style={{ color: '#1B3A6B' }}>
+                  {stat.number}
+                </h3>
+                <p className="text-xs sm:text-sm font-medium text-slate-500">
+                  {stat.label}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Testimonials */}
       <Suspense fallback={
-        <div className="py-16 text-center" style={{ backgroundColor:'#1B3A6B' }}>
+        <div className="py-16 text-center" style={{ backgroundColor:'#F0F4F8' }}>
           <div className="w-8 h-8 mx-auto border-3 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
         </div>
       }>
         <Testimonials />
       </Suspense>
 
-      <hr className="section-divider" />
-
       {/* ══════════════════════════════════════════════════
-          CALL TO ACTION — navy
+          CALL TO ACTION — Main page light background
       ══════════════════════════════════════════════════ */}
-      <section className="content-section-navy">
+      <section className="py-16 sm:py-20" style={{ backgroundColor: '#F0F4F8' }}>
         <div className="container-responsive">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-merriweather font-bold mb-4 text-white">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-merriweather font-bold mb-4" style={{ color: '#1B3A6B' }}>
               Join Our Mission
             </h2>
-            <p className="text-base sm:text-lg mb-8" style={{ color:'#BEE3F8' }}>
+            <p className="text-base sm:text-lg mb-8" style={{ color: '#4A5568' }}>
               Together, we can bring dignity to the forgotten and make a lasting impact in our communities.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/report" className="btn-urgent" title="Report an unclaimed or unidentified body">
-                <ExclamationTriangleIcon style={{ width:'1.1rem', height:'1.1rem' }} aria-hidden="true" />
-                Report a Case
-                <ArrowRightIcon style={{ width:'1rem', height:'1rem' }} aria-hidden="true" />
-              </Link>
-              <Link to="/contact" className="btn-secondary" style={{ borderColor:'rgba(255,255,255,0.5)', color:'#fff' }} title="Contact Avaykta support team">
+            <div className="flex justify-center">
+              <Link to="/contact" className="btn-secondary" style={{ borderColor: 'rgba(27,58,107,0.25)', color: '#1B3A6B', background: '#FFFFFF' }} title="Contact Avaykta support team">
                 Contact Us
-                <ArrowRightIcon style={{ width:'1rem', height:'1rem' }} aria-hidden="true" />
               </Link>
             </div>
           </div>

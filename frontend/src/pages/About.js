@@ -141,134 +141,119 @@ const About = () => {
     }
   ];
 
-  const testimonials = [
-    {
-      quote: "Avaykta helped us find closure we never thought possible. After 3 years of searching, we finally found our brother.",
-      author: "Anonymous Family Member",
-      location: "Delhi",
-      rating: 5
-    },
-    {
-      quote: "The platform's efficiency is remarkable. We identified a missing person within 24 hours of the report.",
-      author: "Police Inspector",
-      location: "Mumbai",
-      rating: 5
-    },
-    {
-      quote: "As a volunteer, I've seen firsthand how this technology brings hope to families. It's more than just identification - it's dignity.",
-      author: "Volunteer Coordinator",
-      location: "Bangalore",
-      rating: 5
-    },
-    {
-      quote: "The compassion and respect shown by the Avaykta team is exemplary. They treat every case with the dignity it deserves.",
-      author: "Hospital Administrator",
-      location: "Chennai",
-      rating: 5
-    },
-    {
-      quote: "This platform has revolutionized how we handle unclaimed bodies. It's a game-changer for law enforcement.",
-      author: "Senior Police Officer",
-      location: "Hyderabad",
-      rating: 5
-    },
-    {
-      quote: "We found our missing daughter after 2 years. Avaykta gave us the closure we desperately needed.",
-      author: "Anonymous Family",
-      location: "Kolkata",
-      rating: 5
-    }
-  ];
-
   return (
-    <div className="min-h-screen section-light">
-      {/* Hero Section */}
-      <section className="relative h-screen overflow-hidden section-dark flex items-center justify-center">
-        {/* Background Gradient & Animated Blobs */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0F1E36] to-[#1B3A6B]"></div>
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl animate-blob"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl animate-blob animation-delay-2000"></div>
-        </div>
-        
-        <div className="relative w-full flex flex-col justify-center items-center container-responsive text-center z-10">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-merriweather font-bold mb-4 sm:mb-6 animate-fade-in-up" style={{ color: '#fff' }}>
+    <div className="min-h-screen pt-16 sm:pt-20 lg:pt-24" style={{ background: 'var(--off-white)' }}>
+      {/* Navy Header Banner (Identical to Contact Page) */}
+      <section className="section-dark section-padding">
+        <div className="container-responsive text-center">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-merriweather font-bold mb-4 sm:mb-6" style={{ color: '#fff' }}>
             About Avaykta
           </h1>
-          <p className="text-lg sm:text-xl lg:text-2xl max-w-3xl sm:max-w-4xl mx-auto mb-6 sm:mb-8 animate-fade-in-up animation-delay-200" style={{ color: '#CBD5E0' }}>
-            Bringing dignity to the unclaimed, one soul at a time
+          <p className="text-base sm:text-lg lg:text-xl max-w-2xl sm:max-w-3xl mx-auto mb-6 sm:mb-8" style={{ color: '#CBD5E0' }}>
+            Bringing dignity to the unclaimed, one soul at a time. Dedicated to helping identify and honor the forgotten.
           </p>
-          <p className="text-base sm:text-lg lg:text-xl max-w-2xl sm:max-w-3xl mx-auto leading-relaxed animate-fade-in-up animation-delay-300" style={{ color: 'rgba(255,255,255,0.8)' }}>
-            We are a compassionate platform dedicated to helping identify and honor unclaimed bodies with dignity, compassion, and purpose.
-          </p>
+          <div className="w-16 sm:w-24 h-1 mx-auto rounded-full" style={{ background: 'linear-gradient(90deg, var(--teal), var(--teal-light))' }}></div>
+        </div>
+      </section>
+
+      {/* Mission and Vision Section */}
+      <section className="section-padding" style={{ background: 'var(--off-white)' }}>
+        <div className="container-responsive">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+            <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/80 shadow-sm">
+              <div className="w-12 h-12 rounded-xl bg-sky-50 border border-sky-100 flex items-center justify-center mb-4">
+                <RocketLaunchIcon className="w-6 h-6 text-sky-700" aria-hidden="true" />
+              </div>
+              <h3 className="text-xl sm:text-2xl font-merriweather font-bold mb-3" style={{ color: '#1B3A6B' }}>Our Mission</h3>
+              <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
+                To provide a dignified platform for identifying and honoring unclaimed bodies, ensuring that every individual receives the respect and closure they deserve, while supporting families in their search for missing loved ones.
+              </p>
+            </div>
+            <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/80 shadow-sm">
+              <div className="w-12 h-12 rounded-xl bg-teal-50 border border-teal-100 flex items-center justify-center mb-4">
+                <LightBulbIcon className="w-6 h-6 text-teal-700" aria-hidden="true" />
+              </div>
+              <h3 className="text-xl sm:text-2xl font-merriweather font-bold mb-3" style={{ color: '#1B3A6B' }}>Our Vision</h3>
+              <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
+                To create a world where no life goes unnoticed, where every individual receives the dignity they deserve,
+                and where technology serves as a bridge between the lost and their loved ones.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Statistics Section */}
-      <section className="section-padding section-cream">
+      <section className="py-12 sm:py-16 bg-slate-50 border-t border-b border-slate-200/60">
         <div className="container-responsive">
-          <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-merriweather font-bold mb-4" style={{ color: 'var(--navy)' }}>
+          <div className="text-center mb-8 sm:mb-10">
+            <h2 className="text-2xl sm:text-3xl font-merriweather font-bold mb-3" style={{ color: '#1B3A6B' }}>
               The Reality We Face
             </h2>
-            <p className="text-base sm:text-lg lg:text-xl max-w-3xl mx-auto" style={{ color: 'var(--text-mid)' }}>
-              Every year, thousands of unclaimed bodies are found across India. These are not just statistics - they are human beings who deserve dignity and closure.
+            <p className="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto">
+              Every year, thousands of unclaimed bodies are found across India. These are human beings who deserve dignity and closure.
             </p>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-            <div className="inst-card text-center transform hover:scale-105 transition-all duration-300">
-              <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2" style={{ color: 'var(--teal)' }}>{counters.reports}+</h3>
-              <p className="text-sm sm:text-base lg:text-lg" style={{ color: 'var(--navy)' }}>Total Unclaimed Reports Handled</p>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm text-center">
+              <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1" style={{ color: '#1B3A6B' }}>{counters.reports}+</h3>
+              <p className="text-xs sm:text-sm font-medium text-slate-500">Unclaimed Reports Handled</p>
             </div>
-            <div className="inst-card text-center transform hover:scale-105 transition-all duration-300">
-              <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2" style={{ color: 'var(--teal)' }}>{counters.lives}</h3>
-              <p className="text-sm sm:text-base lg:text-lg" style={{ color: 'var(--navy)' }}>Lives Saved Through Timely Alerts</p>
+            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm text-center">
+              <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1" style={{ color: '#1B3A6B' }}>{counters.lives}</h3>
+              <p className="text-xs sm:text-sm font-medium text-slate-500">Lives Saved Through Alerts</p>
             </div>
-            <div className="inst-card text-center transform hover:scale-105 transition-all duration-300">
-              <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2" style={{ color: 'var(--teal)' }}>{counters.volunteers}+</h3>
-              <p className="text-sm sm:text-base lg:text-lg" style={{ color: 'var(--navy)' }}>Volunteers Active</p>
+            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm text-center">
+              <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1" style={{ color: '#1B3A6B' }}>{counters.volunteers}+</h3>
+              <p className="text-xs sm:text-sm font-medium text-slate-500">Volunteers Active</p>
             </div>
-            <div className="inst-card text-center transform hover:scale-105 transition-all duration-300">
-              <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2" style={{ color: 'var(--teal)' }}>{counters.stations}+</h3>
-              <p className="text-sm sm:text-base lg:text-lg" style={{ color: 'var(--navy)' }}>Police Stations Connected</p>
+            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm text-center">
+              <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1" style={{ color: '#1B3A6B' }}>{counters.stations}+</h3>
+              <p className="text-xs sm:text-sm font-medium text-slate-500">Connected Stations</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* The Growing Crisis */}
-      <section className="section-padding section-light">
+      <section className="section-padding" style={{ background: 'var(--off-white)' }}>
         <div className="container-responsive">
           <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-merriweather font-bold mb-4" style={{ color: 'var(--navy)' }}>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-merriweather font-bold mb-4" style={{ color: '#1B3A6B' }}>
               The Growing Crisis
             </h2>
-            <p className="text-base sm:text-lg lg:text-xl max-w-3xl mx-auto" style={{ color: 'var(--text-mid)' }}>
+            <p className="text-base sm:text-lg max-w-3xl mx-auto" style={{ color: '#4A5568' }}>
               A visual representation of the unclaimed bodies found in the last 5 years across India.
             </p>
           </div>
           
-          <div className="inst-card">
+          <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 sm:p-8 max-w-3xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
               <div>
-                <h3 className="text-2xl font-bold mb-2" style={{ color: 'var(--navy)' }}>2019</h3>
-                <p className="text-lg" style={{ color: 'var(--text-dark)' }}>1,200 bodies</p>
-                <p className="text-sm font-semibold" style={{ color: 'var(--success-green)' }}>🟢 Low Severity</p>
+                <h3 className="text-xl font-bold mb-1" style={{ color: '#1B3A6B' }}>2019</h3>
+                <p className="text-base text-slate-700 font-semibold">1,200 bodies</p>
+                <span className="inline-block mt-1 text-xs px-2.5 py-0.5 rounded-full font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  Low Severity
+                </span>
               </div>
               <div>
-                <h3 className="text-2xl font-bold mb-2" style={{ color: 'var(--navy)' }}>2022</h3>
-                <p className="text-lg" style={{ color: 'var(--text-dark)' }}>1,650 bodies</p>
-                <p className="text-sm font-semibold" style={{ color: 'var(--amber-warn)' }}>🟡 Medium Severity</p>
+                <h3 className="text-xl font-bold mb-1" style={{ color: '#1B3A6B' }}>2022</h3>
+                <p className="text-base text-slate-700 font-semibold">1,650 bodies</p>
+                <span className="inline-block mt-1 text-xs px-2.5 py-0.5 rounded-full font-medium bg-amber-50 text-amber-700 border border-amber-200">
+                  Medium Severity
+                </span>
               </div>
               <div>
-                <h3 className="text-2xl font-bold mb-2" style={{ color: 'var(--navy)' }}>2024</h3>
-                <p className="text-lg" style={{ color: 'var(--text-dark)' }}>1,950 bodies</p>
-                <p className="text-sm font-semibold" style={{ color: 'var(--alert-red)' }}>🔴 High Severity</p>
+                <h3 className="text-xl font-bold mb-1" style={{ color: '#1B3A6B' }}>2024</h3>
+                <p className="text-base text-slate-700 font-semibold">1,950 bodies</p>
+                <span className="inline-block mt-1 text-xs px-2.5 py-0.5 rounded-full font-medium bg-rose-50 text-rose-700 border border-rose-200">
+                  High Severity
+                </span>
               </div>
             </div>
             <div className="mt-6 text-center pt-4" style={{ borderTop: '1px solid #E2E8F0' }}>
-              <p className="text-sm font-semibold" style={{ color: 'var(--teal)' }}>
+              <p className="text-sm font-semibold" style={{ color: '#2E7D9C' }}>
                 Year-over-Year Change: +62.5% increase since 2019
               </p>
             </div>
@@ -277,32 +262,31 @@ const About = () => {
       </section>
 
       {/* Our Story Section */}
-      <section className="section-padding section-cream">
+      <section className="py-12 sm:py-16 bg-slate-50 border-t border-b border-slate-200/60">
         <div className="container-responsive">
           <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-merriweather font-bold mb-4" style={{ color: 'var(--navy)' }}>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-merriweather font-bold mb-4" style={{ color: '#1B3A6B' }}>
               Our Story
             </h2>
-            <p className="text-base sm:text-lg lg:text-xl max-w-3xl mx-auto" style={{ color: 'var(--text-mid)' }}>
+            <p className="text-base sm:text-lg max-w-3xl mx-auto" style={{ color: '#4A5568' }}>
               From a simple idea to a nationwide movement - here's how Avaykta came to be and the milestones we've achieved.
             </p>
           </div>
           
-          <div className="space-y-6 max-w-4xl mx-auto">
+          <div className="space-y-4 sm:space-y-6 max-w-3xl mx-auto">
             {timelineData.map((item, index) => (
-              <div key={index} className="flex items-start gap-4 inst-card" style={{ padding: '1.5rem' }}>
-                <div className="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center" style={{ background: 'rgba(46,125,156,0.1)' }}>
-                  <item.icon className="text-lg sm:text-2xl" style={{ color: 'var(--teal)' }} />
+              <div key={index} className="flex items-start gap-4 bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 sm:p-6">
+                <div className="flex-shrink-0 w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center bg-sky-50 border border-sky-100">
+                  <item.icon className="w-5 h-5 text-sky-700" aria-hidden="true" />
                 </div>
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-sm font-bold" style={{ color: 'var(--teal)' }}>{item.year}</span>
-                    <span className="text-sm" style={{ color: 'var(--text-light)' }}>•</span>
-                    <h3 className="text-lg sm:text-xl lg:text-2xl font-bold" style={{ color: 'var(--navy)' }}>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-xs font-bold px-2 py-0.5 rounded bg-sky-100 text-sky-800">{item.year}</span>
+                    <h3 className="text-base sm:text-lg font-bold" style={{ color: '#1B3A6B' }}>
                       {item.title}
                     </h3>
                   </div>
-                  <p className="text-sm sm:text-base" style={{ color: 'var(--text-dark)' }}>
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                     {item.description}
                   </p>
                 </div>
@@ -312,54 +296,33 @@ const About = () => {
         </div>
       </section>
 
-      {/* Mission and Vision Section */}
-      <section className="section-padding section-dark">
-        <div className="container-responsive">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
-            <div className="p-6 sm:p-8 lg:p-10 rounded-2xl" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
-              <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6" style={{ color: '#fff' }}>Our Mission</h3>
-              <p className="text-base sm:text-lg leading-relaxed" style={{ color: '#CBD5E0' }}>
-                To provide a dignified platform for identifying and honoring unclaimed bodies, ensuring that every individual receives the respect and closure they deserve, while supporting families in their search for missing loved ones.
-              </p>
-            </div>
-            <div className="p-6 sm:p-8 lg:p-10 rounded-2xl" style={{ background: 'var(--warm-white)', border: '1px solid #E2E8F0' }}>
-              <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6" style={{ color: 'var(--navy)' }}>Our Vision</h3>
-              <p className="text-base sm:text-lg leading-relaxed" style={{ color: 'var(--text-dark)' }}>
-                To create a world where no life goes unnoticed, where every individual receives the dignity they deserve,
-                and where technology serves as a bridge between the lost and their loved ones.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Team Section */}
-      <section className="section-padding section-light">
+      <section className="section-padding" style={{ background: 'var(--off-white)' }}>
         <div className="container-responsive">
           <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-merriweather font-bold mb-4" style={{ color: 'var(--navy)' }}>
-              Our Team
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-merriweather font-bold mb-4" style={{ color: '#1B3A6B' }}>
+              Leadership
             </h2>
-            <p className="text-base sm:text-lg lg:text-xl max-w-3xl mx-auto" style={{ color: 'var(--text-mid)' }}>
-              Meet the dedicated individuals working tirelessly to make a difference and bring dignity to the unclaimed.
+            <p className="text-base sm:text-lg max-w-3xl mx-auto" style={{ color: '#4A5568' }}>
+              Meet the individuals working tirelessly to bring dignity and closure to families.
             </p>
           </div>
           <div className="flex justify-center w-full">
             {teamData.map((member, index) => (
-              <div key={index} className="inst-card overflow-hidden max-w-md w-full" style={{ padding: 0 }}>
-                <div className="h-32 sm:h-40 w-full flex items-center justify-center" style={{ background: 'var(--navy)' }}>
-                  <span className="text-white text-4xl font-bold">
+              <div key={index} className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden max-w-md w-full">
+                <div className="h-28 sm:h-32 w-full flex items-center justify-center bg-gradient-to-r from-[#1B3A6B] to-[#2E7D9C]">
+                  <span className="text-white text-3xl font-bold">
                     {member.name.charAt(0)}
                   </span>
                 </div>
-                <div className="p-4 sm:p-6 text-center">
-                  <h3 className="text-lg sm:text-xl font-bold mb-1" style={{ color: 'var(--navy)' }}>
+                <div className="p-5 sm:p-6 text-center">
+                  <h3 className="text-lg font-bold mb-1" style={{ color: '#1B3A6B' }}>
                     {member.name}
                   </h3>
-                  <p className="text-sm font-semibold mb-3" style={{ color: 'var(--teal)' }}>
+                  <p className="text-xs font-semibold uppercase tracking-wider mb-3 text-sky-700">
                     {member.role}
                   </p>
-                  <p className="text-sm" style={{ color: 'var(--text-dark)' }}>
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                     {member.bio}
                   </p>
                 </div>
@@ -369,66 +332,18 @@ const About = () => {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="section-padding section-cream">
-        <div className="container-responsive">
-          <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-merriweather font-bold mb-4" style={{ color: 'var(--navy)' }}>
-              What People Say
-            </h2>
-            <p className="text-base sm:text-lg lg:text-xl max-w-3xl mx-auto" style={{ color: 'var(--text-mid)' }}>
-              Real stories from families who found closure through our platform.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {testimonials.map((testimonial, index) => (
-              <div key={index} className="inst-card">
-                <div className="flex items-center mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} className={`h-4 w-4 sm:h-5 sm:w-5 text-yellow-400`} fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
-                <p className="text-sm italic mb-4" style={{ color: 'var(--text-dark)' }}>
-                  "{testimonial.quote}"
-                </p>
-                <div className="flex items-center pt-3 border-t border-gray-200">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center mr-3" style={{ background: 'var(--teal)' }}>
-                    <span className="text-white font-bold text-sm">
-                      {testimonial.author.charAt(0)}
-                    </span>
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-semibold" style={{ color: 'var(--navy)' }}>
-                      {testimonial.author}
-                    </h4>
-                    <p className="text-xs" style={{ color: 'var(--text-mid)' }}>
-                      {testimonial.location}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Call to Action */}
-      <section className="section-padding section-dark text-center">
+      <section className="py-16 sm:py-20 text-center" style={{ backgroundColor: '#F0F4F8' }}>
         <div className="container-responsive">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-merriweather font-bold mb-4 sm:mb-6" style={{ color: '#fff' }}>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-merriweather font-bold mb-4" style={{ color: '#1B3A6B' }}>
               Join Our Mission
             </h2>
-            <p className="text-base sm:text-lg mb-6 sm:mb-8" style={{ color: '#CBD5E0' }}>
+            <p className="text-base sm:text-lg mb-8" style={{ color: '#4A5568' }}>
               Together, we can bring dignity to the forgotten and make a lasting impact in our communities.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/how-it-works" className="btn-primary" style={{ background: '#fff', color: 'var(--navy)', border: '1px solid #fff' }} title="Learn how Avaykta works to identify unclaimed bodies">
-                Know How it Works
-              </Link>
-              <Link to="/contact" className="btn-secondary" style={{ color: '#fff', borderColor: '#fff' }} title="Contact Avaykta support team">
+            <div className="flex justify-center">
+              <Link to="/contact" className="btn-secondary" style={{ borderColor: 'rgba(27,58,107,0.25)', color: '#1B3A6B', background: '#FFFFFF' }} title="Contact Avaykta support team">
                 Contact Us
               </Link>
             </div>

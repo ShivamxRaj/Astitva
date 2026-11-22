@@ -6,7 +6,6 @@ import {
   EyeIcon,
   EyeSlashIcon,
   ShieldCheckIcon,
-  ArrowLeftIcon,
   ExclamationCircleIcon,
   CheckCircleIcon,
 } from '@heroicons/react/24/outline';
@@ -142,7 +141,7 @@ const AdminAuth = () => {
             style={{ borderBottomColor: tab === 'login' ? '#1B3A6B' : 'transparent' }}
             aria-selected={tab === 'login'}
           >
-            🔐 Sign In
+            Sign In
           </button>
           <button
             onClick={() => { setTab('info'); setError(''); setShowForgot(false); }}
@@ -150,7 +149,7 @@ const AdminAuth = () => {
             style={{ borderBottomColor: tab === 'info' ? '#1B3A6B' : 'transparent' }}
             aria-selected={tab === 'info'}
           >
-            ℹ️ Get Access
+            Get Access
           </button>
         </div>
 
@@ -264,7 +263,6 @@ const AdminAuth = () => {
                 style={{ color: '#2E7D9C' }}
                 aria-label="Back to login"
               >
-                <ArrowLeftIcon style={{ width: '0.9rem', height: '0.9rem' }} aria-hidden="true" />
                 Back to login
               </button>
 
@@ -342,32 +340,9 @@ const AdminAuth = () => {
                   </li>
                 </ul>
               </div>
-              <button
-                onClick={() => setTab('login')}
-                className="w-full py-3 rounded-lg font-bold text-white text-sm"
-                style={{ background: 'linear-gradient(135deg, #1B3A6B, #2E7D9C)' }}
-              >
-                ← Back to Sign In
-              </button>
             </div>
           )}
 
-        </div>
-
-        {/* Footer */}
-        <div className="px-8 pb-6 text-center">
-          <button
-            onClick={() => navigate('/')}
-            className="text-xs flex items-center justify-center gap-1 mx-auto hover:underline"
-            style={{ color: '#94A3B8' }}
-            aria-label="Go to home page"
-          >
-            <ArrowLeftIcon style={{ width: '0.75rem', height: '0.75rem' }} aria-hidden="true" />
-            Return to main portal
-          </button>
-          <p className="text-xs mt-3" style={{ color: '#CBD5E0' }}>
-            🔒 Secured by Supabase Auth · All access is logged
-          </p>
         </div>
       </div>
     </div>

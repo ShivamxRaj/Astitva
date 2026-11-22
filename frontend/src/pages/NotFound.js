@@ -49,7 +49,7 @@ const NotFound = () => {
           style={styles.backButton}
           id="go-back-button"
         >
-          ← Go Back
+          Go Back
         </button>
       </div>
     </div>

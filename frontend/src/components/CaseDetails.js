@@ -145,10 +145,10 @@ const CaseDetails = () => {
           {/* Back & Share Buttons */}
           <div className="flex justify-between items-center mb-6 px-1">
             <button onClick={() => navigate(-1)} className="text-sm font-bold flex items-center gap-1.5 text-slate-500 hover:text-slate-800 transition-colors">
-              ← Go Back
+              Go Back
             </button>
             <button onClick={shareCase} className="py-2 px-4 border border-slate-200 bg-white hover:bg-slate-50 rounded-xl text-xs font-bold text-slate-700 flex items-center gap-1.5 transition-all shadow-sm">
-              🔗 Share Sighting
+              Share Sighting
             </button>
           </div>
 
@@ -221,28 +221,6 @@ const CaseDetails = () => {
                   </p>
                 </div>
               )}
-
-              {/* Verified Contact Disclaimer / Safety Warning */}
-              <div className="pt-6 border-t border-slate-100 flex flex-col gap-3">
-                <div className="p-4 bg-blue-50/50 rounded-2xl border border-blue-100/50 flex flex-col sm:flex-row items-start gap-3">
-                  <span className="text-2xl mt-0.5" role="img" aria-label="info">ℹ️</span>
-                  <div className="flex-1">
-                    <h4 className="text-sm font-bold text-slate-800 mb-1">Do you know this person?</h4>
-                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                      If you recognize these details, or have matching information about a missing relative, please contact the Avaykta Foundation Helpline immediately or speak directly with local coordination officers.
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <a href="tel:+916299446452" className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-[#1B3A6B] hover:bg-[#152d52] text-white rounded-xl text-center text-sm font-bold transition-all shadow-sm whitespace-nowrap" title="Call Avaykta emergency helpline">
-                    📞 Call +91 62994 46452
-                  </a>
-                  <a href={`https://wa.me/916299446452?text=Inquiry%20regarding%20Case%20ID%20${caseData.case_id}`} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-center text-sm font-bold transition-all shadow-sm whitespace-nowrap" title="Inquire about this case on WhatsApp">
-                    💬 WhatsApp Support
-                  </a>
-                </div>
-              </div>
             </div>
           </div>
         </div>

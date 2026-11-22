@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { PhoneIcon, HeartIcon, ShieldCheckIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
+import { PhoneIcon, ShieldCheckIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 import Modal from './Modal';
 import CookiePolicy from '../pages/CookiePolicy';
 import TermsOfService from '../pages/Guidelines';
@@ -11,11 +11,17 @@ const HELPLINE     = '+91 62994 46452';
 const WHATSAPP_URL = 'https://wa.me/916299446452?text=Hello%20Avaykta%2C%20I%20need%20assistance.';
 
 const Footer = () => {
+  const location = useLocation();
   const { i18n } = useTranslation();
   const year = 2025;
   const [modalOpen, setModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState(null);
   const [modalTitle, setModalTitle] = useState('');
+
+  // Hide footer completely on admin panel pages
+  if (location.pathname.startsWith('/admin')) {
+    return null;
+  }
 
   const openModal = (type) => {
     if (type === 'privacy')  { setModalContent(<PrivacyPolicy />);  setModalTitle('Privacy Policy'); }
@@ -86,8 +92,6 @@ const Footer = () => {
               { label: 'Home',           path: '/',        title: 'Go to Avaykta homepage' },
               { label: 'About Us',       path: '/about',   title: 'Learn about Avaykta mission and team' },
               { label: 'Report a Case',  path: '/report',  title: 'Report an unclaimed or unidentified body' },
-              { label: 'Search Records', path: '/search',  title: 'Search missing persons database' },
-              { label: 'FAQ',            path: '/faq',     title: 'Frequently asked questions about Avaykta' },
               { label: 'Contact Us',     path: '/contact', title: 'Get in touch with Avaykta support team' },
             ].map((item) => (
               <li key={item.path}>
@@ -193,9 +197,7 @@ const Footer = () => {
 
           {/* Copyright */}
           <div className="text-xs text-center" style={{ color: '#A0C4E8' }}>
-            © {year} Avaykta. Every soul remembered, every life respected. &nbsp;|&nbsp; Built with{' '}
-            <HeartIcon style={{ width: '0.75rem', height: '0.75rem', display: 'inline', color: '#FC8181' }} aria-hidden="true" />
-            {' '}by Shivam Raj
+            © {year} Avaykta. Every soul remembered, every life respected.
           </div>
         </div>
       </div>

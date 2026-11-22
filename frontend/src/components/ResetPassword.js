@@ -111,7 +111,7 @@ const ResetPassword = () => {
                 <CheckCircleIcon style={{ width: '2.5rem', height: '2.5rem', color: '#065F46' }} aria-hidden="true" />
               </div>
               <h2 className="font-bold text-xl mb-2" style={{ color: '#1B3A6B' }}>
-                Password Updated! 🎉
+                Password Updated!
               </h2>
               <p className="text-sm text-gray-600 mb-2">
                 Your password has been successfully reset.
@@ -143,7 +143,7 @@ const ResetPassword = () => {
                 className="text-sm hover:underline"
                 style={{ color: '#2E7D9C' }}
               >
-                ← Back to login & request a new link
+                Back to login & request a new link
               </button>
             </div>
           )}
@@ -252,7 +252,7 @@ const ResetPassword = () => {
         {/* Footer */}
         <div className="px-8 pb-6 text-center">
           <p className="text-xs" style={{ color: '#CBD5E0' }}>
-            🔒 Secured by Supabase Auth · All access is logged
+            Secured by Supabase Auth · All access is logged
           </p>
         </div>
       </div>

@@ -12,6 +12,7 @@ import {
   DocumentCheckIcon,
   ChatBubbleOvalLeftEllipsisIcon,
   ArrowRightOnRectangleIcon,
+  UserIcon,
 } from '@heroicons/react/24/outline';
 
 const formatDate = (d) =>
@@ -190,7 +191,7 @@ const AdminCases = () => {
         setCases(prev => prev.map(c => c.id === id ? { ...c, status } : c));
       }
       
-      showToast(status === 'identified' ? '✅ Case marked as identified!' : status === 'investigating' ? '🔍 Case under investigation' : '❌ Case rejected');
+      showToast(status === 'identified' ? 'Case marked as identified!' : status === 'investigating' ? 'Case under investigation' : 'Case rejected');
     } catch (err) {
       console.warn('Backend API update failed, falling back to direct Supabase client:', err);
       
@@ -209,7 +210,7 @@ const AdminCases = () => {
           setCases(prev => prev.map(c => c.id === id ? { ...c, status } : c));
         }
         
-        showToast(status === 'identified' ? '✅ Case marked as identified!' : status === 'investigating' ? '🔍 Case under investigation' : '❌ Case rejected');
+        showToast(status === 'identified' ? 'Case marked as identified!' : status === 'investigating' ? 'Case under investigation' : 'Case rejected');
       } catch (fallbackErr) {
         console.error('All update routes failed:', fallbackErr);
         setError('Error updating status. Please verify your backend server connection or disable RLS in Supabase.');
@@ -288,11 +289,11 @@ const AdminCases = () => {
   };
 
   const FILTERS = [
-    { key: 'unidentified',  label: '⏳ Unidentified' },
-    { key: 'investigating', label: '🔍 Investigating' },
-    { key: 'identified', label: '✅ Identified' },
-    { key: 'rejected', label: '❌ Rejected' },
-    { key: 'all',      label: '📋 All' },
+    { key: 'unidentified',  label: 'Unidentified' },
+    { key: 'investigating', label: 'Investigating' },
+    { key: 'identified', label: 'Identified' },
+    { key: 'rejected', label: 'Rejected' },
+    { key: 'all',      label: 'All' },
   ];
 
   return (
@@ -301,29 +302,29 @@ const AdminCases = () => {
 
         {/* Navigation between Admin Pages */}
         <div className="flex items-center justify-center mb-6 gap-3 flex-wrap">
-          <div className="bg-white/10 p-1 rounded-xl flex gap-1 border border-white/20">
+          <div className="bg-white/10 p-1 rounded-xl flex flex-wrap sm:flex-nowrap justify-center gap-1 border border-white/20 max-w-full">
             <button 
               onClick={() => navigate('/admin/cases')}
-              className="px-5 py-2 rounded-lg font-bold text-sm bg-white text-indigo-900 shadow"
+              className="px-3 sm:px-5 py-1.5 sm:py-2 rounded-lg font-bold text-xs sm:text-sm bg-white text-indigo-900 shadow"
             >
               Cases / Reports
             </button>
             <button 
               onClick={() => navigate('/admin/ratings')}
-              className="px-5 py-2 rounded-lg font-bold text-sm text-indigo-200 hover:bg-white/10 transition-all"
+              className="px-3 sm:px-5 py-1.5 sm:py-2 rounded-lg font-bold text-xs sm:text-sm text-indigo-200 hover:bg-white/10 transition-all"
             >
               Feedback / Ratings
             </button>
             <button 
               onClick={() => navigate('/admin/contacts')}
-              className="px-5 py-2 rounded-lg font-bold text-sm text-indigo-200 hover:bg-white/10 transition-all"
+              className="px-3 sm:px-5 py-1.5 sm:py-2 rounded-lg font-bold text-xs sm:text-sm text-indigo-200 hover:bg-white/10 transition-all"
             >
               Contact Messages
             </button>
           </div>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition-all hover:bg-red-500/20"
+            className="flex items-center gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all hover:bg-red-500/20"
             style={{ background: 'rgba(239,68,68,0.15)', color: '#FCA5A5', border: '1px solid rgba(239,68,68,0.3)' }}
             aria-label="Logout"
           >
@@ -357,7 +358,7 @@ const AdminCases = () => {
         )}
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6">
           {[
             { label: 'Unidentified',         value: stats.pending, color: '#F59E0B' },
             { label: 'Investigating',   value: stats.investigating,    color: '#3B82F6' },
@@ -374,13 +375,13 @@ const AdminCases = () => {
         {/* Advanced Filters */}
         <div className="bg-white/5 border border-white/10 rounded-2xl p-5 mb-6 backdrop-blur-md">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider">⚡ Advanced Search & Filters</h3>
+            <h3 className="text-sm font-bold text-white uppercase tracking-wider">Advanced Search & Filters</h3>
             {hasActiveFilters && (
               <button 
                 onClick={handleResetFilters}
                 className="text-xs font-bold text-indigo-300 hover:text-white transition-colors flex items-center gap-1"
               >
-                ✕ Clear All Filters
+                Clear All Filters
               </button>
             )}
           </div>
@@ -388,7 +389,7 @@ const AdminCases = () => {
             
             {/* Search Input */}
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-indigo-200">🔍 Search</label>
+              <label className="block text-xs font-semibold text-indigo-200">Search</label>
               <input
                 type="text"
                 placeholder="Search by Case ID, Contact, Description..."
@@ -400,7 +401,7 @@ const AdminCases = () => {
 
             {/* Location Filter */}
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-indigo-200">📍 Location</label>
+              <label className="block text-xs font-semibold text-indigo-200">Location</label>
               <input
                 type="text"
                 placeholder="Filter by city, state, landmark..."
@@ -412,7 +413,7 @@ const AdminCases = () => {
 
             {/* Date Range Selector */}
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-indigo-200">📅 Date Range</label>
+              <label className="block text-xs font-semibold text-indigo-200">Date Range</label>
               <select
                 value={dateRange}
                 onChange={(e) => setDateRange(e.target.value)}
@@ -525,7 +526,7 @@ const AdminCases = () => {
                       </div>
                     ) : (
                       <div className="w-full h-full bg-white/5 rounded-xl flex flex-col items-center justify-center border border-white/10 p-2 text-center">
-                        <span className="text-2xl opacity-40 mb-1">👤</span>
+                        <UserIcon className="w-8 h-8 text-indigo-300/40 mb-1" />
                         <span className="text-[10px] font-bold text-indigo-300 tracking-wider uppercase block">No Image Provided</span>
                       </div>
                     )}

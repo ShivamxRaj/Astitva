@@ -432,7 +432,7 @@ const DonationModal = ({ isOpen, onClose }) => {
                       }
                     }}
                   >
-                    Continue to Payment →
+                    Continue to Payment
                   </button>
                 </div>
               </div>
@@ -456,7 +456,7 @@ const DonationModal = ({ isOpen, onClose }) => {
                   }}
                   className="hover:underline"
                 >
-                  ← Back
+                  Back
                 </button>
 
                 {/* Highlighted Amount */}
