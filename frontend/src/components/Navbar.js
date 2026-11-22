@@ -114,17 +114,14 @@ const Navbar = () => {
             <div className="bg-slate-900/90 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl transition-all duration-300">
               <div className="flex h-16 sm:h-20 items-center justify-between px-4 sm:px-6 gap-4">
 
-                {/* Logo + Brand */}
-                <Link to="/" className="flex items-center gap-3 flex-shrink-0 group" aria-label="Avaykta Home" title="Go to Avaykta homepage">
+                {/* Logo */}
+                <Link to="/" className="flex items-center flex-shrink-0 group" aria-label="Avaykta Home" title="Go to Avaykta homepage">
                   <img
-                    className="h-9 w-9 object-contain filter brightness-0 invert drop-shadow-[0_0_8px_rgba(255,255,255,0.4)] group-hover:scale-105 transition-transform"
+                    className="h-9 sm:h-10 w-auto object-contain filter brightness-0 invert drop-shadow-[0_0_8px_rgba(255,255,255,0.4)] group-hover:scale-105 transition-transform"
                     src={logo}
                     alt="Avaykta Logo"
-                    width="36"
-                    height="36"
                     onError={(e) => { e.target.style.display = 'none'; }}
                   />
-                  <span className="text-white font-bold text-lg tracking-wider font-poppins">Avaykta</span>
                 </Link>
 
                 {/* Desktop Nav Links */}
