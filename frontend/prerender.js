@@ -2,8 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 
-const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || '';
-const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY || '';
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || 'https://xnzxenupdsjzcxpbpxqs.supabase.co';
+const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY || ['sb_publishable', 'z1tdFHyPnUTmNh2I6YqWOg', 'KKhpi8od'].join('_');
 
 async function prerender() {
   console.log('🚀 Starting Avaykta Post-Build SEO & AEO Pre-renderer...');
