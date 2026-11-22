@@ -80,18 +80,18 @@ const Home = () => {
           HERO — Cosmic dark (preserved), improved CTAs
       ══════════════════════════════════════════════════ */}
       {/* ── Hero section: soft light blue-gray background with a calm, dignified institutional look ── */}
-      <section className="relative min-h-screen overflow-hidden flex flex-col justify-center" style={{ backgroundColor: '#F0F4F8', backgroundImage: 'radial-gradient(circle at 10% 20%, #F5F7FA 0%, #E4ECF5 100%)' }}>
+      <section className="relative overflow-hidden pt-8 sm:pt-12 pb-10 sm:pb-14" style={{ backgroundColor: '#F0F4F8', backgroundImage: 'radial-gradient(circle at 10% 20%, #F5F7FA 0%, #E4ECF5 100%)' }}>
         
         {/* Soft Dignified Overlay */}
         <div className="absolute inset-0 pointer-events-none" style={{
           background: 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%)'
         }} />
 
-        <div className="relative z-10 container-responsive text-center py-16">
+        <div className="relative z-10 container-responsive text-center">
 
           {/* Trust Badge */}
-          <div className={`flex justify-center mb-6 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-            <span className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 text-[10px] sm:text-xs font-semibold text-center whitespace-normal sm:whitespace-nowrap max-w-[90vw]"
+          <div className={`flex justify-center mb-4 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            <span className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 text-[10px] sm:text-xs font-semibold text-center whitespace-normal sm:whitespace-nowrap max-w-[90vw]"
               style={{
                 background: 'rgba(27,58,107,0.06)',
                 color: '#1B3A6B',
@@ -104,34 +104,34 @@ const Home = () => {
           </div>
 
           {/* Main Heading */}
-          <h1 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-merriweather font-bold mb-4 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+          <h1 className={`text-4xl sm:text-5xl md:text-6xl font-merriweather font-bold mb-3 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
             style={{ color: '#1B3A6B' }}>
             {t('home.hero.title')}
           </h1>
 
-          <p className={`text-lg sm:text-xl lg:text-2xl max-w-3xl mx-auto mb-3 transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+          <p className={`text-base sm:text-lg lg:text-xl max-w-3xl mx-auto mb-2 transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
             style={{ color:'#2D3748' }}>
             {t('home.hero.description')}
           </p>
-          <p className={`text-sm sm:text-base max-w-2xl mx-auto mb-10 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-            style={{ color:'#4A5568', marginTop:'8px' }}>
+          <p className={`text-xs sm:text-sm max-w-2xl mx-auto mb-6 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+            style={{ color:'#4A5568' }}>
             Connecting families with unclaimed bodies since 2020 · Punjab, India
           </p>
 
 
           {/* ── Case Status Tracker Preview ── */}
-          <div className={`flex justify-center transition-all duration-1000 delay-600 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <div className={`flex justify-center transition-all duration-1000 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <div style={{ width:'100%', maxWidth:'560px' }} className="px-2 sm:px-0">
-              <p className="text-xs mb-3" style={{ color:'#4A5568' }}>How a case progresses through our system:</p>
+              <p className="text-xs mb-2.5 font-medium" style={{ color:'#4A5568' }}>How a case progresses through our system:</p>
               <CaseStatusTracker currentStep={1} lang={['hi','pa'].includes(navigator.language?.slice(0,2)) ? navigator.language.slice(0,2) : 'en'} />
             </div>
           </div>
         </div>
 
 
-        {/* Bottom fade — hero bleeds smoothly into next section */}
+        {/* Bottom fade — subtle smooth blend into Recent Cases */}
         <div className="absolute bottom-0 left-0 right-0 pointer-events-none" style={{
-          height: '120px',
+          height: '40px',
           background: 'linear-gradient(to bottom, transparent, var(--off-white))'
         }} />
       </section>
@@ -139,13 +139,13 @@ const Home = () => {
       {/* ══════════════════════════════════════════════════
           RECENT CASES — warm off-white
       ══════════════════════════════════════════════════ */}
-      <section className="content-section">
+      <section className="bg-[var(--off-white)] pt-6 sm:pt-8 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="container-responsive">
-          <div className="text-center mb-8">
+          <div className="text-center mb-6">
             <h2 className="text-2xl sm:text-3xl font-merriweather font-bold mb-2" style={{ color:'#1B3A6B' }}>
               Recent Cases
             </h2>
-            <p className="text-base" style={{ color:'#4A5568' }}>
+            <p className="text-sm sm:text-base" style={{ color:'#4A5568' }}>
               Our portal is actively maintained. Here are the latest cases:
             </p>
           </div>
