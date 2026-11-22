@@ -91,33 +91,20 @@ const Navbar = () => {
 
   return (
     <>
-      {/* ── Sleek Announcement / Utility Bar ── */}
-      <div className="hidden sm:flex bg-slate-950 text-slate-400 py-2.5 px-4 sm:px-6 lg:px-8 text-[11px] font-semibold tracking-wider uppercase border-b border-white/5 items-center justify-between gap-2.5" role="banner">
-        <div className="flex items-center gap-2">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true" />
-          <span>Official Humanitarian Portal &nbsp;|&nbsp; Punjab, India &nbsp;|&nbsp; Est. 2020</span>
-        </div>
-        <div className="flex items-center gap-4">
-          <a href={`tel:${HELPLINE}`} className="hover:text-white transition-colors" aria-label={`Call helpline ${HELPLINE}`} title="Call Avaykta 24/7 helpline">
-            Helpline: {HELPLINE}
-          </a>
-        </div>
-      </div>
-
       {/* ── Main Floating Capsule Navbar ── */}
       <Disclosure
         as="header"
-        className="sticky top-0 z-50 w-full pt-4 transition-all duration-300"
+        className="sticky top-0 z-50 w-full pt-3 sm:pt-4 transition-all duration-300"
       >
         {({ open }) => (
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="bg-slate-900/90 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl transition-all duration-300">
-              <div className="flex h-16 sm:h-20 items-center justify-between px-4 sm:px-6 gap-4">
+          <div className="mx-auto max-w-5xl px-3 sm:px-6">
+            <div className="bg-[#0e0e11]/95 backdrop-blur-md border border-white/10 rounded-2xl shadow-2xl transition-all duration-300">
+              <div className="flex h-14 sm:h-16 items-center justify-between px-3 sm:px-5 gap-3">
 
                 {/* Logo */}
                 <Link to="/" className="flex items-center flex-shrink-0 group" aria-label="Avaykta Home" title="Go to Avaykta homepage">
                   <img
-                    className="h-9 sm:h-10 w-auto object-contain filter brightness-0 invert drop-shadow-[0_0_8px_rgba(255,255,255,0.4)] group-hover:scale-105 transition-transform"
+                    className="h-8 sm:h-9 w-auto object-contain filter brightness-0 invert drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] group-hover:scale-105 transition-transform"
                     src={logo}
                     alt="Avaykta Logo"
                     onError={(e) => { e.target.style.display = 'none'; }}
